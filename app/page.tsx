@@ -1,65 +1,277 @@
-import Image from "next/image";
+'use client';
+
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import CountUp from 'react-countup';
+import { ArrowRight, Coins, TrendingUp, Wallet } from 'lucide-react';
+import Button from '@/components/Button';
+import Card from '@/components/Card';
+import { mockMetrics } from '@/lib/mock-data';
 
 export default function Home() {
+  const steps = [
+    {
+      icon: <Wallet className="w-8 h-8" />,
+      title: '消费获得 Credit',
+      description: '在合作商家消费，每10元获得1个Credit，积累消费价值'
+    },
+    {
+      icon: <Coins className="w-8 h-8" />,
+      title: '质押获得 Share',
+      description: '将Credit质押，1:1获得Share，成为商家生态的股东'
+    },
+    {
+      icon: <TrendingUp className="w-8 h-8" />,
+      title: '持续获得收益',
+      description: '商家产生收入，Share持有者按比例获得收益分配'
+    }
+  ];
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-md-background">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden">
+        {/* Organic Blur Shapes Background */}
+        <div className="absolute inset-0 overflow-hidden">
+          <motion.div
+            className="absolute -top-40 -right-40 w-96 h-96 bg-md-primary/20 rounded-full blur-3xl"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.5, 0.3],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+          <motion.div
+            className="absolute -bottom-40 -left-40 w-96 h-96 bg-md-tertiary/20 rounded-full blur-3xl"
+            animate={{
+              scale: [1.2, 1, 1.2],
+              opacity: [0.5, 0.3, 0.5],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1
+            }}
+          />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+
+        {/* Hero Content */}
+        <div className="relative container mx-auto px-4 py-20 md:py-32">
+          <motion.div
+            className="max-w-4xl mx-auto text-center"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <motion.h1
+              className="text-5xl md:text-7xl font-bold text-md-on-background mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              消费即积累，长期获得收益
+            </motion.h1>
+            <motion.p
+              className="text-xl md:text-2xl text-md-on-surface-variant mb-12 max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              通过 Credit & Share 双资产模型，让每一次消费都成为长期价值的积累
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
+              <Link href="/merchants">
+                <Button size="lg" className="group">
+                  开始体验
+                  <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </Link>
+            </motion.div>
+          </motion.div>
         </div>
-      </main>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-20 bg-md-surface-container-low">
+        <div className="container mx-auto px-4">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-md-on-background mb-4">
+              如何运作
+            </h2>
+            <p className="text-lg text-md-on-surface-variant max-w-2xl mx-auto">
+              三个简单步骤，开启您的收益之旅
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {steps.map((step, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.2 }}
+              >
+                <Card hover className="h-full">
+                  <div className="flex flex-col items-center text-center">
+                    <div className="w-16 h-16 rounded-full bg-md-secondary-container flex items-center justify-center text-md-primary mb-6">
+                      {step.icon}
+                    </div>
+                    <div className="w-8 h-8 rounded-full bg-md-primary text-md-on-primary flex items-center justify-center font-bold mb-4">
+                      {index + 1}
+                    </div>
+                    <h3 className="text-xl font-bold text-md-on-background mb-3">
+                      {step.title}
+                    </h3>
+                    <p className="text-md-on-surface-variant">
+                      {step.description}
+                    </p>
+                  </div>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Key Metrics Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-md-on-background mb-4">
+              平台数据
+            </h2>
+            <p className="text-lg text-md-on-surface-variant max-w-2xl mx-auto">
+              实时展示平台运营数据
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0 }}
+            >
+              <Card className="text-center">
+                <div className="text-md-on-surface-variant text-sm mb-2">
+                  总用户数
+                </div>
+                <div className="text-4xl font-bold text-md-primary mb-1">
+                  <CountUp end={mockMetrics.totalUsers} duration={2.5} separator="," />
+                </div>
+                <div className="text-xs text-md-on-surface-variant">
+                  活跃用户
+                </div>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              <Card className="text-center">
+                <div className="text-md-on-surface-variant text-sm mb-2">
+                  总 Credit 发行量
+                </div>
+                <div className="text-4xl font-bold text-md-primary mb-1">
+                  <CountUp end={mockMetrics.totalCredit} duration={2.5} separator="," />
+                </div>
+                <div className="text-xs text-md-on-surface-variant">
+                  累计发行
+                </div>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <Card className="text-center">
+                <div className="text-md-on-surface-variant text-sm mb-2">
+                  已分配收益
+                </div>
+                <div className="text-4xl font-bold text-md-primary mb-1">
+                  $<CountUp end={mockMetrics.totalRewards} duration={2.5} separator="," decimals={2} />
+                </div>
+                <div className="text-xs text-md-on-surface-variant">
+                  累计分配
+                </div>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <Card className="text-center">
+                <div className="text-md-on-surface-variant text-sm mb-2">
+                  总 Share 数量
+                </div>
+                <div className="text-4xl font-bold text-md-primary mb-1">
+                  <CountUp end={mockMetrics.totalShares} duration={2.5} separator="," />
+                </div>
+                <div className="text-xs text-md-on-surface-variant">
+                  流通中
+                </div>
+              </Card>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-br from-md-primary/10 to-md-tertiary/10">
+        <div className="container mx-auto px-4">
+          <motion.div
+            className="max-w-3xl mx-auto text-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-md-on-background mb-6">
+              准备好开始了吗？
+            </h2>
+            <p className="text-lg text-md-on-surface-variant mb-8">
+              立即体验 Credit & Share 双资产模型，让消费创造长期价值
+            </p>
+            <Link href="/merchants">
+              <Button size="lg" className="group">
+                立即开始
+                <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </Link>
+          </motion.div>
+        </div>
+      </section>
     </div>
   );
 }
