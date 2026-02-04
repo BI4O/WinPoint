@@ -14,33 +14,44 @@ const activityConfig = {
     icon: Coins,
     label: '获得 Credit',
     color: 'text-md-success',
-    bgColor: 'bg-md-success/10'
+    bgColor: 'bg-md-success/10',
+    borderColor: 'border-md-success/20'
   },
   credit_staked: {
     icon: Share2,
     label: '质押 Credit',
     color: 'text-md-primary',
-    bgColor: 'bg-md-primary/10'
+    bgColor: 'bg-md-primary/10',
+    borderColor: 'border-md-primary/20'
   },
   reward_received: {
     icon: TrendingUp,
     label: '收到收益',
     color: 'text-md-tertiary',
-    bgColor: 'bg-md-tertiary/10'
+    bgColor: 'bg-md-tertiary/10',
+    borderColor: 'border-md-tertiary/20'
   }
 };
 
 export default function ActivityList({ activities }: ActivityListProps) {
   return (
     <Card>
-      <h3 className="text-lg font-semibold text-md-on-background mb-4">
-        最近活动
-      </h3>
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-lg font-semibold text-md-on-background">
+          最近活动
+        </h3>
+        <span className="text-xs text-md-on-surface-variant">
+          最新 5 条
+        </span>
+      </div>
       <div className="space-y-3">
         {activities.length === 0 ? (
-          <p className="text-sm text-md-on-surface-variant text-center py-8">
-            暂无活动记录
-          </p>
+          <div className="text-center py-12">
+            <div className="text-4xl mb-3">📭</div>
+            <p className="text-sm text-md-on-surface-variant">
+              暂无活动记录
+            </p>
+          </div>
         ) : (
           activities.slice(0, 5).map((activity, index) => {
             const config = activityConfig[activity.type];
@@ -51,25 +62,36 @@ export default function ActivityList({ activities }: ActivityListProps) {
                 key={activity.id}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="flex items-center justify-between p-3 rounded-2xl bg-md-surface-container-high hover:bg-md-surface-container-highest transition-colors"
+                transition={{ delay: index * 0.08, type: 'tween', duration: 0.3, ease: [0.2, 0, 0, 1] }}
+                className="group"
               >
-                <div className="flex items-center gap-3">
-                  <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${config.bgColor}`}>
-                    <Icon className={`h-5 w-5 ${config.color}`} />
+                <div className={`flex items-center justify-between p-4 rounded-2xl bg-md-surface-container-high border ${config.borderColor} transition-all duration-300 ease-md hover:shadow-md hover:scale-[1.01]`}>
+                  <div className="flex items-center gap-4">
+                    <motion.div
+                      className={`flex h-12 w-12 items-center justify-center rounded-xl ${config.bgColor}`}
+                      whileHover={{ scale: 1.1, rotate: [0, -10, 10, -10, 0] }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <Icon className={`h-6 w-6 ${config.color}`} />
+                    </motion.div>
+                    <div>
+                      <p className="text-sm font-semibold text-md-on-background mb-0.5">
+                        {config.label}
+                      </p>
+                      <p className="text-xs text-md-on-surface-variant">
+                        {activity.merchant && `${activity.merchant} · `}
+                        {activity.timestamp}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-md-on-background">
-                      {config.label}
-                    </p>
-                    <p className="text-xs text-md-on-surface-variant">
-                      {activity.merchant && `${activity.merchant} · `}
-                      {activity.timestamp}
-                    </p>
-                  </div>
-                </div>
-                <div className={`text-sm font-semibold ${config.color}`}>
-                  +{activity.amount.toFixed(2)}
+                  <motion.div
+                    className={`text-sm font-bold ${config.color}`}
+                    initial={{ scale: 0.8 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: index * 0.08 + 0.1, type: 'spring', stiffness: 200 }}
+                  >
+                    +{activity.amount.toFixed(2)}
+                  </motion.div>
                 </div>
               </motion.div>
             );

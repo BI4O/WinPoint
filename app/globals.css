@@ -5,13 +5,21 @@
   --color-md-on-background: #1c1b1f;
   --color-md-primary: #6750a4;
   --color-md-on-primary: #ffffff;
+  --color-md-primary-container: #eaddff;
+  --color-md-on-primary-container: #21005d;
   --color-md-secondary-container: #e8def8;
   --color-md-on-secondary-container: #1d192b;
   --color-md-tertiary: #7d5260;
+  --color-md-tertiary-container: #ffd8e4;
+  --color-md-on-tertiary-container: #31111d;
   --color-md-surface-container: #f3edf7;
   --color-md-surface-container-low: #e7e0ec;
-  --color-md-border: #79747e;
+  --color-md-surface-container-high: #ece6f0;
+  --color-md-surface-variant: #e7e0ec;
+  --color-md-on-surface: #1c1b1f;
   --color-md-on-surface-variant: #49454f;
+  --color-md-outline: #79747e;
+  --color-md-border: #79747e;
   --color-md-success: #10b981;
   --color-md-error: #ef4444;
 }
@@ -22,6 +30,11 @@ body {
   color: var(--color-md-on-background);
 }
 
+/* Material You easing */
+.ease-md {
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -30,4 +43,45 @@ body {
 @keyframes scaleIn {
   from { opacity: 0; transform: scale(0.9); }
   to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* MD3 Input field styles */
+.md-input-filled {
+  @apply relative;
+}
+
+.md-input-filled::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--color-md-outline);
+  border-radius: 0 0 4px 4px;
+  transition: all 200ms ease-md;
+}
+
+.md-input-filled:focus-within::before {
+  background-color: var(--color-md-primary);
+  height: 3px;
+}
+
+/* Utility for glow effects */
+.glow-primary {
+  box-shadow: 0 0 30px -10px var(--color-md-primary);
+}
+
+.glow-tertiary {
+  box-shadow: 0 0 30px -10px var(--color-md-tertiary);
 }
