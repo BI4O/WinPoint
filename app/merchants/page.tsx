@@ -138,7 +138,7 @@ export default function MerchantsPage() {
                 </p>
                 <p className="text-sm text-md-on-surface-variant">Credit</p>
               </motion.div>
-              <motion.p
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6, type: 'tween', duration: 0.3, ease: [0.2, 0, 0, 1] }}
@@ -150,7 +150,7 @@ export default function MerchantsPage() {
                   transition={{ duration: 1.5, repeat: Infinity }}
                 />
                 正在跳转到资产页面...
-              </motion.p>
+              </motion.div>
             </motion.div>
           </motion.div>
         )}
