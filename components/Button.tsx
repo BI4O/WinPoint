@@ -38,7 +38,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const transition = {
       type: 'tween' as const,
       duration: 0.3,
-      ease: [0.2, 0, 0, 1] // cubic-bezier(0.2, 0, 0, 1)
+      ease: [0.2, 0, 0, 1] as const // cubic-bezier(0.2, 0, 0, 1)
     };
 
     return (
