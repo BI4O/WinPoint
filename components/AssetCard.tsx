@@ -25,7 +25,7 @@ const glowColors = {
 
 export default function AssetCard({ title, value, subtitle, icon: Icon, trend, glow = 'none' }: AssetCardProps) {
   return (
-    <Card hover glow={glow === 'none' ? 'none' : glow}>
+    <Card hover>
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <p className="text-sm text-md-on-surface-variant mb-3 font-medium">{title}</p>
