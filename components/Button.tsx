@@ -1,18 +1,19 @@
 'use client';
 
-import { ButtonHTMLAttributes, forwardRef } from 'react';
-import { motion } from 'framer-motion';
+import { forwardRef, type ReactNode } from 'react';
+import { motion, type HTMLMotionProps } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
-interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onDrag' | 'onDragEnd' | 'onDragStart'> {
+interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'variants'> {
   variant?: 'filled' | 'tonal' | 'outlined' | 'text';
   size?: 'sm' | 'md' | 'lg';
+  children: ReactNode;
 }
 
 const MotionButton = motion.button;
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'filled', size = 'md', children, ...props }, ref) => {
+  ({ className, variant = 'filled', size = 'md', children, type = 'button', ...props }, ref) => {
     const baseStyles = 'rounded-full font-medium disabled:opacity-50 disabled:cursor-not-allowed';
 
     const variants = {
@@ -38,12 +39,13 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const transition = {
       type: 'tween' as const,
       duration: 0.3,
-      ease: [0.2, 0, 0, 1] as const // cubic-bezier(0.2, 0, 0, 1)
+      ease: [0.2, 0, 0, 1] as const
     };
 
     return (
       <MotionButton
         ref={ref}
+        type={type}
         className={cn(baseStyles, variants[variant], sizes[size], className)}
         variants={motionVariants}
         initial="rest"

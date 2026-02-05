@@ -1,12 +1,13 @@
 'use client';
 
-import { HTMLAttributes, forwardRef } from 'react';
-import { motion } from 'framer-motion';
+import { forwardRef, type ReactNode } from 'react';
+import { motion, type HTMLMotionProps } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
-interface CardProps extends HTMLAttributes<HTMLDivElement> {
+interface CardProps extends Omit<HTMLMotionProps<'div'>, 'whileHover'> {
   hover?: boolean;
   glow?: 'primary' | 'tertiary' | 'none';
+  children: ReactNode;
 }
 
 const MotionDiv = motion.div;
@@ -32,7 +33,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
           className
         )}
         whileHover={hover ? { y: -2 } : undefined}
-        transition={{ type: 'tween', duration: 0.3, ease: [0.2, 0, 0, 1] }}
+        transition={{ type: 'tween' as const, duration: 0.3, ease: [0.2, 0, 0, 1] as const }}
         {...props}
       >
         {children}

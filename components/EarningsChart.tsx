@@ -138,7 +138,8 @@ export default function EarningsChart({ data }: EarningsChartProps) {
               color: 'var(--color-md-on-surface)',
               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)'
             }}
-            formatter={(value: number, name: string, props: any) => {
+            formatter={(value: number | undefined, name: string | undefined, props: any) => {
+              if (value === undefined || name === undefined) return ['', ''];
               const item = props.payload as EarningsData;
               // 日/周视图
               if (timeRange === 'day' || timeRange === 'week') {
