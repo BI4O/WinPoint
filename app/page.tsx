@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import CountUp from 'react-countup';
-import { ArrowRight, Coins, TrendingUp, Wallet } from 'lucide-react';
+import { ArrowRight, Coins, TrendingUp, Wallet, FileText } from 'lucide-react';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import { mockMetrics } from '@/lib/mock-data';
@@ -88,13 +88,18 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
+              className="flex flex-col sm:flex-row items-center justify-center gap-4"
             >
               <Link href="/merchants">
-                <Button size="lg" className="group">
+                <Button size="lg">
                   开始体验
-                  <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
+              <a href="/whitepaper.pdf" target="_blank" rel="noopener noreferrer">
+                <Button size="lg" variant="outlined">
+                  白皮书
+                </Button>
+              </a>
             </motion.div>
           </motion.div>
         </div>
@@ -264,9 +269,8 @@ export default function Home() {
               立即体验 Credit & Share 双资产模型，让消费创造长期价值
             </p>
             <Link href="/merchants">
-              <Button size="lg" className="group">
+              <Button size="lg">
                 立即开始
-                <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
           </motion.div>
