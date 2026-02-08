@@ -155,6 +155,7 @@ export default function ShoppingCartDrawer({ isOpen, onClose }: ShoppingCartDraw
       <CheckoutModal
         isOpen={isCheckoutModalOpen}
         onClose={() => setIsCheckoutModalOpen(false)}
+        onCheckoutSuccess={onClose}
         merchantId={merchantId}
         merchantName={merchantName}
       />

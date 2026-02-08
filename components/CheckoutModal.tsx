@@ -12,6 +12,7 @@ import SuccessNotification from './SuccessNotification';
 interface CheckoutModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onCheckoutSuccess?: () => void;
   merchantId: string;
   merchantName: string;
 }
@@ -19,6 +20,7 @@ interface CheckoutModalProps {
 export default function CheckoutModal({
   isOpen,
   onClose,
+  onCheckoutSuccess,
   merchantId,
   merchantName
 }: CheckoutModalProps) {
@@ -57,6 +59,9 @@ export default function CheckoutModal({
     // 显示成功通知
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 2000);
+
+    // 通知父组件关闭购物车
+    onCheckoutSuccess?.();
 
     // 移除自动跳转: router.push('/dashboard');
   };
