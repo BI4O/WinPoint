@@ -27,7 +27,7 @@ export default function OrderModal({ isOpen, onClose, merchant, onConfirm }: Ord
   if (!merchant) return null;
 
   const numAmount = parseFloat(amount) || 0;
-  const creditToEarn = numAmount / merchant.creditRate;
+  const pointToEarn = numAmount / merchant.pointRate;
 
   const handleConfirm = async () => {
     if (numAmount <= 0) return;
@@ -98,7 +98,7 @@ export default function OrderModal({ isOpen, onClose, merchant, onConfirm }: Ord
                     disabled={isSubmitting}
                   />
 
-                  {/* Credit Preview */}
+                  {/* 积分 Preview */}
                   <AnimatePresence>
                     {numAmount > 0 && (
                       <motion.div
@@ -115,10 +115,10 @@ export default function OrderModal({ isOpen, onClose, merchant, onConfirm }: Ord
                                 将获得
                               </p>
                               <p className="text-3xl font-bold text-md-primary">
-                                {creditToEarn.toFixed(2)}
+                                {pointToEarn.toFixed(2)}
                               </p>
                               <p className="text-xs text-md-on-primary-container/80 mt-1">
-                                Credit
+                                积分
                               </p>
                             </div>
                             <motion.div

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Coins, Share2, TrendingUp, ArrowUpCircle, ShoppingBag } from 'lucide-react';
+import { Coins, Share2, TrendingUp, ArrowUpCircle, ShoppingBag, Gift } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useStore } from '@/lib/store';
 import { mockEarningsHistory } from '@/lib/mock-data';
@@ -29,7 +29,7 @@ export default function DashboardPage() {
             我的资产
           </h1>
           <p className="text-md-on-surface-variant">
-            查看您的 Credit、Share 和收益情况
+            查看您的积分、$RWA 和收益情况
           </p>
         </motion.div>
 
@@ -41,8 +41,8 @@ export default function DashboardPage() {
             transition={{ delay: 0.1, type: 'tween', duration: 0.4, ease: [0.2, 0, 0, 1] }}
           >
             <AssetCard
-              title="Credit"
-              value={user.credit.toFixed(2)}
+              title="积分"
+              value={user.point.toFixed(2)}
               subtitle="可用余额"
               icon={Coins}
               glow="primary"
@@ -54,9 +54,9 @@ export default function DashboardPage() {
             transition={{ delay: 0.2, type: 'tween', duration: 0.4, ease: [0.2, 0, 0, 1] }}
           >
             <AssetCard
-              title="Share"
-              value={user.share.toFixed(2)}
-              subtitle="持有份额"
+              title="$RWA"
+              value={user.rwa.toFixed(2)}
+              subtitle="持有 $RWA"
               icon={Share2}
               glow="tertiary"
             />
@@ -86,7 +86,7 @@ export default function DashboardPage() {
           <h2 className="text-2xl font-bold text-md-on-background mb-6">
             快速操作
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Button
               variant="filled"
               size="lg"
@@ -94,10 +94,19 @@ export default function DashboardPage() {
               className="flex items-center justify-center gap-2"
             >
               <ArrowUpCircle className="h-5 w-5" />
-              质押 Credit
+              质押积分
             </Button>
             <Button
-              variant="tonal"
+              variant="filled"
+              size="lg"
+              onClick={() => router.push('/rewards')}
+              className="flex items-center justify-center gap-2"
+            >
+              <Gift className="h-5 w-5" />
+              积分兑换
+            </Button>
+            <Button
+              variant="filled"
               size="lg"
               onClick={() => router.push('/merchants')}
               className="flex items-center justify-center gap-2"

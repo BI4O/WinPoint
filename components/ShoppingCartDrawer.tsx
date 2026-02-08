@@ -23,10 +23,10 @@ export default function ShoppingCartDrawer({ isOpen, onClose }: ShoppingCartDraw
   const removeFromCart = useStore(state => state.removeFromCart);
   const clearCart = useStore(state => state.clearCart);
   const getCartTotal = useStore(state => state.getCartTotal);
-  const getCartCreditTotal = useStore(state => state.getCartCreditTotal);
+  const getCartPointTotal = useStore(state => state.getCartPointTotal);
 
   const totalAmount = getCartTotal();
-  const totalCredit = getCartCreditTotal();
+  const totalPoint = getCartPointTotal();
 
   // 获取商家信息（假设购物车中的商品来自同一商家）
   const merchantId = cart.length > 0 ? cart[0].product.merchantId : '';
@@ -120,7 +120,7 @@ export default function ShoppingCartDrawer({ isOpen, onClose }: ShoppingCartDraw
                     </div>
                     <div className="flex justify-between text-md-success">
                       <span>将获得:</span>
-                      <span className="font-bold">{totalCredit.toFixed(1)} Credit</span>
+                      <span className="font-bold">{totalPoint.toFixed(1)} 积分</span>
                     </div>
                   </div>
 

@@ -11,13 +11,13 @@ import AtmosphericBackground from '@/components/AtmosphericBackground';
 
 export default function StakePage() {
   const user = useStore((state) => state.user);
-  const stakeCredit = useStore((state) => state.stakeCredit);
+  const stakePoint = useStore((state) => state.stakePoint);
   const router = useRouter();
   const [showSuccess, setShowSuccess] = useState(false);
   const [stakedAmount, setStakedAmount] = useState(0);
 
   const handleStake = (amount: number) => {
-    stakeCredit(amount);
+    stakePoint(amount);
     setStakedAmount(amount);
     setShowSuccess(true);
 
@@ -42,12 +42,12 @@ export default function StakePage() {
             </div>
             <div>
               <h1 className="text-4xl font-bold text-md-on-background">
-                质押 Credit
+                质押 积分
               </h1>
             </div>
           </div>
           <p className="text-md-on-surface-variant ml-1">
-            将 Credit 质押以获得 Share，参与收益分配
+            将 积分 质押以获得 $RWA，参与收益分配
           </p>
         </motion.div>
 
@@ -60,7 +60,7 @@ export default function StakePage() {
             className="lg:col-span-2"
           >
             <StakeForm
-              availableCredit={user.credit}
+              availablePoint={user.point}
               onStake={handleStake}
             />
           </motion.div>
@@ -86,13 +86,13 @@ export default function StakePage() {
                 {[
                   {
                     step: 1,
-                    title: 'Credit 被锁定',
-                    description: '质押后 Credit 将被锁定，无法用于其他用途'
+                    title: '积分 被锁定',
+                    description: '质押后 积分 将被锁定，无法用于其他用途'
                   },
                   {
                     step: 2,
-                    title: '获得 Share',
-                    description: '立即获得对应数量的 Share (1:1 比例)'
+                    title: '获得 $RWA',
+                    description: '立即获得对应数量的 $RWA (1:1 比例)'
                   },
                   {
                     step: 3,
@@ -102,7 +102,7 @@ export default function StakePage() {
                   {
                     step: 4,
                     title: '自由交易',
-                    description: 'Share 可在市场自由交易，随时变现'
+                    description: '$RWA 可在市场自由交易，随时变现'
                   }
                 ].map((item, index) => (
                   <motion.div
@@ -167,10 +167,10 @@ export default function StakePage() {
                     已质押
                   </p>
                   <p className="text-3xl font-bold text-md-primary mb-1">
-                    {stakedAmount.toFixed(2)} Credit
+                    {stakedAmount.toFixed(2)} 积分
                   </p>
                   <p className="text-md-on-surface-variant">
-                    获得 {stakedAmount.toFixed(2)} Share
+                    获得 {stakedAmount.toFixed(2)} $RWA
                   </p>
                 </div>
 

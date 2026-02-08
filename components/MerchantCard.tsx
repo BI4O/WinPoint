@@ -42,11 +42,11 @@ export default function MerchantCard({ merchant, onConsume }: MerchantCardProps)
           {merchant.description}
         </p>
 
-        {/* Credit Rate Info */}
+        {/* Point Rate Info */}
         <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-md-primary/5">
           <div className="w-2 h-2 rounded-full bg-md-primary animate-pulse" />
           <p className="text-xs text-md-on-surface-variant font-medium">
-            每消费 {merchant.creditRate} 元 = 1 Credit
+            每消费 {merchant.pointRate} 元 = 1 积分
           </p>
         </div>
       </div>

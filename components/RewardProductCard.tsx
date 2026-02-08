@@ -7,16 +7,16 @@ import { RewardProduct } from '@/lib/mock-data';
 
 interface RewardProductCardProps {
   product: RewardProduct;
-  userCredit: number;
+  userPoint: number;
   onRedeem: (product: RewardProduct) => void;
 }
 
 export default function RewardProductCard({
   product,
-  userCredit,
+  userPoint,
   onRedeem
 }: RewardProductCardProps) {
-  const canAfford = userCredit >= product.creditCost;
+  const canAfford = userPoint >= product.pointCost;
   const isEmoji = product.image.startsWith('emoji:');
   const imageContent = isEmoji ? product.image.replace('emoji:', '') : product.image;
 
@@ -56,9 +56,9 @@ export default function RewardProductCard({
           <div className="flex items-baseline gap-2">
             <div className="flex items-center gap-1">
               <span className="text-2xl font-bold text-md-primary">
-                {product.creditCost}
+                {product.pointCost}
               </span>
-              <span className="text-sm text-md-on-surface-variant">Credit</span>
+              <span className="text-sm text-md-on-surface-variant">积分</span>
             </div>
             <span className="text-sm text-md-on-surface-variant line-through">
               ¥{product.originalPrice}

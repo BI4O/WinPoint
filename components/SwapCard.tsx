@@ -9,11 +9,11 @@ import SuccessNotification from './SuccessNotification';
 import { useStore } from '@/lib/store';
 import { mockMarketData } from '@/lib/mock-data';
 
-type SwapDirection = 'shareToUsdt' | 'usdtToShare';
+type SwapDirection = 'rwaToUsdt' | 'usdtToRwa';
 
 export default function SwapCard() {
   const { user } = useStore();
-  const [direction, setDirection] = useState<SwapDirection>('shareToUsdt');
+  const [direction, setDirection] = useState<SwapDirection>('rwaToUsdt');
   const [inputAmount, setInputAmount] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
   const [successData, setSuccessData] = useState({
@@ -28,7 +28,7 @@ export default function SwapCard() {
   // 计算输出金额
   const outputAmount = useMemo(() => {
     const input = parseFloat(inputAmount) || 0;
-    if (direction === 'shareToUsdt') {
+    if (direction === 'rwaToUsdt') {
       return (input * currentPrice).toFixed(2);
     } else {
       return (input / currentPrice).toFixed(2);
@@ -37,7 +37,7 @@ export default function SwapCard() {
 
   // 切换方向
   const toggleDirection = () => {
-    setDirection(prev => prev === 'shareToUsdt' ? 'usdtToShare' : 'shareToUsdt');
+    setDirection(prev => prev === 'rwaToUsdt' ? 'usdtToRwa' : 'rwaToUsdt');
     setInputAmount('');
   };
 
@@ -46,12 +46,12 @@ export default function SwapCard() {
     const input = parseFloat(inputAmount) || 0;
     if (input <= 0) return;
 
-    if (direction === 'shareToUsdt') {
-      if (input > user.share) {
-        alert('Share 余额不足');
+    if (direction === 'rwaToUsdt') {
+      if (input > user.rwa) {
+        alert('$RWA 余额不足');
         return;
       }
-      // TODO: 实现 Share -> USDT 交换逻辑
+      // TODO: 实现 $RWA -> USDT 交换逻辑
       setSuccessData({
         title: '卖出成功！',
         amount: parseFloat(outputAmount),
@@ -61,11 +61,11 @@ export default function SwapCard() {
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 2500);
     } else {
-      // TODO: 实现 USDT -> Share 交换逻辑
+      // TODO: 实现 USDT -> $RWA 交换逻辑
       setSuccessData({
         title: '购买成功！',
         amount: parseFloat(outputAmount),
-        unit: 'Share',
+        unit: '$RWA',
         emoji: '🎉'
       });
       setShowSuccess(true);
@@ -75,10 +75,10 @@ export default function SwapCard() {
     setInputAmount('');
   };
 
-  const isShareToUsdt = direction === 'shareToUsdt';
-  const inputToken = isShareToUsdt ? 'Share' : 'USDT';
-  const outputToken = isShareToUsdt ? 'USDT' : 'Share';
-  const inputBalance = isShareToUsdt ? user.share : 0; // USDT 余额暂时为 0
+  const isRwaToUsdt = direction === 'rwaToUsdt';
+  const inputToken = isRwaToUsdt ? '$RWA' : 'USDT';
+  const outputToken = isRwaToUsdt ? 'USDT' : '$RWA';
+  const inputBalance = isRwaToUsdt ? user.rwa : 0; // USDT 余额暂时为 0
 
   return (
     <>
@@ -88,7 +88,7 @@ export default function SwapCard() {
           交易
         </h3>
         <p className="text-xs text-md-on-surface-variant">
-          当前价格: <span className="text-md-primary font-semibold">${currentPrice.toFixed(2)}</span> / Share
+          当前价格: <span className="text-md-primary font-semibold">${currentPrice.toFixed(2)}</span> / $RWA
         </p>
       </div>
 
@@ -161,7 +161,7 @@ export default function SwapCard() {
           <div className="flex items-center justify-between text-sm">
             <span className="text-md-on-surface-variant">价格</span>
             <span className="text-md-on-background font-medium">
-              1 Share = ${currentPrice.toFixed(2)} USDT
+              1 $RWA = ${currentPrice.toFixed(2)} USDT
             </span>
           </div>
           <div className="flex items-center justify-between text-sm">
@@ -181,7 +181,7 @@ export default function SwapCard() {
           disabled={!inputAmount || parseFloat(inputAmount) <= 0}
           className="w-full"
         >
-          {isShareToUsdt ? '卖出 Share' : '购买 Share'}
+          {isRwaToUsdt ? '卖出 $RWA' : '购买 $RWA'}
         </Button>
 
         {/* 提示信息 */}

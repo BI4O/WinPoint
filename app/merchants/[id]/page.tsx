@@ -81,7 +81,7 @@ export default function MerchantDetailPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Tag className="w-4 h-4" />
-                  <span>消费可获得 Credit (10:1)</span>
+                  <span>消费可获得 积分 (10:1)</span>
                 </div>
               </div>
 

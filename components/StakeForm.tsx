@@ -8,27 +8,27 @@ import Card from './Card';
 import InputField from './InputField';
 
 interface StakeFormProps {
-  availableCredit: number;
+  availablePoint: number;
   onStake: (amount: number) => void;
 }
 
-export default function StakeForm({ availableCredit, onStake }: StakeFormProps) {
+export default function StakeForm({ availablePoint, onStake }: StakeFormProps) {
   const [amount, setAmount] = useState(0);
   const [error, setError] = useState('');
 
-  const shareToReceive = amount;
+  const rwaToReceive = amount;
   const estimatedAPY = 15;
   const estimatedYearlyReturn = (amount * estimatedAPY) / 100;
 
   useEffect(() => {
-    if (amount > availableCredit) {
+    if (amount > availablePoint) {
       setError('质押数量不能超过可用余额');
     } else if (amount < 0) {
       setError('质押数量必须大于0');
     } else {
       setError('');
     }
-  }, [amount, availableCredit]);
+  }, [amount, availablePoint]);
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAmount(Number(e.target.value));
@@ -42,7 +42,7 @@ export default function StakeForm({ availableCredit, onStake }: StakeFormProps) 
   };
 
   const handleMaxClick = () => {
-    setAmount(availableCredit);
+    setAmount(availablePoint);
   };
 
   const handleStake = () => {
@@ -50,7 +50,7 @@ export default function StakeForm({ availableCredit, onStake }: StakeFormProps) 
       setError('请输入质押数量');
       return;
     }
-    if (amount > availableCredit) {
+    if (amount > availablePoint) {
       setError('质押数量不能超过可用余额');
       return;
     }
@@ -70,11 +70,11 @@ export default function StakeForm({ availableCredit, onStake }: StakeFormProps) 
             <Coins className="h-5 w-5 text-white" />
           </div>
           <h2 className="text-2xl font-bold text-md-on-surface">
-            质押 Credit 获得 Share
+            质押积分获得 $RWA
           </h2>
         </div>
 
-        {/* Available Credit */}
+        {/* Available 积分 */}
         <motion.div
           className="mb-8 p-5 bg-gradient-to-r from-md-primary-container/30 to-md-secondary-container/30 rounded-2xl border border-md-primary/10"
           whileHover={{ scale: 1.01 }}
@@ -86,9 +86,9 @@ export default function StakeForm({ availableCredit, onStake }: StakeFormProps) 
                 <Coins className="h-6 w-6 text-md-primary" />
               </div>
               <div>
-                <p className="text-sm text-md-on-surface-variant">可用 Credit</p>
+                <p className="text-sm text-md-on-surface-variant">可用 积分</p>
                 <p className="text-2xl font-bold text-md-on-surface mt-0.5">
-                  {availableCredit.toFixed(2)}
+                  {availablePoint.toFixed(2)}
                 </p>
               </div>
             </div>
@@ -126,18 +126,18 @@ export default function StakeForm({ availableCredit, onStake }: StakeFormProps) 
             <input
               type="range"
               min="0"
-              max={availableCredit}
+              max={availablePoint}
               step="0.01"
               value={amount}
               onChange={handleSliderChange}
               className="w-full h-2 bg-md-surface-container-low rounded-full appearance-none cursor-pointer accent-md-primary"
               style={{
-                background: `linear-gradient(to right, var(--color-md-primary) ${(amount / availableCredit) * 100}%, var(--color-md-surface-container-low) ${(amount / availableCredit) * 100}%)`
+                background: `linear-gradient(to right, var(--color-md-primary) ${(amount / availablePoint) * 100}%, var(--color-md-surface-container-low) ${(amount / availablePoint) * 100}%)`
               }}
             />
             <div className="flex justify-between mt-2 text-xs text-md-on-surface-variant">
               <span>0</span>
-              <span>{availableCredit.toFixed(2)}</span>
+              <span>{availablePoint.toFixed(2)}</span>
             </div>
           </div>
         </div>
@@ -161,7 +161,7 @@ export default function StakeForm({ availableCredit, onStake }: StakeFormProps) 
 
         {/* Preview Cards */}
         <div className="grid grid-cols-2 gap-4 mb-6">
-          {/* Share to Receive */}
+          {/* RWA to Receive */}
           <motion.div
             className="p-5 rounded-2xl bg-gradient-to-br from-md-primary-container/40 to-md-primary-container/20 border border-md-primary/10"
             whileHover={{ scale: 1.02, y: -2 }}
@@ -169,13 +169,13 @@ export default function StakeForm({ availableCredit, onStake }: StakeFormProps) 
           >
             <div className="flex items-center gap-2 mb-3">
               <Share2 className="h-5 w-5 text-md-primary" />
-              <span className="text-sm text-md-on-primary-container">将获得 Share</span>
+              <span className="text-sm text-md-on-primary-container">将获得 $RWA</span>
             </div>
             <p className="text-3xl font-bold text-md-primary mb-1">
-              {shareToReceive.toFixed(2)}
+              {rwaToReceive.toFixed(2)}
             </p>
             <p className="text-xs text-md-on-primary-container/70">
-              1 Credit = 1 Share
+              1 积分 = 1 $RWA
             </p>
           </motion.div>
 

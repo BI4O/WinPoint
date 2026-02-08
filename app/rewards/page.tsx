@@ -41,7 +41,7 @@ export default function RewardsPage() {
       productId,
       selectedProduct.name,
       selectedProduct.merchantName,
-      selectedProduct.creditCost
+      selectedProduct.pointCost
     );
 
     if (success) {
@@ -82,7 +82,7 @@ export default function RewardsPage() {
               </div>
             </div>
 
-            {/* Credit Balance */}
+            {/* 积分 Balance */}
             <motion.div
               className="px-6 py-3 rounded-full bg-md-primary/10 border border-md-primary/20"
               whileHover={{ scale: 1.05 }}
@@ -91,14 +91,14 @@ export default function RewardsPage() {
               <div className="flex items-center gap-2">
                 <span className="text-sm text-md-on-surface-variant">我的积分</span>
                 <span className="text-2xl font-bold text-md-primary">
-                  {user.credit.toFixed(2)}
+                  {user.point.toFixed(2)}
                 </span>
               </div>
             </motion.div>
           </div>
 
           <p className="text-md-on-surface-variant ml-1">
-            使用 Credit 积分兑换心仪商品，1 Credit = ¥1 商品价值
+            使用积分兑换心仪商品，1 积分 = ¥1 商品价值
           </p>
         </motion.div>
 
@@ -137,7 +137,7 @@ export default function RewardsPage() {
             >
               <RewardProductCard
                 product={product}
-                userCredit={user.credit}
+                userPoint={user.point}
                 onRedeem={handleRedeem}
               />
             </motion.div>
@@ -164,7 +164,7 @@ export default function RewardsPage() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         product={selectedProduct}
-        userCredit={user.credit}
+        userPoint={user.point}
         onConfirm={handleConfirmRedeem}
       />
 
@@ -173,8 +173,8 @@ export default function RewardsPage() {
         isOpen={showSuccess}
         onClose={() => setShowSuccess(false)}
         title="兑换成功!"
-        amount={redeemedProduct ? -redeemedProduct.creditCost : 0}
-        unit="Credit"
+        amount={redeemedProduct ? -redeemedProduct.pointCost : 0}
+        unit="积分"
         message="商品将在 3-5 个工作日内发送"
         emoji="🎁"
       />

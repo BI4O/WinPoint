@@ -23,7 +23,7 @@ export interface Merchant {
   category: string;
   logo: string;
   description: string;
-  creditRate: number;
+  pointRate: number;
   products: Product[];  // 新增商品列表
 }
 
@@ -43,20 +43,20 @@ export interface Order {
   merchantName: string;
   items: OrderItem[];  // 新增订单商品明细
   totalAmount: number;  // 订单总金额
-  creditEarned: number;
+  pointEarned: number;
   status: 'completed' | 'pending';
 }
 
 // 活动记录接口
 export interface Activity {
   id: string;  // 改为 string
-  type: 'credit_earned' | 'credit_staked' | 'reward_received' | 'credit_redeemed';  // 新增 credit_redeemed 类型
+  type: 'point_earned' | 'point_staked' | 'reward_received' | 'point_redeemed';  // 新增 point_redeemed 类型
   amount: number;
   merchant?: string;
   timestamp: number;  // 改为时间戳
-  // 兑换相关字段（当 type = 'credit_redeemed' 时）
+  // 兑换相关字段（当 type = 'point_redeemed' 时）
   rewardProductName?: string;
-  creditSpent?: number;
+  pointSpent?: number;
 }
 
 // 兑换商品接口（需求 2）
@@ -67,7 +67,7 @@ export interface RewardProduct {
   merchantName: string;
   name: string;
   originalPrice: number;
-  creditCost: number;
+  pointCost: number;
   image: string;
   category: string;
   stock: number;
@@ -81,7 +81,7 @@ export interface RedemptionRecord {
   rewardProductId: string;
   productName: string;
   merchantName: string;
-  creditCost: number;
+  pointCost: number;
   timestamp: number;
   status: 'pending' | 'shipped' | 'delivered';
   trackingNumber?: string;
@@ -153,7 +153,7 @@ export const mockMerchants: Merchant[] = [
     category: "餐饮",
     logo: "☕",
     description: "全球知名咖啡连锁",
-    creditRate: 10,
+    pointRate: 10,
     products: starbucksProducts
   },
   {
@@ -162,7 +162,7 @@ export const mockMerchants: Merchant[] = [
     category: "运动",
     logo: "👟",
     description: "运动装备专家",
-    creditRate: 10,
+    pointRate: 10,
     products: nikeProducts
   },
   {
@@ -171,7 +171,7 @@ export const mockMerchants: Merchant[] = [
     category: "电子产品",
     logo: "🍎",
     description: "科技产品零售",
-    creditRate: 10,
+    pointRate: 10,
     products: appleProducts
   },
   {
@@ -180,7 +180,7 @@ export const mockMerchants: Merchant[] = [
     category: "母婴",
     logo: "👶",
     description: "优质母婴用品",
-    creditRate: 10,
+    pointRate: 10,
     products: babyProducts
   },
   {
@@ -189,15 +189,15 @@ export const mockMerchants: Merchant[] = [
     category: "奢侈品",
     logo: "💎",
     description: "高端珠宝定制",
-    creditRate: 10,
+    pointRate: 10,
     products: jewelryProducts
   }
 ];
 
 export const mockUserInitial = {
   address: "0x1234...5678",
-  credit: 5000,
-  share: 50,
+  point: 5000,
+  rwa: 50,
   earnings: 12.5
 };
 
@@ -214,7 +214,7 @@ export const mockOrdersInitial: Order[] = [
       { productId: 'sb-1', productName: '☕ 美式咖啡', price: 32, quantity: 1 }
     ],
     totalAmount: 32,
-    creditEarned: 3.2,
+    pointEarned: 3.2,
     status: "completed"
   }
 ];
@@ -222,14 +222,14 @@ export const mockOrdersInitial: Order[] = [
 export const mockActivitiesInitial: Activity[] = [
   {
     id: 'activity-1',
-    type: "credit_earned",
+    type: "point_earned",
     amount: 10,
     merchant: "星巴克咖啡",
     timestamp: BASE_TIMESTAMP - 86400000 // 1天前
   },
   {
     id: 'activity-2',
-    type: "credit_staked",
+    type: "point_staked",
     amount: 50,
     timestamp: BASE_TIMESTAMP - 172800000 // 2天前
   },
@@ -418,9 +418,9 @@ export const mockEarningsHistory = mockEarningsMonthly;
 
 export const mockMetrics = {
   totalUsers: 1234,
-  totalCredit: 45678,
+  totalPoint: 45678,
   totalRewards: 12345.67,
-  totalShares: 23456
+  totalRwa: 23456
 };
 
 // 兑换商品数据（需求 2）
@@ -433,7 +433,7 @@ export const mockRewardProducts: RewardProduct[] = [
     merchantName: 'Ealing 母婴旗舰店',
     name: 'Ealing 4合1滑梯秋千套装',
     originalPrice: 869,
-    creditCost: 869,
+    pointCost: 869,
     image: '/products/baby/bb-1.jpeg',
     category: '母婴',
     stock: 50
@@ -445,7 +445,7 @@ export const mockRewardProducts: RewardProduct[] = [
     merchantName: 'Ealing 母婴旗舰店',
     name: 'Ealing 3合1婴儿学步车',
     originalPrice: 579,
-    creditCost: 579,
+    pointCost: 579,
     image: '/products/baby/bb-3.jpeg',
     category: '母婴',
     stock: 50
@@ -458,7 +458,7 @@ export const mockRewardProducts: RewardProduct[] = [
     merchantName: 'DIMD 珠宝精品',
     name: '18K白金橄榄石戒指',
     originalPrice: 4100,
-    creditCost: 4100,
+    pointCost: 4100,
     image: '/products/jewelry/01-olivine-ring.png',
     category: '奢侈品',
     stock: 10
@@ -470,7 +470,7 @@ export const mockRewardProducts: RewardProduct[] = [
     merchantName: 'DIMD 珠宝精品',
     name: '18K白红金粉红宝石戒指',
     originalPrice: 2400,
-    creditCost: 2400,
+    pointCost: 2400,
     image: '/products/jewelry/02-ruby-ring.png',
     category: '奢侈品',
     stock: 10
@@ -483,7 +483,7 @@ export const mockRewardProducts: RewardProduct[] = [
     merchantName: 'Apple Store',
     name: '🎧 AirPods Pro',
     originalPrice: 1999,
-    creditCost: 1999,
+    pointCost: 1999,
     image: 'emoji:🎧',
     category: '电子产品',
     stock: 50
@@ -495,7 +495,7 @@ export const mockRewardProducts: RewardProduct[] = [
     merchantName: 'Nike 运动',
     name: '👟 Air Max 运动鞋',
     originalPrice: 899,
-    creditCost: 899,
+    pointCost: 899,
     image: 'emoji:👟',
     category: '运动',
     stock: 100
@@ -507,7 +507,7 @@ export const mockRewardProducts: RewardProduct[] = [
     merchantName: '星巴克咖啡',
     name: '☕ 美式咖啡',
     originalPrice: 32,
-    creditCost: 32,
+    pointCost: 32,
     image: 'emoji:☕',
     category: '餐饮',
     stock: 999

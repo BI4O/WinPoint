@@ -12,8 +12,8 @@ import {
 
 interface UserState {
   address: string;
-  credit: number;
-  share: number;
+  point: number;
+  rwa: number;
   earnings: number;
 }
 
@@ -30,9 +30,9 @@ interface AppState {
 
   // 原有 actions
   consumeAtMerchant: (merchantId: string, merchantName: string, amount: number) => void;
-  stakeCredit: (amount: number) => void;
-  sellShare: (amount: number, price: number) => void;
-  buyShare: (orderId: number, amount: number, price: number) => void;
+  stakePoint: (amount: number) => void;
+  sellRwa: (amount: number, price: number) => void;
+  buyRwa: (orderId: number, amount: number, price: number) => void;
 
   // 购物车 actions（需求 1）
   addToCart: (product: Product) => void;
@@ -41,7 +41,7 @@ interface AppState {
   clearCart: () => void;
   checkout: (merchantId: string, merchantName: string) => void;
   getCartTotal: () => number;
-  getCartCreditTotal: () => number;
+  getCartPointTotal: () => number;
   getCartItemCount: () => number;
 
   // 兑换 actions（需求 2）
@@ -49,7 +49,7 @@ interface AppState {
     productId: string,
     productName: string,
     merchantName: string,
-    creditCost: number
+    pointCost: number
   ) => boolean;
   getUserRedemptions: () => RedemptionRecord[];
 }
@@ -62,7 +62,7 @@ export const useStore = create<AppState>((set, get) => ({
   redemptions: [],
 
   consumeAtMerchant: (merchantId, merchantName, amount) => {
-    const creditEarned = amount / 10;
+    const pointEarned = amount / 10;
     const newOrder: Order = {
       id: `order-${Date.now()}`,
       timestamp: Date.now(),
@@ -70,14 +70,14 @@ export const useStore = create<AppState>((set, get) => ({
       merchantName,
       items: [{ productId: 'manual', productName: '手动输入消费', price: amount, quantity: 1 }],
       totalAmount: amount,
-      creditEarned,
+      pointEarned,
       status: 'completed'
     };
 
     const newActivity: Activity = {
       id: `activity-${Date.now()}`,
-      type: 'credit_earned',
-      amount: creditEarned,
+      type: 'point_earned',
+      amount: pointEarned,
       merchant: merchantName,
       timestamp: Date.now()
     };
@@ -85,20 +85,20 @@ export const useStore = create<AppState>((set, get) => ({
     set(state => ({
       user: {
         ...state.user,
-        credit: state.user.credit + creditEarned
+        point: state.user.point + pointEarned
       },
       orders: [newOrder, ...state.orders],
       activities: [newActivity, ...state.activities]
     }));
   },
 
-  stakeCredit: (amount) => {
+  stakePoint: (amount) => {
     const { user } = get();
-    if (user.credit < amount) return;
+    if (user.point < amount) return;
 
     const newActivity: Activity = {
       id: `activity-${Date.now()}`,
-      type: 'credit_staked',
+      type: 'point_staked',
       amount,
       timestamp: Date.now()
     };
@@ -106,31 +106,31 @@ export const useStore = create<AppState>((set, get) => ({
     set(state => ({
       user: {
         ...state.user,
-        credit: state.user.credit - amount,
-        share: state.user.share + amount
+        point: state.user.point - amount,
+        rwa: state.user.rwa + amount
       },
       activities: [newActivity, ...state.activities]
     }));
   },
 
-  sellShare: (amount, price) => {
+  sellRwa: (amount, price) => {
     const { user } = get();
-    if (user.share < amount) return;
+    if (user.rwa < amount) return;
 
     set(state => ({
       user: {
         ...state.user,
-        share: state.user.share - amount,
+        rwa: state.user.rwa - amount,
         earnings: state.user.earnings + (amount * price)
       }
     }));
   },
 
-  buyShare: (orderId, amount, price) => {
+  buyRwa: (orderId, amount, price) => {
     set(state => ({
       user: {
         ...state.user,
-        share: state.user.share + amount,
+        rwa: state.user.rwa + amount,
         earnings: state.user.earnings - (amount * price)
       }
     }));
@@ -182,7 +182,7 @@ export const useStore = create<AppState>((set, get) => ({
   checkout: (merchantId, merchantName) => {
     const { cart, user } = get();
     const totalAmount = get().getCartTotal();
-    const creditEarned = get().getCartCreditTotal();
+    const pointEarned = get().getCartPointTotal();
 
     // 创建订单
     const order: Order = {
@@ -197,15 +197,15 @@ export const useStore = create<AppState>((set, get) => ({
         quantity: item.quantity
       })),
       totalAmount,
-      creditEarned,
+      pointEarned,
       status: 'completed'
     };
 
     // 创建活动记录
     const activity: Activity = {
       id: `activity-${Date.now()}`,
-      type: 'credit_earned',
-      amount: creditEarned,
+      type: 'point_earned',
+      amount: pointEarned,
       merchant: merchantName,
       timestamp: Date.now()
     };
@@ -213,7 +213,7 @@ export const useStore = create<AppState>((set, get) => ({
     set(state => ({
       user: {
         ...state.user,
-        credit: state.user.credit + creditEarned
+        point: state.user.point + pointEarned
       },
       orders: [order, ...state.orders],
       activities: [activity, ...state.activities],
@@ -226,7 +226,7 @@ export const useStore = create<AppState>((set, get) => ({
     return cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
   },
 
-  getCartCreditTotal: () => {
+  getCartPointTotal: () => {
     return get().getCartTotal() / 10; // 10:1 比例
   },
 
@@ -236,11 +236,11 @@ export const useStore = create<AppState>((set, get) => ({
   },
 
   // 兑换 actions（需求 2）
-  redeemProduct: (productId, productName, merchantName, creditCost) => {
+  redeemProduct: (productId, productName, merchantName, pointCost) => {
     const { user } = get();
 
     // 检查余额
-    if (user.credit < creditCost) {
+    if (user.point < pointCost) {
       return false;
     }
 
@@ -251,7 +251,7 @@ export const useStore = create<AppState>((set, get) => ({
       rewardProductId: productId,
       productName,
       merchantName,
-      creditCost,
+      pointCost,
       timestamp: Date.now(),
       status: 'pending'
     };
@@ -259,17 +259,17 @@ export const useStore = create<AppState>((set, get) => ({
     // 创建活动记录
     const activity: Activity = {
       id: `activity-${Date.now()}`,
-      type: 'credit_redeemed',
-      amount: creditCost,
+      type: 'point_redeemed',
+      amount: pointCost,
       timestamp: Date.now(),
       rewardProductName: productName,
-      creditSpent: creditCost
+      pointSpent: pointCost
     };
 
     set(state => ({
       user: {
         ...state.user,
-        credit: state.user.credit - creditCost
+        point: state.user.point - pointCost
       },
       redemptions: [redemption, ...state.redemptions],
       activities: [activity, ...state.activities]

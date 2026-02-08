@@ -35,7 +35,7 @@ export default function MerchantsPage() {
             </div>
           </div>
           <p className="text-md-on-surface-variant ml-1">
-            在合作商家消费，赚取 Credit 奖励，开启收益之旅
+            在合作商家消费，赚取 积分 奖励，开启收益之旅
           </p>
         </motion.div>
 

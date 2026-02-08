@@ -19,7 +19,7 @@ export default function MarketPage() {
             交易市场
           </h1>
           <p className="text-md-on-surface-variant">
-            实时查看 Share 价格走势，随时进行交易
+            实时查看 $RWA 价格走势，随时进行交易
           </p>
         </motion.div>
 

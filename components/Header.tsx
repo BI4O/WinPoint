@@ -31,7 +31,7 @@ export default function Header() {
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-md-primary to-md-secondary-container text-md-on-primary font-bold text-lg shadow-md">
               C&S
             </div>
-            <span className="font-bold text-lg">Credit & Share</span>
+            <span className="font-bold text-lg">Point & RWA</span>
           </motion.div>
         </Link>
 
@@ -72,25 +72,25 @@ export default function Header() {
 
         <div className="flex items-center gap-3">
           <motion.div
-            className="hidden sm:flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200/60"
-            whileHover={{ scale: 1.02, borderColor: 'rgba(251, 191, 36, 0.5)' }}
+            className="hidden sm:flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-md-secondary-container text-md-on-secondary-container shadow-sm"
+            whileHover={{ scale: 1.02, backgroundColor: 'rgba(232, 222, 248, 0.9)' }}
             transition={{ type: 'tween', duration: 0.2, ease: [0.2, 0, 0, 1] }}
           >
-            <span className="text-sm font-semibold text-amber-700">Credit</span>
-            <div className="w-px h-4 bg-amber-300/50" />
+            <span className="text-sm font-semibold">积分</span>
+            <div className="w-px h-4 bg-md-on-secondary-container/20" />
             <motion.span
-              className="text-base font-bold text-amber-600 tabular-nums"
-              key={user.credit}
+              className="text-base font-bold tabular-nums"
+              key={user.point}
               initial={{ scale: 1.3, opacity: 0.5 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: 'spring', duration: 0.4, stiffness: 300 }}
             >
-              {user.credit.toFixed(1)}
+              {user.point.toFixed(1)}
             </motion.span>
           </motion.div>
           <motion.button
-            className="flex items-center gap-2.5 px-5 py-2.5 rounded-xl bg-gradient-to-r from-md-primary to-md-primary/90 text-md-on-primary border-2 border-md-primary shadow-md hover:shadow-lg hover:border-md-primary/80"
-            whileHover={{ scale: 1.02 }}
+            className="flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-md-primary text-md-on-primary shadow-sm hover:shadow-md"
+            whileHover={{ scale: 1.02, backgroundColor: 'rgba(103, 80, 164, 0.9)' }}
             whileTap={{ scale: 0.96 }}
             transition={{ type: 'tween', duration: 0.2, ease: [0.2, 0, 0, 1] }}
           >

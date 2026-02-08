@@ -10,7 +10,7 @@ interface RedemptionModalProps {
   isOpen: boolean;
   onClose: () => void;
   product: RewardProduct | null;
-  userCredit: number;
+  userPoint: number;
   onConfirm: (productId: string) => void;
 }
 
@@ -18,14 +18,14 @@ export default function RedemptionModal({
   isOpen,
   onClose,
   product,
-  userCredit,
+  userPoint,
   onConfirm
 }: RedemptionModalProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   if (!product) return null;
 
-  const remainingCredit = userCredit - product.creditCost;
+  const remainingPoint = userPoint - product.pointCost;
   const isEmoji = product.image.startsWith('emoji:');
   const imageContent = isEmoji ? product.image.replace('emoji:', '') : product.image;
 
@@ -93,32 +93,32 @@ export default function RedemptionModal({
                   </h3>
                   <div className="flex items-baseline gap-2">
                     <span className="text-xl font-bold text-md-primary">
-                      {product.creditCost}
+                      {product.pointCost}
                     </span>
-                    <span className="text-sm text-md-on-surface-variant">Credit</span>
+                    <span className="text-sm text-md-on-surface-variant">积分</span>
                   </div>
                 </div>
               </div>
 
-              {/* Credit Summary */}
+              {/* 积分 Summary */}
               <div className="bg-md-surface-container-low rounded-2xl p-4 space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-md-on-surface-variant">当前积分</span>
                   <span className="font-medium text-md-on-surface">
-                    {userCredit.toFixed(2)} Credit
+                    {userPoint.toFixed(2)} 积分
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-md-on-surface-variant">兑换消耗</span>
                   <span className="font-medium text-md-error">
-                    -{product.creditCost} Credit
+                    -{product.pointCost} 积分
                   </span>
                 </div>
                 <div className="h-px bg-md-on-surface/10 my-2" />
                 <div className="flex justify-between">
                   <span className="font-medium text-md-on-surface">剩余积分</span>
                   <span className="text-lg font-bold text-md-primary">
-                    {remainingCredit.toFixed(2)} Credit
+                    {remainingPoint.toFixed(2)} 积分
                   </span>
                 </div>
               </div>
@@ -158,4 +158,3 @@ export default function RedemptionModal({
     </AnimatePresence>
   );
 }
-

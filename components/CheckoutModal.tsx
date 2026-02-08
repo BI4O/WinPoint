@@ -27,15 +27,15 @@ export default function CheckoutModal({
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [earnedCredit, setEarnedCredit] = useState(0);
+  const [earnedPoint, setEarnedPoint] = useState(0);
 
   const cart = useStore(state => state.cart);
   const checkout = useStore(state => state.checkout);
   const getCartTotal = useStore(state => state.getCartTotal);
-  const getCartCreditTotal = useStore(state => state.getCartCreditTotal);
+  const getCartPointTotal = useStore(state => state.getCartPointTotal);
 
   const totalAmount = getCartTotal();
-  const totalCredit = getCartCreditTotal();
+  const totalPoint = getCartPointTotal();
 
   // 获取商家信息
   const merchant = mockMerchants.find(m => m.id === merchantId);
@@ -46,9 +46,9 @@ export default function CheckoutModal({
     // 模拟支付处理
     await new Promise(resolve => setTimeout(resolve, 1500));
 
-    // 保存 Credit 值(checkout 会清空购物车)
-    const creditToEarn = getCartCreditTotal();
-    setEarnedCredit(creditToEarn);
+    // 保存 Point 值(checkout 会清空购物车)
+    const pointToEarn = getCartPointTotal();
+    setEarnedPoint(pointToEarn);
 
     // 执行结算
     checkout(merchantId, merchant?.name || merchantName);
@@ -146,9 +146,9 @@ export default function CheckoutModal({
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-md-success">将获得 Credit:</span>
+                      <span className="text-md-success">将获得 积分:</span>
                       <span className="text-lg font-bold text-md-success">
-                        {totalCredit.toFixed(1)}
+                        {totalPoint.toFixed(1)}
                       </span>
                     </div>
                   </div>
@@ -156,7 +156,7 @@ export default function CheckoutModal({
                   {/* 提示信息 */}
                   <div className="bg-md-primary-container/40 rounded-2xl p-4">
                     <p className="text-sm text-md-on-surface-variant">
-                      💡 提示: Credit 可用于质押获得 Share，参与收益分配
+                      💡 提示: 积分 可用于质押获得 $RWA，参与收益分配
                     </p>
                   </div>
                 </div>
@@ -204,8 +204,8 @@ export default function CheckoutModal({
         isOpen={showSuccess}
         onClose={() => setShowSuccess(false)}
         title="购买成功!"
-        amount={earnedCredit}
-        unit="Credit"
+        amount={earnedPoint}
+        unit="积分"
         message="积分已到账，可用于质押或兑换商品"
         emoji="🎉"
       />

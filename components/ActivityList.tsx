@@ -10,16 +10,16 @@ interface ActivityListProps {
 }
 
 const activityConfig = {
-  credit_earned: {
+  point_earned: {
     icon: Coins,
-    label: '获得 Credit',
+    label: '获得积分',
     color: 'text-md-success',
     bgColor: 'bg-md-success/10',
     borderColor: 'border-md-success/20'
   },
-  credit_staked: {
+  point_staked: {
     icon: Share2,
-    label: '质押 Credit',
+    label: '质押积分',
     color: 'text-md-primary',
     bgColor: 'bg-md-primary/10',
     borderColor: 'border-md-primary/20'
@@ -31,7 +31,7 @@ const activityConfig = {
     bgColor: 'bg-md-tertiary/10',
     borderColor: 'border-md-tertiary/20'
   },
-  credit_redeemed: {
+  point_redeemed: {
     icon: Gift,
     label: '兑换商品',
     color: 'text-md-tertiary',
@@ -102,7 +102,7 @@ export default function ActivityList({ activities }: ActivityListProps) {
                     animate={{ scale: 1 }}
                     transition={{ delay: index * 0.08 + 0.1, type: 'spring', stiffness: 200 }}
                   >
-                    {activity.type === 'credit_redeemed' ? '-' : '+'}
+                    {activity.type === 'point_redeemed' ? '-' : '+'}
                     {activity.amount.toFixed(2)}
                   </motion.div>
                 </div>
