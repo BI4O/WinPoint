@@ -14,7 +14,7 @@ const MotionButton = motion.button;
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'filled', size = 'md', children, type = 'button', ...props }, ref) => {
-    const baseStyles = 'rounded-full font-medium disabled:opacity-50 disabled:cursor-not-allowed';
+    const baseStyles = 'inline-flex items-center justify-center rounded-full font-medium disabled:opacity-50 disabled:cursor-not-allowed';
 
     const variants = {
       filled: 'bg-md-primary text-md-on-primary shadow-sm',
