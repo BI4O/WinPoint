@@ -13,7 +13,7 @@ export default function Header() {
   const navItems = [
     { href: '/', label: '首页', icon: Home },
     { href: '/merchants', label: '商家', icon: Store },
-    { href: '/rewards', label: '积分商城', icon: Gift },
+    { href: '/rewards', label: '兑换', icon: Gift },
     { href: '/dashboard', label: '资产', icon: LayoutDashboard },
     { href: '/market', label: '市场', icon: TrendingUp },
   ];
@@ -76,7 +76,7 @@ export default function Header() {
             whileHover={{ scale: 1.02, backgroundColor: 'rgba(232, 222, 248, 0.9)' }}
             transition={{ type: 'tween', duration: 0.2, ease: [0.2, 0, 0, 1] }}
           >
-            <span className="text-sm font-semibold">积分</span>
+            <span className="text-sm font-semibold">Point</span>
             <div className="w-px h-4 bg-md-on-secondary-container/20" />
             <motion.span
               className="text-base font-bold tabular-nums"

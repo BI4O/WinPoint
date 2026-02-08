@@ -29,7 +29,7 @@ export default function DashboardPage() {
             我的资产
           </h1>
           <p className="text-md-on-surface-variant">
-            查看您的积分、$RWA 和收益情况
+            查看您的 Point、$RWA 和收益情况
           </p>
         </motion.div>
 
@@ -41,7 +41,7 @@ export default function DashboardPage() {
             transition={{ delay: 0.1, type: 'tween', duration: 0.4, ease: [0.2, 0, 0, 1] }}
           >
             <AssetCard
-              title="积分"
+              title="Point"
               value={user.point.toFixed(2)}
               subtitle="可用余额"
               icon={Coins}
@@ -94,7 +94,7 @@ export default function DashboardPage() {
               className="flex items-center justify-center gap-2"
             >
               <ArrowUpCircle className="h-5 w-5" />
-              质押积分
+              质押 Point
             </Button>
             <Button
               variant="filled"
@@ -103,7 +103,7 @@ export default function DashboardPage() {
               className="flex items-center justify-center gap-2"
             >
               <Gift className="h-5 w-5" />
-              积分兑换
+              Point 兑换
             </Button>
             <Button
               variant="filled"

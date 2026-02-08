@@ -58,7 +58,7 @@ export default function RewardProductCard({
               <span className="text-2xl font-bold text-md-primary">
                 {product.pointCost}
               </span>
-              <span className="text-sm text-md-on-surface-variant">积分</span>
+              <span className="text-sm text-md-on-surface-variant">Point</span>
             </div>
             <span className="text-sm text-md-on-surface-variant line-through">
               ¥{product.originalPrice}
@@ -81,7 +81,7 @@ export default function RewardProductCard({
             size="lg"
             disabled={!canAfford}
           >
-            {canAfford ? '立即兑换' : '积分不足'}
+            {canAfford ? '立即兑换' : 'Point 不足'}
           </Button>
         </div>
       </div>

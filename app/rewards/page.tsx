@@ -77,19 +77,19 @@ export default function RewardsPage() {
               </div>
               <div>
                 <h1 className="text-4xl font-bold text-md-on-background">
-                  积分商城
+                  兑换
                 </h1>
               </div>
             </div>
 
-            {/* 积分 Balance */}
+            {/* Point Balance */}
             <motion.div
               className="px-6 py-3 rounded-full bg-md-primary/10 border border-md-primary/20"
               whileHover={{ scale: 1.05 }}
               transition={{ type: 'tween', duration: 0.2, ease: [0.2, 0, 0, 1] }}
             >
               <div className="flex items-center gap-2">
-                <span className="text-sm text-md-on-surface-variant">我的积分</span>
+                <span className="text-sm text-md-on-surface-variant">我的 Point</span>
                 <span className="text-2xl font-bold text-md-primary">
                   {user.point.toFixed(2)}
                 </span>
@@ -98,7 +98,7 @@ export default function RewardsPage() {
           </div>
 
           <p className="text-md-on-surface-variant ml-1">
-            使用积分兑换心仪商品，1 积分 = ¥1 商品价值
+            使用 Point 兑换心仪商品，1 Point = ¥1 商品价值
           </p>
         </motion.div>
 
