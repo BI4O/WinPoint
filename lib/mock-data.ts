@@ -1,28 +1,90 @@
+// 商品接口
+export interface Product {
+  id: string;
+  merchantId: string;
+  name: string;
+  price: number;
+  image: string;
+  description?: string;
+  stock: number;
+  category?: string;
+}
+
+// 购物车商品项接口
+export interface CartItem {
+  product: Product;
+  quantity: number;
+}
+
+// 商家接口
 export interface Merchant {
-  id: number;
+  id: string;  // 改为 string
   name: string;
   category: string;
   logo: string;
   description: string;
   creditRate: number;
+  products: Product[];  // 新增商品列表
 }
 
+// 订单商品项接口
+export interface OrderItem {
+  productId: string;
+  productName: string;
+  price: number;
+  quantity: number;
+}
+
+// 订单接口
 export interface Order {
-  id: number;
-  date: string;
-  merchant: string;
-  merchantId: number;
-  amount: number;
+  id: string;  // 改为 string
+  timestamp: number;  // 改为时间戳
+  merchantId: string;
+  merchantName: string;
+  items: OrderItem[];  // 新增订单商品明细
+  totalAmount: number;  // 订单总金额
   creditEarned: number;
   status: 'completed' | 'pending';
 }
 
+// 活动记录接口
 export interface Activity {
-  id: number;
-  type: 'credit_earned' | 'credit_staked' | 'reward_received';
+  id: string;  // 改为 string
+  type: 'credit_earned' | 'credit_staked' | 'reward_received' | 'credit_redeemed';  // 新增 credit_redeemed 类型
   amount: number;
   merchant?: string;
-  timestamp: string;
+  timestamp: number;  // 改为时间戳
+  // 兑换相关字段（当 type = 'credit_redeemed' 时）
+  rewardProductName?: string;
+  creditSpent?: number;
+}
+
+// 兑换商品接口（需求 2）
+export interface RewardProduct {
+  id: string;
+  productId: string;
+  merchantId: string;
+  merchantName: string;
+  name: string;
+  originalPrice: number;
+  creditCost: number;
+  image: string;
+  category: string;
+  stock: number;
+  description?: string;
+}
+
+// 兑换记录接口（需求 2）
+export interface RedemptionRecord {
+  id: string;
+  userId: string;
+  rewardProductId: string;
+  productName: string;
+  merchantName: string;
+  creditCost: number;
+  timestamp: number;
+  status: 'pending' | 'shipped' | 'delivered';
+  trackingNumber?: string;
 }
 
 export interface MarketOrder {
@@ -33,71 +95,149 @@ export interface MarketOrder {
   total: number;
 }
 
+// 星巴克咖啡商品
+const starbucksProducts: Product[] = [
+  { id: 'sb-1', merchantId: 'starbucks', name: '☕ 美式咖啡', price: 32, image: 'emoji:☕', stock: 999 },
+  { id: 'sb-2', merchantId: 'starbucks', name: '☕ 拿铁咖啡', price: 38, image: 'emoji:☕', stock: 999 },
+  { id: 'sb-3', merchantId: 'starbucks', name: '☕ 卡布奇诺', price: 38, image: 'emoji:☕', stock: 999 },
+  { id: 'sb-4', merchantId: 'starbucks', name: '☕ 摩卡咖啡', price: 42, image: 'emoji:☕', stock: 999 },
+  { id: 'sb-5', merchantId: 'starbucks', name: '☕ 焦糖玛奇朵', price: 45, image: 'emoji:☕', stock: 999 },
+  { id: 'sb-6', merchantId: 'starbucks', name: '🍰 提拉米苏', price: 35, image: 'emoji:🍰', stock: 999 }
+];
+
+// Nike 运动商品
+const nikeProducts: Product[] = [
+  { id: 'nk-1', merchantId: 'nike', name: '👟 Air Max 运动鞋', price: 899, image: 'emoji:👟', stock: 999 },
+  { id: 'nk-2', merchantId: 'nike', name: '👕 Dri-FIT 运动T恤', price: 299, image: 'emoji:👕', stock: 999 },
+  { id: 'nk-3', merchantId: 'nike', name: '🩳 运动短裤', price: 399, image: 'emoji:🩳', stock: 999 },
+  { id: 'nk-4', merchantId: 'nike', name: '🎒 运动背包', price: 499, image: 'emoji:🎒', stock: 999 },
+  { id: 'nk-5', merchantId: 'nike', name: '🧦 运动袜套装', price: 129, image: 'emoji:🧦', stock: 999 },
+  { id: 'nk-6', merchantId: 'nike', name: '🥤 运动水壶', price: 159, image: 'emoji:🥤', stock: 999 }
+];
+
+// Apple Store 商品
+const appleProducts: Product[] = [
+  { id: 'ap-1', merchantId: 'apple', name: '🎧 AirPods Pro', price: 1999, image: 'emoji:🎧', stock: 999 },
+  { id: 'ap-2', merchantId: 'apple', name: '⌚ Apple Watch SE', price: 2199, image: 'emoji:⌚', stock: 999 },
+  { id: 'ap-3', merchantId: 'apple', name: '📱 iPhone 保护壳', price: 399, image: 'emoji:📱', stock: 999 },
+  { id: 'ap-4', merchantId: 'apple', name: '🔌 MagSafe 充电器', price: 329, image: 'emoji:🔌', stock: 999 },
+  { id: 'ap-5', merchantId: 'apple', name: '🔌 Lightning 数据线', price: 149, image: 'emoji:🔌', stock: 999 },
+  { id: 'ap-6', merchantId: 'apple', name: '🏷️ AirTag 4件装', price: 799, image: 'emoji:🏷️', stock: 999 }
+];
+
+// 母婴用品店商品
+const babyProducts: Product[] = [
+  { id: 'bb-1', merchantId: 'baby', name: 'Ealing 4合1滑梯秋千套装', price: 869, image: '/products/baby/bb-1.jpeg', stock: 999 },
+  { id: 'bb-2', merchantId: 'baby', name: 'Ealing 儿童沙发滑梯', price: 629, image: '/products/baby/bb-2.jpeg', stock: 999 },
+  { id: 'bb-3', merchantId: 'baby', name: 'Ealing 3合1婴儿学步车', price: 579, image: '/products/baby/bb-3.jpeg', stock: 999 },
+  { id: 'bb-4', merchantId: 'baby', name: 'Ealing 野餐篮套装', price: 516, image: '/products/baby/bb-4.jpeg', stock: 999 },
+  { id: 'bb-5', merchantId: 'baby', name: 'Ealing 室内幼儿滑梯', price: 459, image: '/products/baby/bb-5.jpeg', stock: 999 },
+  { id: 'bb-6', merchantId: 'baby', name: 'Ealing 可折叠婴儿学步车', price: 619, image: '/products/baby/bb-6.jpeg', stock: 999 }
+];
+
+// 珠宝钻石店商品
+const jewelryProducts: Product[] = [
+  { id: 'jw-1', merchantId: 'jewelry', name: '18K白金橄榄石戒指', price: 4100, image: 'emoji:💍', stock: 999 },
+  { id: 'jw-2', merchantId: 'jewelry', name: '18K白红金粉红宝石戒指', price: 2400, image: 'emoji:💍', stock: 999 },
+  { id: 'jw-3', merchantId: 'jewelry', name: '18K白金尖晶白钻胸针', price: 3800, image: 'emoji:💎', stock: 999 },
+  { id: 'jw-4', merchantId: 'jewelry', name: '18K白红金粉钻戒指', price: 3750, image: 'emoji:💍', stock: 999 },
+  { id: 'jw-5', merchantId: 'jewelry', name: '蓝宝石白钻戒指', price: 2700, image: 'emoji:💍', stock: 999 },
+  { id: 'jw-6', merchantId: 'jewelry', name: '18K金祖母绿黄白钻戒指', price: 2600, image: 'emoji:💍', stock: 999 }
+];
+
+// 商家数据
 export const mockMerchants: Merchant[] = [
   {
-    id: 1,
+    id: 'starbucks',
     name: "星巴克咖啡",
     category: "餐饮",
     logo: "☕",
     description: "全球知名咖啡连锁",
-    creditRate: 10
+    creditRate: 10,
+    products: starbucksProducts
   },
   {
-    id: 2,
+    id: 'nike',
     name: "Nike 运动",
     category: "运动",
     logo: "👟",
     description: "运动装备专家",
-    creditRate: 10
+    creditRate: 10,
+    products: nikeProducts
   },
   {
-    id: 3,
+    id: 'apple',
     name: "Apple Store",
     category: "电子产品",
     logo: "🍎",
     description: "科技产品零售",
-    creditRate: 10
+    creditRate: 10,
+    products: appleProducts
+  },
+  {
+    id: 'baby',
+    name: "Ealing 母婴旗舰店",
+    category: "母婴",
+    logo: "👶",
+    description: "优质母婴用品",
+    creditRate: 10,
+    products: babyProducts
+  },
+  {
+    id: 'jewelry',
+    name: "DIMD 珠宝精品",
+    category: "奢侈品",
+    logo: "💎",
+    description: "高端珠宝定制",
+    creditRate: 10,
+    products: jewelryProducts
   }
 ];
 
 export const mockUserInitial = {
   address: "0x1234...5678",
-  credit: 100,
+  credit: 5000,
   share: 50,
   earnings: 12.5
 };
 
+// 使用固定的基准时间戳 (2024-02-01) 避免 SSR hydration 问题
+const BASE_TIMESTAMP = 1706745600000;
+
 export const mockOrdersInitial: Order[] = [
   {
-    id: 1,
-    date: "2024-02-01 10:30",
-    merchant: "星巴克咖啡",
-    merchantId: 1,
-    amount: 30,
-    creditEarned: 3,
+    id: 'order-1',
+    timestamp: BASE_TIMESTAMP - 86400000, // 1天前
+    merchantId: 'starbucks',
+    merchantName: "星巴克咖啡",
+    items: [
+      { productId: 'sb-1', productName: '☕ 美式咖啡', price: 32, quantity: 1 }
+    ],
+    totalAmount: 32,
+    creditEarned: 3.2,
     status: "completed"
   }
 ];
 
 export const mockActivitiesInitial: Activity[] = [
   {
-    id: 1,
+    id: 'activity-1',
     type: "credit_earned",
     amount: 10,
     merchant: "星巴克咖啡",
-    timestamp: "2024-02-01 10:30"
+    timestamp: BASE_TIMESTAMP - 86400000 // 1天前
   },
   {
-    id: 2,
+    id: 'activity-2',
     type: "credit_staked",
     amount: 50,
-    timestamp: "2024-02-02 14:20"
+    timestamp: BASE_TIMESTAMP - 172800000 // 2天前
   },
   {
-    id: 3,
+    id: 'activity-3',
     type: "reward_received",
     amount: 5.2,
-    timestamp: "2024-02-03 00:00"
+    timestamp: BASE_TIMESTAMP - 259200000 // 3天前
   }
 ];
 
@@ -282,3 +422,94 @@ export const mockMetrics = {
   totalRewards: 12345.67,
   totalShares: 23456
 };
+
+// 兑换商品数据（需求 2）
+export const mockRewardProducts: RewardProduct[] = [
+  // 母婴商品（重点展示）
+  {
+    id: 'reward-baby-1',
+    productId: 'bb-1',
+    merchantId: 'baby',
+    merchantName: 'Ealing 母婴旗舰店',
+    name: 'Ealing 4合1滑梯秋千套装',
+    originalPrice: 869,
+    creditCost: 869,
+    image: '/products/baby/bb-1.jpeg',
+    category: '母婴',
+    stock: 50
+  },
+  {
+    id: 'reward-baby-2',
+    productId: 'bb-3',
+    merchantId: 'baby',
+    merchantName: 'Ealing 母婴旗舰店',
+    name: 'Ealing 3合1婴儿学步车',
+    originalPrice: 579,
+    creditCost: 579,
+    image: '/products/baby/bb-3.jpeg',
+    category: '母婴',
+    stock: 50
+  },
+  // 珠宝商品（重点展示）
+  {
+    id: 'reward-jewelry-1',
+    productId: 'jw-1',
+    merchantId: 'jewelry',
+    merchantName: 'DIMD 珠宝精品',
+    name: '18K白金橄榄石戒指',
+    originalPrice: 4100,
+    creditCost: 4100,
+    image: 'emoji:💍',
+    category: '奢侈品',
+    stock: 10
+  },
+  {
+    id: 'reward-jewelry-2',
+    productId: 'jw-2',
+    merchantId: 'jewelry',
+    merchantName: 'DIMD 珠宝精品',
+    name: '18K白红金粉红宝石戒指',
+    originalPrice: 2400,
+    creditCost: 2400,
+    image: 'emoji:💍',
+    category: '奢侈品',
+    stock: 10
+  },
+  // 其他商品
+  {
+    id: 'reward-apple-1',
+    productId: 'ap-1',
+    merchantId: 'apple',
+    merchantName: 'Apple Store',
+    name: '🎧 AirPods Pro',
+    originalPrice: 1999,
+    creditCost: 1999,
+    image: 'emoji:🎧',
+    category: '电子产品',
+    stock: 50
+  },
+  {
+    id: 'reward-nike-1',
+    productId: 'nk-1',
+    merchantId: 'nike',
+    merchantName: 'Nike 运动',
+    name: '👟 Air Max 运动鞋',
+    originalPrice: 899,
+    creditCost: 899,
+    image: 'emoji:👟',
+    category: '运动',
+    stock: 100
+  },
+  {
+    id: 'reward-starbucks-1',
+    productId: 'sb-1',
+    merchantId: 'starbucks',
+    merchantName: '星巴克咖啡',
+    name: '☕ 美式咖啡',
+    originalPrice: 32,
+    creditCost: 32,
+    image: 'emoji:☕',
+    category: '餐饮',
+    stock: 999
+  }
+];

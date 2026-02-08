@@ -1,46 +1,17 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { mockMerchants, type Merchant } from '@/lib/mock-data';
-import { useStore } from '@/lib/store';
 import MerchantCard from '@/components/MerchantCard';
-import OrderModal from '@/components/OrderModal';
 import AtmosphericBackground from '@/components/AtmosphericBackground';
 
 export default function MerchantsPage() {
   const router = useRouter();
-  const consumeAtMerchant = useStore((state) => state.consumeAtMerchant);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedMerchant, setSelectedMerchant] = useState<Merchant | null>(null);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [earnedCredit, setEarnedCredit] = useState(0);
 
-  const handleConsumeClick = (merchant: Merchant) => {
-    setSelectedMerchant(merchant);
-    setIsModalOpen(true);
-  };
-
-  const handleConfirmConsume = (amount: number) => {
-    if (!selectedMerchant) return;
-
-    const creditEarned = amount / selectedMerchant.creditRate;
-
-    // Call store action
-    consumeAtMerchant(selectedMerchant.id, selectedMerchant.name, amount);
-
-    // Close modal
-    setIsModalOpen(false);
-
-    // Show success animation
-    setEarnedCredit(creditEarned);
-    setShowSuccess(true);
-
-    // Navigate to dashboard after animation
-    setTimeout(() => {
-      router.push('/dashboard');
-    }, 2500);
+  const handleMerchantClick = (merchant: Merchant) => {
+    // 跳转到店铺详情页
+    router.push(`/merchants/${merchant.id}`);
   };
 
   return (
@@ -84,77 +55,12 @@ export default function MerchantsPage() {
             >
               <MerchantCard
                 merchant={merchant}
-                onConsume={() => handleConsumeClick(merchant)}
+                onConsume={() => handleMerchantClick(merchant)}
               />
             </motion.div>
           ))}
         </motion.div>
       </div>
-
-      {/* Order Modal */}
-      <OrderModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        merchant={selectedMerchant}
-        onConfirm={handleConfirmConsume}
-      />
-
-      {/* Success Animation */}
-      <AnimatePresence>
-        {showSuccess && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ type: 'tween', duration: 0.2, ease: [0.2, 0, 0, 1] }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
-          >
-            <motion.div
-              initial={{ scale: 0.5, rotate: -10 }}
-              animate={{ scale: 1, rotate: 0 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ type: 'spring', duration: 0.6, ease: [0.2, 0, 0, 1] }}
-              className="bg-md-surface-container rounded-[40px] p-10 text-center shadow-2xl border border-white/10 max-w-sm w-full"
-            >
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: [0, 1.3, 1] }}
-                transition={{ delay: 0.2, duration: 0.6, type: 'tween', ease: [0.2, 0, 0, 1] }}
-                className="text-7xl mb-6"
-              >
-                🎉
-              </motion.div>
-              <h2 className="text-2xl font-bold text-md-on-background mb-3">
-                消费成功！
-              </h2>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, type: 'tween', duration: 0.3, ease: [0.2, 0, 0, 1] }}
-                className="mb-4"
-              >
-                <p className="text-4xl font-bold text-md-primary mb-2">
-                  +{earnedCredit.toFixed(2)}
-                </p>
-                <p className="text-sm text-md-on-surface-variant">Credit</p>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.6, type: 'tween', duration: 0.3, ease: [0.2, 0, 0, 1] }}
-                className="text-sm text-md-on-surface-variant flex items-center justify-center gap-2"
-              >
-                <motion.div
-                  className="w-2 h-2 rounded-full bg-md-primary"
-                  animate={{ opacity: [0.4, 1, 0.4] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                />
-                正在跳转到资产页面...
-              </motion.div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </AtmosphericBackground>
   );
 }

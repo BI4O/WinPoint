@@ -59,7 +59,7 @@ export default function MerchantCard({ merchant, onConsume }: MerchantCardProps)
           variant="filled"
           size="lg"
         >
-          消费
+          进入店铺
         </Button>
       </div>
     </Card>

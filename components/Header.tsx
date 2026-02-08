@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useStore } from '@/lib/store';
-import { Wallet, Home, Store, LayoutDashboard, TrendingUp } from 'lucide-react';
+import { Wallet, Home, Store, Gift, LayoutDashboard, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Header() {
@@ -13,6 +13,7 @@ export default function Header() {
   const navItems = [
     { href: '/', label: '首页', icon: Home },
     { href: '/merchants', label: '商家', icon: Store },
+    { href: '/rewards', label: '积分商城', icon: Gift },
     { href: '/dashboard', label: '资产', icon: LayoutDashboard },
     { href: '/market', label: '市场', icon: TrendingUp },
   ];

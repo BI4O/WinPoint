@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { Activity } from '@/lib/mock-data';
 import Card from './Card';
-import { Coins, Share2, TrendingUp } from 'lucide-react';
+import { Coins, Share2, TrendingUp, Gift } from 'lucide-react';
 
 interface ActivityListProps {
   activities: Activity[];
@@ -27,6 +27,13 @@ const activityConfig = {
   reward_received: {
     icon: TrendingUp,
     label: '收到收益',
+    color: 'text-md-tertiary',
+    bgColor: 'bg-md-tertiary/10',
+    borderColor: 'border-md-tertiary/20'
+  },
+  credit_redeemed: {
+    icon: Gift,
+    label: '兑换商品',
     color: 'text-md-tertiary',
     bgColor: 'bg-md-tertiary/10',
     borderColor: 'border-md-tertiary/20'
@@ -80,7 +87,12 @@ export default function ActivityList({ activities }: ActivityListProps) {
                       </p>
                       <p className="text-xs text-md-on-surface-variant">
                         {activity.merchant && `${activity.merchant} · `}
-                        {activity.timestamp}
+                        {new Date(activity.timestamp).toLocaleString('zh-CN', {
+                          month: 'numeric',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
                       </p>
                     </div>
                   </div>
@@ -90,7 +102,8 @@ export default function ActivityList({ activities }: ActivityListProps) {
                     animate={{ scale: 1 }}
                     transition={{ delay: index * 0.08 + 0.1, type: 'spring', stiffness: 200 }}
                   >
-                    +{activity.amount.toFixed(2)}
+                    {activity.type === 'credit_redeemed' ? '-' : '+'}
+                    {activity.amount.toFixed(2)}
                   </motion.div>
                 </div>
               </motion.div>
