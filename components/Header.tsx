@@ -20,7 +20,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-md-border/20 bg-md-background/80 backdrop-blur-md">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+      <div className="container mx-auto flex h-20 items-center justify-between px-4">
         <Link href="/">
           <motion.div
             className="flex items-center space-x-3"
@@ -35,54 +35,67 @@ export default function Header() {
           </motion.div>
         </Link>
 
-        <nav className="hidden md:flex items-center space-x-1">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href;
-            return (
-              <Link key={item.href} href={item.href}>
-                <motion.div
-                  className={`
-                    flex items-center space-x-2 px-4 py-2 rounded-full
-                    transition-all duration-300 ease-md
-                    ${isActive
-                      ? 'bg-md-secondary-container text-md-on-secondary-container shadow-sm'
-                      : 'text-md-on-surface-variant hover:bg-md-primary/10'
-                    }
-                  `}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ type: 'tween', duration: 0.2, ease: [0.2, 0, 0, 1] }}
-                >
-                  <Icon className="h-4 w-4" />
-                  <span className="text-sm font-medium">{item.label}</span>
-                </motion.div>
-              </Link>
-            );
-          })}
+        <nav className="hidden md:flex items-center">
+          <div className="relative flex items-center bg-md-surface-container p-1 rounded-2xl">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = pathname === item.href;
+              return (
+                <Link key={item.href} href={item.href} className="relative">
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeNavIndicator"
+                      className="absolute inset-0 bg-md-secondary-container rounded-xl shadow-sm z-0"
+                      transition={{ type: 'spring', duration: 0.5, bounce: 0.2 }}
+                    />
+                  )}
+                  <motion.div
+                    className={`
+                      relative z-10 flex items-center space-x-2 px-4 py-2.5 rounded-xl
+                      ${isActive
+                        ? 'text-md-on-secondary-container'
+                        : 'text-md-on-surface-variant'
+                      }
+                    `}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: 'tween', duration: 0.2, ease: [0.2, 0, 0, 1] }}
+                  >
+                    <Icon className="h-4 w-4" />
+                    <span className="text-sm font-semibold">{item.label}</span>
+                  </motion.div>
+                </Link>
+              );
+            })}
+          </div>
         </nav>
 
-        <div className="flex items-center space-x-4">
-          <div className="hidden sm:flex items-center space-x-3 px-5 py-2.5 rounded-2xl bg-md-surface-container border border-md-border/10 shadow-sm">
-            <span className="text-sm font-medium text-md-on-surface-variant">Credit:</span>
+        <div className="flex items-center gap-3">
+          <motion.div
+            className="hidden sm:flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200/60"
+            whileHover={{ scale: 1.02, borderColor: 'rgba(251, 191, 36, 0.5)' }}
+            transition={{ type: 'tween', duration: 0.2, ease: [0.2, 0, 0, 1] }}
+          >
+            <span className="text-sm font-semibold text-amber-700">Credit</span>
+            <div className="w-px h-4 bg-amber-300/50" />
             <motion.span
-              className="text-sm font-bold text-md-primary"
+              className="text-base font-bold text-amber-600 tabular-nums"
               key={user.credit}
-              initial={{ scale: 1.2 }}
-              animate={{ scale: 1 }}
-              transition={{ type: 'spring', duration: 0.3, stiffness: 200 }}
+              initial={{ scale: 1.3, opacity: 0.5 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: 'spring', duration: 0.4, stiffness: 300 }}
             >
               {user.credit.toFixed(1)}
             </motion.span>
-          </div>
+          </motion.div>
           <motion.button
-            className="flex items-center space-x-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-md-primary to-md-primary/90 text-md-on-primary shadow-sm hover:shadow-md transition-shadow"
+            className="flex items-center gap-2.5 px-5 py-2.5 rounded-xl bg-gradient-to-r from-md-primary to-md-primary/90 text-md-on-primary border-2 border-md-primary shadow-md hover:shadow-lg hover:border-md-primary/80"
             whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            whileTap={{ scale: 0.96 }}
             transition={{ type: 'tween', duration: 0.2, ease: [0.2, 0, 0, 1] }}
           >
             <Wallet className="h-4 w-4" />
-            <span className="text-sm font-medium hidden sm:inline">{user.address}</span>
+            <span className="text-sm font-semibold hidden sm:inline">{user.address}</span>
           </motion.button>
         </div>
       </div>

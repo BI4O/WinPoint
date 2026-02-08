@@ -137,12 +137,12 @@ const babyProducts: Product[] = [
 
 // 珠宝钻石店商品
 const jewelryProducts: Product[] = [
-  { id: 'jw-1', merchantId: 'jewelry', name: '18K白金橄榄石戒指', price: 4100, image: 'emoji:💍', stock: 999 },
-  { id: 'jw-2', merchantId: 'jewelry', name: '18K白红金粉红宝石戒指', price: 2400, image: 'emoji:💍', stock: 999 },
-  { id: 'jw-3', merchantId: 'jewelry', name: '18K白金尖晶白钻胸针', price: 3800, image: 'emoji:💎', stock: 999 },
-  { id: 'jw-4', merchantId: 'jewelry', name: '18K白红金粉钻戒指', price: 3750, image: 'emoji:💍', stock: 999 },
-  { id: 'jw-5', merchantId: 'jewelry', name: '蓝宝石白钻戒指', price: 2700, image: 'emoji:💍', stock: 999 },
-  { id: 'jw-6', merchantId: 'jewelry', name: '18K金祖母绿黄白钻戒指', price: 2600, image: 'emoji:💍', stock: 999 }
+  { id: 'jw-1', merchantId: 'jewelry', name: '18K白金橄榄石戒指', price: 4100, image: '/products/jewelry/01-olivine-ring.png', stock: 999 },
+  { id: 'jw-2', merchantId: 'jewelry', name: '18K白红金粉红宝石戒指', price: 2400, image: '/products/jewelry/02-ruby-ring.png', stock: 999 },
+  { id: 'jw-3', merchantId: 'jewelry', name: '18K白金尖晶白钻胸针', price: 3800, image: '/products/jewelry/03-spinel-brooch.png', stock: 999 },
+  { id: 'jw-4', merchantId: 'jewelry', name: '18K白红金粉钻戒指', price: 3750, image: '/products/jewelry/04-pink-diamond-ring.png', stock: 999 },
+  { id: 'jw-5', merchantId: 'jewelry', name: '蓝宝石白钻戒指', price: 2700, image: '/products/jewelry/05-sapphire-ring.png', stock: 999 },
+  { id: 'jw-6', merchantId: 'jewelry', name: '18K金祖母绿黄白钻戒指', price: 2600, image: '/products/jewelry/06-emerald-ring.png', stock: 999 }
 ];
 
 // 商家数据
@@ -459,7 +459,7 @@ export const mockRewardProducts: RewardProduct[] = [
     name: '18K白金橄榄石戒指',
     originalPrice: 4100,
     creditCost: 4100,
-    image: 'emoji:💍',
+    image: '/products/jewelry/01-olivine-ring.png',
     category: '奢侈品',
     stock: 10
   },
@@ -471,7 +471,7 @@ export const mockRewardProducts: RewardProduct[] = [
     name: '18K白红金粉红宝石戒指',
     originalPrice: 2400,
     creditCost: 2400,
-    image: 'emoji:💍',
+    image: '/products/jewelry/02-ruby-ring.png',
     category: '奢侈品',
     stock: 10
   },
