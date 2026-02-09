@@ -302,7 +302,7 @@ export const useStore = create<AppState>((set, get) => ({
 
   // 交易市场 actions（需求 3）
   placeBuyOrder: (price, quantity) => {
-    const { user } = get();
+    const { user, orderBook } = get();
     const totalAmount = price * quantity;
 
     // 检查 USDT 余额
@@ -322,13 +322,12 @@ export const useStore = create<AppState>((set, get) => ({
       filledQuantity: 0
     };
 
-    // 简化版订单匹配：检查是否有匹配的卖单
-    const matchingSellOrder = get().orderBook.sellOrders.find(
-      order => order.price <= price
-    );
+    // 判断是否为市价订单（使用最新成交价）
+    const marketPrice = orderBook.lastPrice || 0;
+    const isMarketOrder = Math.abs(price - marketPrice) < 0.0001;
 
-    if (matchingSellOrder) {
-      // 立即成交
+    if (isMarketOrder) {
+      // 市价订单：直接完全成交
       newOrder.status = 'fulfilled';
       newOrder.filledQuantity = quantity;
 
@@ -341,7 +340,7 @@ export const useStore = create<AppState>((set, get) => ({
         historicalOrders: [newOrder, ...state.historicalOrders]
       }));
     } else {
-      // 挂单
+      // 非市价订单：挂单待成交
       set(state => ({
         user: {
           ...state.user,
@@ -355,7 +354,7 @@ export const useStore = create<AppState>((set, get) => ({
   },
 
   placeSellOrder: (price, quantity) => {
-    const { user } = get();
+    const { user, orderBook } = get();
     const totalAmount = price * quantity;
 
     // 检查 RWA 余额
@@ -375,13 +374,12 @@ export const useStore = create<AppState>((set, get) => ({
       filledQuantity: 0
     };
 
-    // 简化版订单匹配：检查是否有匹配的买单
-    const matchingBuyOrder = get().orderBook.buyOrders.find(
-      order => order.price >= price
-    );
+    // 判断是否为市价订单（使用最新成交价）
+    const marketPrice = orderBook.lastPrice || 0;
+    const isMarketOrder = Math.abs(price - marketPrice) < 0.0001;
 
-    if (matchingBuyOrder) {
-      // 立即成交
+    if (isMarketOrder) {
+      // 市价订单：直接完全成交
       newOrder.status = 'fulfilled';
       newOrder.filledQuantity = quantity;
 
@@ -394,7 +392,7 @@ export const useStore = create<AppState>((set, get) => ({
         historicalOrders: [newOrder, ...state.historicalOrders]
       }));
     } else {
-      // 挂单
+      // 非市价订单：挂单待成交
       set(state => ({
         user: {
           ...state.user,

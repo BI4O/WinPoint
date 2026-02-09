@@ -24,13 +24,13 @@ export default function MarketPage() {
   const [showError, setShowError] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
 
-  // 默认价格：买入使用最高买价，卖出使用最低卖价
+  // 默认价格：使用最新成交价作为市价
   const defaultBuyPrice = useMemo(() => {
-    return orderBook.buyOrders[0]?.price; // 买单第一个是最高价
+    return orderBook.lastPrice;
   }, [orderBook]);
 
   const defaultSellPrice = useMemo(() => {
-    return orderBook.sellOrders[orderBook.sellOrders.length - 1]?.price; // 卖单最后一个是最低价
+    return orderBook.lastPrice;
   }, [orderBook]);
 
   // 处理订单簿价格点击

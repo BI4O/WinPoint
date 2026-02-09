@@ -53,17 +53,19 @@ export default function SuccessNotification({
             <h2 className="text-2xl font-bold text-md-on-background mb-3">
               {title}
             </h2>
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, type: 'tween', duration: 0.3, ease: [0.2, 0, 0, 1] }}
-              className="mb-4"
-            >
-              <p className="text-4xl font-bold text-md-primary mb-2">
-                {amount >= 0 ? '+' : ''}{amount.toFixed(2)}
-              </p>
-              <p className="text-sm text-md-on-surface-variant">{unit}</p>
-            </motion.div>
+            {amount !== 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, type: 'tween', duration: 0.3, ease: [0.2, 0, 0, 1] }}
+                className="mb-4"
+              >
+                <p className="text-4xl font-bold text-md-primary mb-2">
+                  {amount >= 0 ? '+' : ''}{amount.toFixed(4)}
+                </p>
+                <p className="text-sm text-md-on-surface-variant">{unit}</p>
+              </motion.div>
+            )}
             {message && (
               <motion.p
                 initial={{ opacity: 0 }}

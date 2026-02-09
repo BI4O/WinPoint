@@ -487,54 +487,56 @@ export const mockOrderBook: OrderBook = {
   priceChangePercent24h: 3.41
 };
 
-// 用户交易订单历史（需求 3）
+// 用户交易订单历史（需求 3）- 2025年12月数据
+// 2025年12月时间戳参考：
+// 2025-12-01 = 1764547200000, 2025-12-20 = 1766188800000
 export const mockUserOrders: TradeOrder[] = [
   {
     id: 'trade-1',
     type: 'buy',
-    price: 0.1489,
+    price: 0.1510,
     quantity: 10.5,
-    totalAmount: 1.5635,
-    timestamp: BASE_TIMESTAMP - 86400000, // 1天前
+    totalAmount: 1.5855,
+    timestamp: 1766188800000, // 2025-12-20 00:00:00
     status: 'fulfilled',
     filledQuantity: 10.5
   },
   {
     id: 'trade-2',
     type: 'sell',
-    price: 0.2370,
+    price: 0.1520,
     quantity: 5.2,
-    totalAmount: 1.2324,
-    timestamp: BASE_TIMESTAMP - 172800000, // 2天前
+    totalAmount: 0.7904,
+    timestamp: 1766016000000, // 2025-12-18 00:00:00
     status: 'fulfilled',
     filledQuantity: 5.2
   },
   {
     id: 'trade-3',
     type: 'buy',
-    price: 0.1477,
+    price: 0.1505,
     quantity: 8.0,
-    totalAmount: 1.1816,
-    timestamp: BASE_TIMESTAMP - 259200000, // 3天前
+    totalAmount: 1.2040,
+    timestamp: 1765763200000, // 2025-12-15 00:00:00
     status: 'cancelled'
   },
   {
     id: 'trade-4',
     type: 'sell',
-    price: 0.2358,
+    price: 0.1535,
     quantity: 12.3,
-    totalAmount: 2.9003,
-    timestamp: BASE_TIMESTAMP - 345600000, // 4天前
+    totalAmount: 1.8881,
+    timestamp: 1765564800000, // 2025-12-13 00:00:00
     status: 'fulfilled',
     filledQuantity: 12.3
   },
   {
     id: 'trade-5',
     type: 'buy',
-    price: 0.1465,
+    price: 0.1490,
     quantity: 15.0,
-    totalAmount: 2.1975,
-    timestamp: BASE_TIMESTAMP - 432000000, // 5天前
+    totalAmount: 2.2350,
+    timestamp: 1765305600000, // 2025-12-10 00:00:00
     status: 'partial',
     filledQuantity: 7.5
   }

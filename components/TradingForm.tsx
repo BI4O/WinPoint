@@ -6,6 +6,7 @@ import Card from './Card';
 import Button from './Button';
 import PercentageSlider from './PercentageSlider';
 import SuccessNotification from './SuccessNotification';
+import PriceSelector from './PriceSelector';
 import { useStore } from '@/lib/store';
 
 interface TradingFormProps {
@@ -30,28 +31,31 @@ export default function TradingForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [notificationTitle, setNotificationTitle] = useState('订单提交成功');
+  const [notificationAmount, setNotificationAmount] = useState(0);
+  const [notificationUnit, setNotificationUnit] = useState('');
   const [notificationMessage, setNotificationMessage] = useState('');
 
   // 当交易类型变化时，更新默认价格
   useEffect(() => {
     if (tradeType === 'buy' && defaultBuyPrice !== undefined) {
-      setPrice(defaultBuyPrice.toString());
+      setPrice(defaultBuyPrice.toFixed(4));
     } else if (tradeType === 'sell' && defaultSellPrice !== undefined) {
-      setPrice(defaultSellPrice.toString());
+      setPrice(defaultSellPrice.toFixed(4));
     }
   }, [tradeType, defaultBuyPrice, defaultSellPrice]);
 
   // 当外部点击价格时更新
   useEffect(() => {
     if (initialPrice !== undefined) {
-      setPrice(initialPrice.toString());
+      setPrice(initialPrice.toFixed(4));
     }
   }, [initialPrice]);
 
   // 初始化默认价格（买入）
   useEffect(() => {
     if (defaultBuyPrice !== undefined && !price) {
-      setPrice(defaultBuyPrice.toString());
+      setPrice(defaultBuyPrice.toFixed(4));
     }
   }, [defaultBuyPrice]);
 
@@ -118,7 +122,33 @@ export default function TradingForm({
         : placeSellOrder(priceNum, quantityNum);
 
       if (success) {
-        setNotificationMessage(`${tradeType === 'buy' ? '买入' : '卖出'}订单已提交`);
+        // 判断是否为市价订单
+        const isMarketOrder = Math.abs(priceNum - currentMarketPrice) < 0.0001;
+
+        if (isMarketOrder) {
+          // 市价订单：直接完全成交
+          const totalAmount = priceNum * quantityNum;
+          if (tradeType === 'buy') {
+            // 买入成功：获得 RWA，支付 USDT
+            setNotificationTitle('买入成功');
+            setNotificationAmount(quantityNum);
+            setNotificationUnit('RWA');
+            setNotificationMessage(`支付 ${totalAmount.toFixed(4)} USDT，获得 ${quantityNum.toFixed(4)} RWA`);
+          } else {
+            // 卖出成功：获得 USDT，卖出 RWA
+            setNotificationTitle('卖出成功');
+            setNotificationAmount(totalAmount);
+            setNotificationUnit('USDT');
+            setNotificationMessage(`出售 ${quantityNum.toFixed(4)} RWA，获得 ${totalAmount.toFixed(4)} USDT`);
+          }
+        } else {
+          // 非市价订单：挂单成功
+          setNotificationTitle('挂单成功');
+          setNotificationAmount(0);
+          setNotificationUnit('');
+          setNotificationMessage('您的订单已挂入订单簿');
+        }
+
         setShowSuccess(true);
         setTimeout(() => setShowSuccess(false), 2000);
         // 重置表单
@@ -137,6 +167,9 @@ export default function TradingForm({
   // 检查按钮是否应该禁用
   const isButtonDisabled = isSubmitting || !price || !quantity || parseFloat(price) <= 0 || parseFloat(quantity) <= 0;
 
+  // 获取当前市价
+  const currentMarketPrice = tradeType === 'buy' ? (defaultBuyPrice || 0) : (defaultSellPrice || 0);
+
   return (
     <>
       <Card className="p-6 h-full flex flex-col">
@@ -154,9 +187,9 @@ export default function TradingForm({
                 setTradeType('buy');
                 setQuantity('');
                 setPercentage(0);
-                // 切换到买入时，使用最高买价
+                // 切换到买入时，使用市价
                 if (defaultBuyPrice !== undefined) {
-                  setPrice(defaultBuyPrice.toString());
+                  setPrice(defaultBuyPrice.toFixed(4));
                 }
               }}
               className={`flex-1 ${tradeType === 'buy' ? 'bg-success hover:bg-success/90' : ''}`}
@@ -169,9 +202,9 @@ export default function TradingForm({
                 setTradeType('sell');
                 setQuantity('');
                 setPercentage(0);
-                // 切换到卖出时，使用最低卖价
+                // 切换到卖出时，使用市价
                 if (defaultSellPrice !== undefined) {
-                  setPrice(defaultSellPrice.toString());
+                  setPrice(defaultSellPrice.toFixed(4));
                 }
               }}
               className={`flex-1 ${tradeType === 'sell' ? 'bg-error hover:bg-error/90' : ''}`}
@@ -180,18 +213,17 @@ export default function TradingForm({
             </Button>
           </div>
 
-          {/* 价格输入 */}
+          {/* 价格选择器 */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-md-on-surface-variant mb-2">
               价格 (USDT)
             </label>
-            <input
-              type="number"
+            <PriceSelector
               value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              placeholder="0.0000"
-              step="0.0001"
-              className="w-full px-4 py-3 bg-md-surface-container-low rounded-2xl border border-md-outline-variant focus:border-md-primary focus:outline-none text-md-on-surface font-mono"
+              onChange={setPrice}
+              marketPrice={currentMarketPrice}
+              tradeType={tradeType}
+              disabled={isSubmitting}
             />
           </div>
 
@@ -255,11 +287,11 @@ export default function TradingForm({
       <SuccessNotification
         isOpen={showSuccess}
         onClose={() => setShowSuccess(false)}
-        title="订单提交成功"
-        amount={parseFloat(quantity || '0')}
-        unit="RWA"
+        title={notificationTitle}
+        amount={notificationAmount}
+        unit={notificationUnit}
         message={notificationMessage}
-        emoji={tradeType === 'buy' ? '📈' : '📉'}
+        emoji={notificationAmount > 0 ? (tradeType === 'buy' ? '📈' : '📉') : '📋'}
       />
 
       {/* 错误通知 */}
