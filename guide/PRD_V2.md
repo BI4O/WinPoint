@@ -15,6 +15,7 @@
 
 1. ✅ **商城购物体验升级** - 从简化的"输入金额"模式升级为真实的电商购物体验
 2. ✅ **Credit 积分商城** - 赋予 Credit 积分兑换功能，增强资产实用性
+3. **RWA 交易市场升级** - 从简化的买卖列表升级为专业的交易所界面
 
 ------
 
@@ -1344,8 +1345,1352 @@ public/
 
 ------
 
+## 需求 3: RWA 交易市场升级
+
+### 3.1 需求背景
+
+**现状问题**：
+- V0.1 版本中，市场页面只有简单的买卖订单列表
+- 缺少专业交易所的核心功能：订单簿、实时价格、交易深度
+- 用户无法直观了解市场供需关系和价格走势
+- 交易界面不够专业，缺少交易所应有的信息密度
+
+**改进目标**：
+> 将市场页面升级为专业的交易所界面，提供订单簿、实时价格、交易表单等核心功能，提升交易体验
+
+### 3.2 核心改动
+
+#### 交易界面升级
+```
+V0.1 流程：
+市场页面 → 买卖订单列表 → 点击买入/卖出 → 简单表单
+
+V0.2 流程：
+市场页面 → 交易对选择 → 订单簿展示 → 价格选择 → 交易表单 → 确认交易
+```
+
+### 3.3 页面结构设计
+
+#### 3.3.1 市场页面 (`/market`) - 重构
+
+**页面布局**：
+```
+┌───────────────────────────────────────────────────────────────────────────┐
+│  Header + User Info                    💰 61.5184 USDT | 2.4833 RWA      │
+├───────────────────────────────────────────────────────────────────────────┤
+│                                                                           │
+│  Trading Pairs                          Contract Information             │
+│  [RWA/USDT ▼]                          0X1E2729EC754...909503D35AE13     │
+│                                                                           │
+├───────────────────────────────────────────────────────────────────────────┤
+│                                                                           │
+│  [Market Orders] [Project Introduction]    last Traded Price             │
+│                                            0.1501 ↑         [Buy] [Sell] │
+│                                                                           │
+├───────────────────────────────────────────────────────────────────────────┤
+│                                                         │                 │
+│  ┌──────────────────┬──────────────────┐              │  Price          │
+│  │  Sell Orders     │  Buy Orders      │              │  ┌────────────┐ │
+│  ├──────────────────┼──────────────────┤              │  │ 0.2362     │ │
+│  │ Price  Qty Total │ Price  Qty Total │              │  │      USDT  │ │
+│  │(USDT) (RWA)(USDT)│(USDT) (RWA)(USDT)│              │  └────────────┘ │
+│  ├──────────────────┼──────────────────┤              │                 │
+│  │█0.2394 102  24.6 │ 0.1501  61  9.27█│              │  Quantity       │
+│  │██0.2393 50  12.0 │ 0.1500 801 120.1██│             │  ┌────────────┐ │
+│  │███0.2387 68  16.3│ 0.1211 2150 260.4███│           │  │ 0.001      │ │
+│  │████0.2386 117 28 │ 0.1210 2500 302.5████│          │  │       RWA  │ │
+│  │██0.2385 49  11.8 │ 0.0900 2258 203.2██│            │  └────────────┘ │
+│  │██0.2383 48  11.5 │ 0.0820 3199 262.3██│            │                 │
+│  │███0.2381 63  15.0│ 0.0120 6720  80.6███│           │  [25%][50%]    │
+│  │███0.2380 60  14.2│ 0.0110 11829 130.1███│          │  [75%][100%]   │
+│  │███0.2372 67  16.1│ 0.0100 11770 117.7███│          │  ▓▓▓▓░░░░░░    │
+│  │██0.2362 48  11.3 │ 0.0090 13855 124.6██│           │  40%           │
+│  └──────────────────┴──────────────────┘              │                 │
+│                                                         │  Available      │
+│  注：█ 表示浅色背景条，显示订单深度                      │  Balance        │
+│      卖单为红色系，买单为绿色系                          │  61.5184 USDT  │
+│                                                         │  2.4833 RWA    │
+│                                                         │                 │
+│                                                         │  Total Order    │
+│                                                         │  Amount         │
+│                                                         │  0.0002 USDT   │
+│                                                         │                 │
+│                                                         │  ┌────────────┐ │
+│                                                         │  │    Buy     │ │
+│                                                         │  └────────────┘ │
+│                                                         │                 │
+└─────────────────────────────────────────────────────────┴─────────────────┘
+```
+
+**功能模块说明**：
+
+1. **顶部信息栏**
+   - 左侧：交易对选择器（RWA/USDT 下拉菜单）
+   - 右侧上方：**用户余额显示**（新增）
+     - 实时显示 USDT 余额
+     - 实时显示 RWA 余额
+     - 格式：💰 61.5184 USDT | 2.4833 RWA
+   - 右侧下方：合约地址信息
+
+2. **控制栏**
+   - 左侧：标签页切换（Market Orders / Project Introduction）
+   - 中间：最新成交价显示（含涨跌箭头）
+   - 右侧：Buy/Sell 切换按钮
+
+3. **主内容区域（左右分栏）**
+
+   **左侧：订单簿 (Order Book) - 约 65% 宽度**
+   - **左右并排布局**：
+     - 左半部分：卖单列表（Sell Orders，红色系）
+     - 右半部分：买单列表（Buy Orders，绿色系）
+   - **每列显示三个字段**：
+     - Price(USDT) - 价格
+     - Quantity(RWA) - 数量
+     - Total Amount(USDT) - 总额
+   - **深度可视化**：
+     - 每行背景有浅色渐变条，长度表示该价格的订单深度
+     - 卖单使用红色系渐变（rgba(239, 68, 68, 0.1-0.3)）
+     - 买单使用绿色系渐变（rgba(16, 185, 129, 0.1-0.3)）
+   - **排序规则**：
+     - 卖单：价格从高到低（最低卖价在底部）
+     - 买单：价格从高到低（最高买价在顶部）
+   - **交互**：点击任意价格自动填充到交易表单
+
+   **右侧：交易表单 - 约 35% 宽度**
+   - Price 输入框（USDT）
+   - Quantity 输入框（RWA）
+   - **百分比快捷按钮**（新增）
+     - 四个快捷按钮：25%, 50%, 75%, 100%
+     - 点击按钮自动计算并填充对应百分比的数量
+   - **百分比进度条**（新增）
+     - 可拖动的进度条，实时显示使用余额的百分比
+     - 拖动进度条自动更新 Quantity 输入框
+     - 显示当前百分比数值（如：40%）
+   - Available Balance 显示（USDT 和 RWA 余额）
+   - Total Order Amount 显示（自动计算）
+   - Buy/Sell 确认按钮（大按钮）
+
+4. **订单历史区域（页面下方）**（新增）
+
+   **标签页切换**：
+   - Current Trade（当前交易/挂单）
+   - Historical Trade（历史交易）
+
+   **表格列（两个标签页相同）**：
+   - Date（日期时间，格式：YYYY-MM-DD HH:mm:ss）
+   - Currency（交易对，如 RWA/USDT）
+   - Type（类型：Buy/Sell）
+     - Buy 显示为绿色
+     - Sell 显示为红色
+   - Unit Price（单价，如 0.2362 USDT）
+   - Unit Quantity（数量，如 0.01 RWA）
+   - Total Order Value（订单总额，如 0.0023 USDT）
+   - Status（状态）
+     - Current Trade：Pending（挂单中）、Partial（部分成交）
+     - Historical Trade：Fulfilled（已成交，绿色）、Cancelled（已取消，红色）
+   - Action（操作）
+     - Current Trade：显示"取消"按钮，点击可取消挂单
+     - Historical Trade：可能为空或显示其他操作
+
+   **Current Trade 标签页**：
+   - 显示用户当前未成交的挂单
+   - 按时间倒序排列（最新的在最上方）
+   - 空状态：显示 "No Data" 图标和文字
+   - Action 列：显示"取消"按钮，点击后弹出确认对话框
+
+   **Historical Trade 标签页**：
+   - 显示用户历史订单（已成交或已取消）
+   - 按时间倒序排列（最新的在最上方）
+   - 支持分页或无限滚动加载
+   - Action 列：通常为空，或显示"查看详情"等操作
+   - Total Order Amount 显示（自动计算）
+   - Buy/Sell 确认按钮（大按钮）
+
+4. **订单簿 (Order Book)**
+   - 左侧：卖单列表（红色，价格从低到高）
+   - 右侧：买单列表（绿色，价格从高到低）
+   - 点击价格自动填充到交易表单
+   - 显示每个价格档位的数量
+
+5. **交易表单**
+   - 买入/卖出切换
+   - 价格输入（支持市价/限价）
+   - 数量输入
+   - 显示可用余额
+   - 显示订单总额
+   - 确认交易按钮
+
+### 3.4 数据结构设计
+
+#### 3.4.1 订单簿数据模型
+
+```typescript
+interface OrderBookEntry {
+  price: number;           // 价格 (USDT)
+  quantity: number;        // 数量 (RWA)
+  totalAmount: number;     // 总额 (USDT) = price * quantity
+  depth: number;           // 累计深度（用于计算深度百分比）
+  depthPercentage: number; // 深度百分比（0-100，用于背景条宽度）
+}
+
+interface OrderBook {
+  sellOrders: OrderBookEntry[];  // 卖单列表（价格从高到低）
+  buyOrders: OrderBookEntry[];   // 买单列表（价格从高到低）
+  lastPrice: number;             // 最新成交价
+  priceChange24h: number;        // 24h 价格变化
+  priceChangePercent24h: number; // 24h 价格变化百分比
+}
+```
+
+#### 3.4.2 交易对信息模型
+
+```typescript
+interface TradingPair {
+  symbol: string;          // 交易对符号 (e.g., "RWA/USDT")
+  baseAsset: string;       // 基础资产 (e.g., "RWA")
+  quoteAsset: string;      // 计价资产 (e.g., "USDT")
+  lastPrice: number;       // 最新成交价
+  high24h: number;         // 24h 最高价
+  low24h: number;          // 24h 最低价
+  volume24h: number;       // 24h 成交量
+  priceChange24h: number;  // 24h 价格变化
+  priceChangePercent24h: number; // 24h 价格变化百分比
+}
+```
+
+#### 3.4.3 合约信息模型
+
+```typescript
+interface ContractInfo {
+  totalSupply: number;     // 发行总量
+  circulatingSupply: number; // 流通量
+  volume24h: number;       // 24h 成交量
+  marketCap: number;       // 市值
+  holders: number;         // 持有地址数
+}
+```
+
+#### 3.4.4 交易订单模型（扩展）
+
+```typescript
+interface TradeOrder {
+  id: string;
+  userId: string;
+  currency: string;          // 交易对 (e.g., "RWA/USDT")
+  type: 'buy' | 'sell';
+  orderType: 'market' | 'limit'; // 市价单/限价单
+  price: number;             // 单价
+  quantity: number;          // 数量
+  filled: number;            // 已成交数量
+  remaining: number;         // 剩余数量
+  totalValue: number;        // 订单总额
+  status: 'pending' | 'partial' | 'fulfilled' | 'cancelled';
+  timestamp: number;         // 创建时间
+  completedAt?: number;      // 完成时间（可选）
+  expiresAt?: number;        // 订单过期时间（可选）
+}
+```
+
+**状态说明**：
+- `pending`：挂单中（未成交）
+- `partial`：部分成交
+- `fulfilled`：已完全成交
+- `cancelled`：已取消
+
+### 3.5 Mock 数据设计
+
+#### 3.5.1 交易对信息
+
+```typescript
+const mockTradingPair: TradingPair = {
+  symbol: 'RWA/USDT',
+  baseAsset: 'RWA',
+  quoteAsset: 'USDT',
+  lastPrice: 0.1501,
+  high24h: 0.2500,
+  low24h: 0.0090,
+  volume24h: 50000,
+  priceChange24h: 0.0050,
+  priceChangePercent24h: 3.44
+};
+```
+
+#### 3.5.2 合约信息
+
+```typescript
+const mockContractInfo: ContractInfo = {
+  totalSupply: 1000000,
+  circulatingSupply: 500000,
+  volume24h: 50000,
+  marketCap: 75050, // lastPrice * circulatingSupply
+  holders: 1250,
+  contractAddress: '0X1E2729EC754...909503D35AE13'
+};
+```
+
+#### 3.5.3 订单簿数据
+
+```typescript
+const mockOrderBook: OrderBook = {
+  sellOrders: [
+    { price: 0.2394, quantity: 102.9141, totalAmount: 24.6376, depth: 102.9141, depthPercentage: 20 },
+    { price: 0.2393, quantity: 50.2520, totalAmount: 12.0253, depth: 153.1661, depthPercentage: 40 },
+    { price: 0.2387, quantity: 68.7001, totalAmount: 16.3987, depth: 221.8662, depthPercentage: 60 },
+    { price: 0.2386, quantity: 117.3651, totalAmount: 28.0033, depth: 339.2313, depthPercentage: 80 },
+    { price: 0.2385, quantity: 49.5512, totalAmount: 11.8179, depth: 388.7825, depthPercentage: 50 },
+    { price: 0.2383, quantity: 48.4477, totalAmount: 11.5450, depth: 437.2302, depthPercentage: 45 },
+    { price: 0.2381, quantity: 63.0381, totalAmount: 15.0093, depth: 500.2683, depthPercentage: 65 },
+    { price: 0.2380, quantity: 60.0674, totalAmount: 14.2960, depth: 560.3357, depthPercentage: 60 },
+    { price: 0.2372, quantity: 67.9913, totalAmount: 16.1275, depth: 628.3270, depthPercentage: 70 },
+    { price: 0.2362, quantity: 48.0127, totalAmount: 11.3405, depth: 676.3397, depthPercentage: 50 }
+  ],
+  buyOrders: [
+    { price: 0.1501, quantity: 61.7674, totalAmount: 9.2712, depth: 61.7674, depthPercentage: 15 },
+    { price: 0.1500, quantity: 801.1733, totalAmount: 120.1759, depth: 862.9407, depthPercentage: 85 },
+    { price: 0.1211, quantity: 2150.9884, totalAmount: 260.4846, depth: 3013.9291, depthPercentage: 100 },
+    { price: 0.1210, quantity: 2500.0000, totalAmount: 302.5000, depth: 5513.9291, depthPercentage: 100 },
+    { price: 0.0900, quantity: 2258.1122, totalAmount: 203.2300, depth: 7772.0413, depthPercentage: 90 },
+    { price: 0.0820, quantity: 3199.8109, totalAmount: 262.3844, depth: 10971.8522, depthPercentage: 95 },
+    { price: 0.0120, quantity: 6720.8166, totalAmount: 80.6497, depth: 17692.6688, depthPercentage: 70 },
+    { price: 0.0110, quantity: 11829.4454, totalAmount: 130.1238, depth: 29522.1142, depthPercentage: 80 },
+    { price: 0.0100, quantity: 11770.1800, totalAmount: 117.7018, depth: 41292.2942, depthPercentage: 75 },
+    { price: 0.0090, quantity: 13855.5555, totalAmount: 124.6999, depth: 55147.8497, depthPercentage: 85 }
+  ],
+  lastPrice: 0.1501,
+  priceChange24h: 0.0050,
+  priceChangePercent24h: 3.44
+};
+```
+
+**注意事项**：
+- 卖单价格从高到低排列（最高卖价在顶部，最低卖价在底部）
+- 买单价格从高到低排列（最高买价在顶部，最低买价在底部）
+- `totalAmount` = `price` × `quantity`，表示该档位的总金额
+- `depth` 为累计数量，用于计算市场深度
+- `depthPercentage` 用于订单簿深度可视化（背景色渐变条的宽度百分比）
+- 卖单使用红色系背景，买单使用绿色系背景
+
+#### 3.5.4 用户订单历史数据（新增）
+
+```typescript
+const mockUserOrders: TradeOrder[] = [
+  {
+    id: 'order-001',
+    userId: 'user-123',
+    currency: 'RWA/USDT',
+    type: 'buy',
+    orderType: 'limit',
+    price: 0.2362,
+    quantity: 0.01,
+    filled: 0.01,
+    remaining: 0,
+    totalValue: 0.0023,
+    status: 'fulfilled',
+    timestamp: new Date('2026-02-06 16:12:38').getTime(),
+    completedAt: new Date('2026-02-06 16:12:40').getTime()
+  },
+  {
+    id: 'order-002',
+    userId: 'user-123',
+    currency: 'RWA/USDT',
+    type: 'buy',
+    orderType: 'limit',
+    price: 0.2,
+    quantity: 10,
+    filled: 0,
+    remaining: 10,
+    totalValue: 2,
+    status: 'cancelled',
+    timestamp: new Date('2026-01-28 17:18:13').getTime(),
+    completedAt: new Date('2026-01-28 17:20:00').getTime()
+  },
+  {
+    id: 'order-003',
+    userId: 'user-123',
+    currency: 'RWA/USDT',
+    type: 'sell',
+    orderType: 'limit',
+    price: 0.2315,
+    quantity: 0.0099,
+    filled: 0,
+    remaining: 0.0099,
+    totalValue: 0.0022,
+    status: 'cancelled',
+    timestamp: new Date('2026-02-05 15:49:56').getTime(),
+    completedAt: new Date('2026-02-05 15:50:10').getTime()
+  },
+  {
+    id: 'order-004',
+    userId: 'user-123',
+    currency: 'RWA/USDT',
+    type: 'buy',
+    orderType: 'limit',
+    price: 0.2197,
+    quantity: 0.0106,
+    filled: 0,
+    remaining: 0.0106,
+    totalValue: 0.0023,
+    status: 'cancelled',
+    timestamp: new Date('2026-02-05 15:49:56').getTime(),
+    completedAt: new Date('2026-02-05 15:50:05').getTime()
+  },
+  {
+    id: 'order-005',
+    userId: 'user-123',
+    currency: 'RWA/USDT',
+    type: 'buy',
+    orderType: 'limit',
+    price: 0.2245,
+    quantity: 0.0103,
+    filled: 0,
+    remaining: 0.0103,
+    totalValue: 0.0023,
+    status: 'cancelled',
+    timestamp: new Date('2026-02-05 15:49:48').getTime(),
+    completedAt: new Date('2026-02-05 15:50:00').getTime()
+  }
+];
+
+// 当前挂单（从 mockUserOrders 中筛选 status 为 pending 或 partial 的订单）
+const mockCurrentOrders = mockUserOrders.filter(
+  order => order.status === 'pending' || order.status === 'partial'
+);
+
+// 历史订单（从 mockUserOrders 中筛选 status 为 fulfilled 或 cancelled 的订单）
+const mockHistoricalOrders = mockUserOrders.filter(
+  order => order.status === 'fulfilled' || order.status === 'cancelled'
+);
+```
+
+### 3.6 组件设计
+
+#### 3.6.1 新增/重构组件列表
+
+| 组件名 | 文件路径 | 用途 | 复用性 |
+|--------|----------|------|--------|
+| `BalanceDisplay` | `components/BalanceDisplay.tsx` | 余额显示（右上角） | 市场页面 |
+| `TradingPairSelector` | `components/TradingPairSelector.tsx` | 交易对选择器 | 市场页面 |
+| `ContractInfoPanel` | `components/ContractInfoPanel.tsx` | 合约信息面板 | 市场页面 |
+| `OrderBook` | `components/OrderBook.tsx` | 订单簿展示 | 市场页面 |
+| `OrderBookEntry` | `components/OrderBookEntry.tsx` | 订单簿单行 | 订单簿组件 |
+| `TradingForm` | `components/TradingForm.tsx` | 交易表单 | 市场页面 |
+| `PercentageSlider` | `components/PercentageSlider.tsx` | 百分比进度条 | 交易表单 |
+| `OrderHistoryTabs` | `components/OrderHistoryTabs.tsx` | 订单历史标签页 | 市场页面 |
+| `OrderHistoryTable` | `components/OrderHistoryTable.tsx` | 订单历史表格 | 订单历史标签页 |
+| `MarketTabs` | `components/MarketTabs.tsx` | 市场标签页 | 市场页面 |
+| `ProjectIntro` | `components/ProjectIntro.tsx` | 项目介绍 | 市场页面 |
+
+#### 3.6.2 BalanceDisplay 组件（新增）
+
+```typescript
+interface BalanceDisplayProps {
+  usdtBalance: number;
+  rwaBalance: number;
+}
+
+// 组件结构
+<div className="balance-display">
+  <Wallet size={16} className="icon" />
+  <span className="balance-item">
+    {usdtBalance.toFixed(4)} USDT
+  </span>
+  <span className="separator">|</span>
+  <span className="balance-item">
+    {rwaBalance.toFixed(4)} RWA
+  </span>
+</div>
+```
+
+**样式说明**：
+- 固定在页面右上角
+- 使用半透明背景，确保可读性
+- 余额数字使用等宽字体
+- 实时更新，交易后立即刷新
+
+#### 3.6.3 TradingPairSelector 组件
+
+```typescript
+interface TradingPairSelectorProps {
+  tradingPair: TradingPair;
+  onPairChange?: (pair: string) => void;
+}
+
+// 组件结构
+<div className="trading-pair-selector">
+  <div className="pair-dropdown">
+    <span className="symbol">{tradingPair.symbol}</span>
+    <ChevronDown size={16} />
+  </div>
+  <div className="price-info">
+    <span className="last-price">${tradingPair.lastPrice}</span>
+    <span className={`price-change ${tradingPair.priceChange24h >= 0 ? 'positive' : 'negative'}`}>
+      {tradingPair.priceChange24h >= 0 ? '+' : ''}
+      {tradingPair.priceChangePercent24h.toFixed(2)}%
+    </span>
+  </div>
+</div>
+```
+
+#### 3.6.3 OrderBook 组件
+
+```typescript
+interface OrderBookProps {
+  orderBook: OrderBook;
+  onPriceClick: (price: number) => void;
+}
+
+// 组件结构 - 左右并排布局
+<div className="order-book">
+  <div className="order-book-container">
+    {/* 左侧：卖单 */}
+    <div className="sell-orders-column">
+      <div className="column-header">
+        <span>Sell Orders</span>
+      </div>
+      <div className="column-labels">
+        <span>Price(USDT)</span>
+        <span>Quantity(RWA)</span>
+        <span>Total Amount(USDT)</span>
+      </div>
+      <div className="orders-list">
+        {orderBook.sellOrders.map(order => (
+          <OrderBookEntry
+            key={order.price}
+            order={order}
+            type="sell"
+            onClick={() => onPriceClick(order.price)}
+          />
+        ))}
+      </div>
+    </div>
+
+    {/* 右侧：买单 */}
+    <div className="buy-orders-column">
+      <div className="column-header">
+        <span>Buy Orders</span>
+      </div>
+      <div className="column-labels">
+        <span>Price(USDT)</span>
+        <span>Quantity(RWA)</span>
+        <span>Total Amount(USDT)</span>
+      </div>
+      <div className="orders-list">
+        {orderBook.buyOrders.map(order => (
+          <OrderBookEntry
+            key={order.price}
+            order={order}
+            type="buy"
+            onClick={() => onPriceClick(order.price)}
+          />
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+**OrderBookEntry 组件**：
+
+```typescript
+interface OrderBookEntryProps {
+  order: OrderBookEntry;
+  type: 'buy' | 'sell';
+  onClick: () => void;
+}
+
+// 组件结构 - 带深度可视化背景
+<div
+  className={`order-book-entry ${type}`}
+  onClick={onClick}
+  style={{
+    background: `linear-gradient(to left,
+      ${type === 'sell'
+        ? `rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.15) ${order.depthPercentage}%, transparent ${order.depthPercentage}%`
+        : `rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.15) ${order.depthPercentage}%, transparent ${order.depthPercentage}%`
+      }
+    )`
+  }}
+>
+  <span className="price">{order.price.toFixed(4)}</span>
+  <span className="quantity">{order.quantity.toFixed(4)}</span>
+  <span className="total">{order.totalAmount.toFixed(4)}</span>
+</div>
+```
+
+**样式说明**：
+- 卖单和买单左右并排，各占 50% 宽度
+- 每行显示三列：Price, Quantity, Total Amount
+- 背景渐变条从右向左，长度由 `depthPercentage` 控制
+- 卖单使用红色系 `rgba(239, 68, 68, 0.15)`
+- 买单使用绿色系 `rgba(16, 185, 129, 0.15)`
+- Hover 时整行高亮，光标变为 pointer
+
+#### 3.6.5 TradingForm 组件（更新）
+
+```typescript
+interface TradingFormProps {
+  tradingPair: TradingPair;
+  userBalance: {
+    base: number;  // RWA 余额
+    quote: number; // USDT 余额
+  };
+  onTrade: (order: TradeOrder) => void;
+}
+
+// 组件结构
+<div className="trading-form">
+  <div className="trade-type-tabs">
+    <button className={`tab ${tradeType === 'buy' ? 'active' : ''}`}>
+      买入 Buy
+    </button>
+    <button className={`tab ${tradeType === 'sell' ? 'active' : ''}`}>
+      卖出 Sell
+    </button>
+  </div>
+
+  <div className="form-content">
+    <div className="form-field">
+      <label>价格 (USDT)</label>
+      <input
+        type="number"
+        value={price}
+        onChange={(e) => setPrice(e.target.value)}
+        placeholder="输入价格"
+      />
+    </div>
+
+    <div className="form-field">
+      <label>数量 (RWA)</label>
+      <input
+        type="number"
+        value={quantity}
+        onChange={(e) => setQuantity(e.target.value)}
+        placeholder="输入数量"
+      />
+    </div>
+
+    {/* 新增：百分比进度条组件 */}
+    <PercentageSlider
+      percentage={percentage}
+      onPercentageChange={handlePercentageChange}
+      tradeType={tradeType}
+    />
+
+    <div className="balance-info">
+      <span>可用余额:</span>
+      <span>{tradeType === 'buy' ? userBalance.quote : userBalance.base} {tradeType === 'buy' ? 'USDT' : 'RWA'}</span>
+    </div>
+
+    <div className="total-info">
+      <span>订单总额:</span>
+      <span>{(price * quantity).toFixed(2)} USDT</span>
+    </div>
+
+    <button
+      className={`trade-button ${tradeType}`}
+      onClick={handleTrade}
+      disabled={!isValid}
+    >
+      确认{tradeType === 'buy' ? '买入' : '卖出'}
+    </button>
+  </div>
+</div>
+```
+
+#### 3.6.6 PercentageSlider 组件（新增）
+
+```typescript
+interface PercentageSliderProps {
+  percentage: number;           // 当前百分比 (0-100)
+  onPercentageChange: (percentage: number) => void;
+  tradeType: 'buy' | 'sell';
+}
+
+// 组件结构
+<div className="percentage-slider">
+  {/* 快捷按钮 */}
+  <div className="quick-buttons">
+    <button
+      className={`quick-btn ${percentage === 25 ? 'active' : ''}`}
+      onClick={() => onPercentageChange(25)}
+    >
+      25%
+    </button>
+    <button
+      className={`quick-btn ${percentage === 50 ? 'active' : ''}`}
+      onClick={() => onPercentageChange(50)}
+    >
+      50%
+    </button>
+    <button
+      className={`quick-btn ${percentage === 75 ? 'active' : ''}`}
+      onClick={() => onPercentageChange(75)}
+    >
+      75%
+    </button>
+    <button
+      className={`quick-btn ${percentage === 100 ? 'active' : ''}`}
+      onClick={() => onPercentageChange(100)}
+    >
+      100%
+    </button>
+  </div>
+
+  {/* 进度条 */}
+  <div className="slider-container">
+    <input
+      type="range"
+      min="0"
+      max="100"
+      step="1"
+      value={percentage}
+      onChange={(e) => onPercentageChange(Number(e.target.value))}
+      className="slider"
+    />
+    <div className="slider-track">
+      <div
+        className={`slider-fill ${tradeType}`}
+        style={{ width: `${percentage}%` }}
+      />
+    </div>
+    <span className="percentage-label">{percentage}%</span>
+  </div>
+</div>
+```
+
+**功能说明**：
+- **快捷按钮**：点击 25%/50%/75%/100% 快速设置百分比
+- **进度条**：可拖动的滑块，实时调整百分比
+- **百分比显示**：实时显示当前选择的百分比
+- **自动计算**：根据百分比自动计算并更新 Quantity 输入框
+  - 买入时：`quantity = (balance * percentage / 100) / price`
+  - 卖出时：`quantity = balance * percentage / 100`
+
+**样式说明**：
+- 快捷按钮采用网格布局（2×2）
+- 选中的按钮高亮显示
+- 进度条填充颜色根据交易类型变化：
+  - 买入：绿色 `rgb(16, 185, 129)`
+  - 卖出：红色 `rgb(239, 68, 68)`
+- 滑块拖动时有平滑过渡效果
+
+#### 3.6.7 OrderHistoryTabs 组件（新增）
+
+```typescript
+interface OrderHistoryTabsProps {
+  currentOrders: TradeOrder[];
+  historicalOrders: TradeOrder[];
+  onCancelOrder: (orderId: string) => void;
+}
+
+// 组件结构
+<div className="order-history-tabs">
+  <div className="tabs-header">
+    <button
+      className={`tab ${activeTab === 'current' ? 'active' : ''}`}
+      onClick={() => setActiveTab('current')}
+    >
+      Current Trade
+    </button>
+    <button
+      className={`tab ${activeTab === 'historical' ? 'active' : ''}`}
+      onClick={() => setActiveTab('historical')}
+    >
+      Historical Trade
+    </button>
+  </div>
+
+  <div className="tabs-content">
+    {activeTab === 'current' && (
+      <OrderHistoryTable
+        orders={currentOrders}
+        type="current"
+        onCancelOrder={onCancelOrder}
+      />
+    )}
+    {activeTab === 'historical' && (
+      <OrderHistoryTable
+        orders={historicalOrders}
+        type="historical"
+        onCancelOrder={onCancelOrder}
+      />
+    )}
+  </div>
+</div>
+```
+
+#### 3.6.8 OrderHistoryTable 组件（新增）
+
+```typescript
+interface OrderHistoryTableProps {
+  orders: TradeOrder[];
+  type: 'current' | 'historical';
+  onCancelOrder: (orderId: string) => void;
+}
+
+// 组件结构
+<div className="order-history-table">
+  {orders.length === 0 ? (
+    // 空状态
+    <div className="empty-state">
+      <FileSearch size={48} className="empty-icon" />
+      <p>No Data</p>
+    </div>
+  ) : (
+    // 表格
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Currency</th>
+          <th>Type</th>
+          <th>Unit Price</th>
+          <th>Unit Quantity</th>
+          <th>Total Order Value</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {orders.map(order => (
+          <tr key={order.id}>
+            <td>{formatDate(order.timestamp)}</td>
+            <td>{order.currency}</td>
+            <td className={`type ${order.type}`}>
+              {order.type === 'buy' ? 'Buy' : 'Sell'}
+            </td>
+            <td>{order.price.toFixed(4)} USDT</td>
+            <td>{order.quantity.toFixed(4)} RWA</td>
+            <td>{order.totalValue.toFixed(4)} USDT</td>
+            <td className={`status ${order.status}`}>
+              {formatStatus(order.status)}
+            </td>
+            <td>
+              {type === 'current' && (
+                <button
+                  className="cancel-btn"
+                  onClick={() => onCancelOrder(order.id)}
+                >
+                  取消
+                </button>
+              )}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+</div>
+```
+
+**样式说明**：
+- Type 列：Buy 为绿色，Sell 为红色
+- Status 列：
+  - Fulfilled 为绿色
+  - Cancelled 为红色
+  - Pending/Partial 为黄色
+- 表格采用斑马纹样式，提高可读性
+- 空状态居中显示，带图标和文字
+- Action 列的取消按钮为红色，Hover 时加深
+      <span>可用余额:</span>
+      <span>{tradeType === 'buy' ? userBalance.quote : userBalance.base} {tradeType === 'buy' ? 'USDT' : 'RWA'}</span>
+    </div>
+
+    <div className="total-info">
+      <span>订单总额:</span>
+      <span>{(price * quantity).toFixed(2)} USDT</span>
+    </div>
+
+    <button
+      className={`trade-button ${tradeType}`}
+      onClick={handleTrade}
+      disabled={!isValid}
+    >
+      确认{tradeType === 'buy' ? '买入' : '卖出'}
+    </button>
+  </div>
+</div>
+```
+
+### 3.7 状态管理扩展
+
+#### 3.7.1 Zustand Store 新增字段
+
+```typescript
+// lib/store.ts
+interface AppState {
+  // ... 原有字段 ...
+
+  // 新增：交易市场相关
+  tradingPair: TradingPair;
+  orderBook: OrderBook;
+  contractInfo: ContractInfo;
+  userOrders: TradeOrder[];        // 所有订单
+  currentOrders: TradeOrder[];     // 当前挂单
+  historicalOrders: TradeOrder[];  // 历史订单
+
+  // 新增：交易操作
+  placeBuyOrder: (price: number, quantity: number) => void;
+  placeSellOrder: (price: number, quantity: number) => void;
+  cancelOrder: (orderId: string) => void;
+
+  // 新增：订单簿更新（模拟实时更新）
+  updateOrderBook: () => void;
+
+  // 新增：订单列表更新
+  refreshOrders: () => void;
+}
+```
+
+#### 3.7.2 交易操作逻辑
+
+```typescript
+// 买入 RWA
+placeBuyOrder: (price, quantity) => {
+  const total = price * quantity;
+
+  // 检查 USDT 余额
+  if (user.earnings < total) {
+    showToast('USDT 余额不足');
+    return;
+  }
+
+  // 创建买单
+  const order: TradeOrder = {
+    id: generateOrderId(),
+    userId: user.address,
+    type: 'buy',
+    orderType: 'limit',
+    price,
+    quantity,
+    filled: 0,
+    remaining: quantity,
+    total,
+    status: 'pending',
+    timestamp: Date.now()
+  };
+
+  // 模拟订单匹配（简化版）
+  const matchedQuantity = Math.min(quantity, getAvailableSellQuantity(price));
+
+  if (matchedQuantity > 0) {
+    // 部分或全部成交
+    order.filled = matchedQuantity;
+    order.remaining = quantity - matchedQuantity;
+    order.status = matchedQuantity === quantity ? 'filled' : 'partial';
+
+    // 更新用户资产
+    user.earnings -= matchedQuantity * price;
+    user.share += matchedQuantity;
+
+    // 添加活动记录
+    activities.push({
+      type: 'share_bought',
+      amount: matchedQuantity,
+      price,
+      timestamp: Date.now()
+    });
+
+    showToast(`买入成功！获得 ${matchedQuantity} RWA`);
+  }
+
+  // 添加订单记录
+  userOrders.push(order);
+
+  // 更新订单簿
+  updateOrderBook();
+},
+
+// 卖出 RWA
+placeSellOrder: (price, quantity) => {
+  // 检查 RWA 余额
+  if (user.share < quantity) {
+    showToast('RWA 余额不足');
+    return;
+  }
+
+  // 创建卖单
+  const order: TradeOrder = {
+    id: generateOrderId(),
+    userId: user.address,
+    type: 'sell',
+    orderType: 'limit',
+    price,
+    quantity,
+    filled: 0,
+    remaining: quantity,
+    total: price * quantity,
+    status: 'pending',
+    timestamp: Date.now()
+  };
+
+  // 模拟订单匹配
+  const matchedQuantity = Math.min(quantity, getAvailableBuyQuantity(price));
+
+  if (matchedQuantity > 0) {
+    order.filled = matchedQuantity;
+    order.remaining = quantity - matchedQuantity;
+    order.status = matchedQuantity === quantity ? 'filled' : 'partial';
+
+    // 更新用户资产
+    user.share -= matchedQuantity;
+    user.earnings += matchedQuantity * price;
+
+    activities.push({
+      type: 'share_sold',
+      amount: matchedQuantity,
+      price,
+      timestamp: Date.now()
+    });
+
+    showToast(`卖出成功！获得 ${(matchedQuantity * price).toFixed(2)} USDT`);
+  }
+
+  userOrders.push(order);
+  updateOrderBook();
+  refreshOrders();
+},
+
+// 取消订单
+cancelOrder: (orderId) => {
+  const order = userOrders.find(o => o.id === orderId);
+
+  if (!order) {
+    showToast('订单不存在');
+    return;
+  }
+
+  if (order.status !== 'pending' && order.status !== 'partial') {
+    showToast('该订单无法取消');
+    return;
+  }
+
+  // 更新订单状态
+  order.status = 'cancelled';
+  order.completedAt = Date.now();
+
+  // 如果是部分成交的订单，退还未成交部分的资金
+  if (order.type === 'buy' && order.remaining > 0) {
+    user.earnings += order.remaining * order.price;
+  } else if (order.type === 'sell' && order.remaining > 0) {
+    user.share += order.remaining;
+  }
+
+  // 添加活动记录
+  activities.push({
+    type: 'order_cancelled',
+    orderId: order.id,
+    timestamp: Date.now()
+  });
+
+  showToast('订单已取消');
+  refreshOrders();
+  updateOrderBook();
+},
+
+// 刷新订单列表
+refreshOrders: () => {
+  currentOrders = userOrders.filter(
+    order => order.status === 'pending' || order.status === 'partial'
+  );
+  historicalOrders = userOrders.filter(
+    order => order.status === 'fulfilled' || order.status === 'cancelled'
+  ).sort((a, b) => b.timestamp - a.timestamp); // 按时间倒序
+}
+```
+
+### 3.8 交互细节与动画
+
+#### 3.8.1 关键动画效果
+
+| 场景 | 动画效果 | 实现方案 |
+|------|----------|----------|
+| 订单簿更新 | 价格闪烁（绿涨红跌） | CSS Animation |
+| 价格变化 | 数字滚动动画 | react-countup |
+| 订单提交 | 加载动画 + 成功提示 | Framer Motion |
+| 订单取消 | 确认对话框 + 成功提示 | Framer Motion |
+| 订单簿行 Hover | 背景高亮 | CSS Transition |
+| 深度可视化 | 背景渐变条 | CSS Linear Gradient |
+| 标签页切换 | 内容淡入淡出 | Framer Motion |
+| 表格行 Hover | 背景高亮 | CSS Transition |
+
+#### 3.8.2 订单簿深度可视化
+
+**实现方式**：使用 CSS `linear-gradient` 创建从右向左的渐变背景条
+
+```css
+/* 订单簿行基础样式 */
+.order-book-entry {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  position: relative;
+}
+
+/* Hover 效果 */
+.order-book-entry:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* 卖单深度背景（红色渐变，从右向左） */
+.order-book-entry.sell {
+  background: linear-gradient(
+    to left,
+    rgba(239, 68, 68, 0.15) 0%,
+    rgba(239, 68, 68, 0.15) var(--depth-percentage),
+    transparent var(--depth-percentage)
+  );
+}
+
+/* 买单深度背景（绿色渐变，从右向左） */
+.order-book-entry.buy {
+  background: linear-gradient(
+    to left,
+    rgba(16, 185, 129, 0.15) 0%,
+    rgba(16, 185, 129, 0.15) var(--depth-percentage),
+    transparent var(--depth-percentage)
+  );
+}
+
+/* 价格列样式 */
+.order-book-entry .price {
+  color: inherit;
+  font-weight: 500;
+}
+
+.order-book-entry.sell .price {
+  color: rgb(239, 68, 68); /* 红色 */
+}
+
+.order-book-entry.buy .price {
+  color: rgb(16, 185, 129); /* 绿色 */
+}
+```
+
+**使用方式**：
+
+```typescript
+// 在组件中设置 CSS 变量
+<div
+  className={`order-book-entry ${type}`}
+  style={{
+    '--depth-percentage': `${order.depthPercentage}%`
+  } as React.CSSProperties}
+  onClick={onClick}
+>
+  <span className="price">{order.price.toFixed(4)}</span>
+  <span className="quantity">{order.quantity.toFixed(4)}</span>
+  <span className="total">{order.totalAmount.toFixed(4)}</span>
+</div>
+```
+
+**视觉效果**：
+- 深度条从右侧开始，向左延伸
+- 深度越大，背景条越长
+- 卖单使用浅红色 `rgba(239, 68, 68, 0.15)`
+- 买单使用浅绿色 `rgba(16, 185, 129, 0.15)`
+- Hover 时整行高亮，便于用户点击
+
+#### 3.8.3 价格闪烁效果
+
+```typescript
+// 价格上涨时闪烁绿色
+const priceFlashUp = keyframes`
+  0% { background-color: rgba(16, 185, 129, 0.3); }
+  100% { background-color: transparent; }
+`;
+
+// 价格下跌时闪烁红色
+const priceFlashDown = keyframes`
+  0% { background-color: rgba(239, 68, 68, 0.3); }
+  100% { background-color: transparent; }
+`;
+```
+
+### 3.9 响应式设计
+
+#### 桌面端 (≥1024px)
+- 订单簿：双列布局（卖单 | 买单）
+- 交易表单：固定在右侧
+- 合约信息：横向排列
+
+#### 平板端 (768px - 1023px)
+- 订单簿：双列布局（紧凑）
+- 交易表单：底部固定
+- 合约信息：2行2列
+
+#### 移动端 (<768px)
+- 订单簿：单列布局，可切换卖单/买单
+- 交易表单：全屏抽屉
+- 合约信息：纵向堆叠
+
+### 3.10 开发任务拆解
+
+#### Phase 1: 数据层 (1天)
+- [ ] 创建交易市场相关数据模型
+- [ ] 创建 Mock 订单簿数据
+- [ ] 创建 Mock 交易对信息
+- [ ] 创建 Mock 合约信息
+- [ ] 扩展 Zustand Store，添加交易市场状态
+
+#### Phase 2: 核心组件 (2天)
+- [ ] 实现 BalanceDisplay 组件（右上角余额显示）
+- [ ] 实现 TradingPairSelector 组件
+- [ ] 实现 ContractInfoPanel 组件
+- [ ] 实现 OrderBook 组件
+- [ ] 实现 OrderBookEntry 组件
+- [ ] 实现订单簿深度可视化
+- [ ] 实现价格点击填充功能
+
+#### Phase 3: 交易表单 (2天)
+- [ ] 实现 TradingForm 组件
+- [ ] 实现买入/卖出切换
+- [ ] 实现价格和数量输入
+- [ ] 实现 PercentageSlider 组件（百分比进度条）
+- [ ] 实现快捷百分比按钮（25%/50%/75%/100%）
+- [ ] 实现进度条拖动功能
+- [ ] 实现百分比自动计算数量逻辑
+- [ ] 实现余额检查
+- [ ] 实现订单总额计算
+- [ ] 实现交易确认逻辑
+
+#### Phase 4: 订单历史功能 (1天)
+- [ ] 实现 OrderHistoryTabs 组件
+- [ ] 实现 OrderHistoryTable 组件
+- [ ] 实现 Current Trade 标签页
+- [ ] 实现 Historical Trade 标签页
+- [ ] 实现订单列表展示（表格）
+- [ ] 实现空状态显示
+- [ ] 实现取消订单功能
+- [ ] 实现取消确认对话框
+- [ ] 实现订单状态颜色显示
+
+#### Phase 5: 标签页功能 (0.5天)
+- [ ] 实现 MarketTabs 组件
+- [ ] 实现市场订单标签页
+- [ ] 实现项目介绍标签页
+- [ ] 实现标签页切换动画
+
+#### Phase 6: 交易逻辑 (1天)
+- [ ] 实现买入订单逻辑
+- [ ] 实现卖出订单逻辑
+- [ ] 实现订单匹配逻辑（简化版）
+- [ ] 实现订单簿更新逻辑
+- [ ] 实现用户订单历史
+- [ ] 实现余额实时更新
+- [ ] 实现取消订单逻辑
+- [ ] 实现订单列表刷新
+
+#### Phase 7: 优化与测试 (1天)
+- [ ] 添加所有动画效果
+- [ ] 实现价格闪烁效果
+- [ ] 实现进度条平滑过渡动画
+- [ ] 实现订单取消确认动画
+- [ ] 响应式适配（移动端）
+- [ ] 错误处理
+- [ ] 完整流程测试
+- [ ] 性能优化
+
+**预计总工时**: 8.5 天
+
+### 3.11 验收标准
+
+#### 功能验收
+- [ ] 右上角余额显示正确（USDT 和 RWA）
+- [ ] 余额实时更新（交易后立即刷新）
+- [ ] 交易对选择器正确显示价格和涨跌幅
+- [ ] 合约信息面板正确显示所有数据
+- [ ] 订单簿正确显示卖单和买单（左右并排）
+- [ ] 订单簿深度可视化正常工作（浅色背景条）
+- [ ] 点击订单簿价格自动填充到交易表单
+- [ ] 交易表单买入/卖出切换正常
+- [ ] 百分比快捷按钮（25%/50%/75%/100%）正常工作
+- [ ] 百分比进度条可拖动，实时更新数量
+- [ ] 百分比自动计算数量准确
+- [ ] 余额检查正常工作
+- [ ] 订单总额计算准确
+- [ ] 买入订单正常执行
+- [ ] 卖出订单正常执行
+- [ ] Current Trade 标签页正确显示当前挂单
+- [ ] Historical Trade 标签页正确显示历史订单
+- [ ] 订单表格所有列正确显示
+- [ ] 订单状态颜色正确（Buy绿色，Sell红色，Fulfilled绿色，Cancelled红色）
+- [ ] 取消订单功能正常工作
+- [ ] 取消订单后余额正确退还
+- [ ] 空状态正确显示（No Data）
+- [ ] 订单历史正确记录
+
+#### 体验验收
+- [ ] 所有动画流畅自然
+- [ ] 价格闪烁效果正常
+- [ ] 订单簿更新实时响应
+- [ ] 进度条拖动平滑流畅
+- [ ] 百分比按钮点击反馈及时
+- [ ] 标签页切换动画流畅
+- [ ] 取消订单确认对话框体验良好
+- [ ] 交互反馈及时（Toast、加载状态）
+- [ ] 移动端适配良好
+- [ ] 无明显 Bug 和卡顿
+
+#### 数据验收
+- [ ] 订单簿数据格式正确
+- [ ] 交易计算准确
+- [ ] 用户资产更新正确
+- [ ] 订单状态流转正确
+- [ ] 百分比计算准确（买入和卖出逻辑不同）
+- [ ] 订单列表按时间倒序排列
+- [ ] 取消订单后数据状态正确
+
+#### 专业性验收
+- [ ] 界面符合专业交易所标准
+- [ ] 信息密度合理
+- [ ] 订单簿展示清晰（左右并排，深度可视化）
+- [ ] 交易流程顺畅
+- [ ] 百分比功能提升交易效率
+- [ ] 订单历史功能完整，便于用户追踪
+- [ ] 买入订单正常执行
+- [ ] 卖出订单正常执行
+- [ ] 订单历史正确记录
+
+#### 体验验收
+- [ ] 所有动画流畅自然
+- [ ] 价格闪烁效果正常
+- [ ] 订单簿更新实时响应
+- [ ] 进度条拖动平滑流畅
+- [ ] 百分比按钮点击反馈及时
+- [ ] 交互反馈及时（Toast、加载状态）
+- [ ] 移动端适配良好
+- [ ] 无明显 Bug 和卡顿
+
+#### 数据验收
+- [ ] 订单簿数据格式正确
+- [ ] 交易计算准确
+- [ ] 用户资产更新正确
+- [ ] 订单状态流转正确
+- [ ] 百分比计算准确（买入和卖出逻辑不同）
+
+#### 专业性验收
+- [ ] 界面符合专业交易所标准
+- [ ] 信息密度合理
+- [ ] 订单簿展示清晰（左右并排，深度可视化）
+- [ ] 交易流程顺畅
+- [ ] 百分比功能提升交易效率
+- [ ] 交易计算准确
+- [ ] 用户资产更新正确
+- [ ] 订单状态流转正确
+
+#### 专业性验收
+- [ ] 界面符合专业交易所标准
+- [ ] 信息密度合理
+- [ ] 订单簿展示清晰
+- [ ] 交易流程顺畅
+
+------
+
 ## 版本历史
 
-- **v0.2** (2026-02-06): 添加需求 1 和需求 2
+- **v0.2** (2026-02-06): 添加需求 1、需求 2 和需求 3
 - **v0.1** (2025-XX-XX): 初始版本（黑客松 Demo）
 
