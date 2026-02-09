@@ -55,7 +55,7 @@ export default function RewardsPage() {
         setShowSuccess(false);
         setRedeemedProduct(null);
         router.push('/dashboard');
-      }, 2000);
+      }, 3000);
 
       // 移除自动跳转: router.push('/dashboard');
     }
@@ -179,10 +179,11 @@ export default function RewardsPage() {
         }}
         title="兑换成功!"
         amount={redeemedProduct ? -redeemedProduct.pointCost : 0}
-        unit="积分"
+        unit="Point"
         message={`商品将在 3-5 个工作日内发送
 正在跳转到资产页面...`}
         emoji="🎁"
+        countdown={3}
       />
     </AtmosphericBackground>
   );
