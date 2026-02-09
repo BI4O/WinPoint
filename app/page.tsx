@@ -17,13 +17,13 @@ export default function Home() {
     },
     {
       icon: <Coins className="w-8 h-8" />,
-      title: '质押获得 $RWA',
-      description: '将积分质押，1:1获得$RWA，成为商家生态的股东'
+      title: '质押获得 RWA',
+      description: '将积分质押，1:1获得RWA，成为商家生态的股东'
     },
     {
       icon: <TrendingUp className="w-8 h-8" />,
       title: '持续获得收益',
-      description: '商家产生收入，$RWA持有者按比例获得收益分配'
+      description: '商家产生收入，RWA持有者按比例获得收益分配'
     }
   ];
 
@@ -82,7 +82,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              通过 积分 & $RWA 双资产模型，让每一次消费都成为长期价值的积累
+              通过 积分 & RWA 双资产模型，让每一次消费都成为长期价值的积累
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -238,7 +238,7 @@ export default function Home() {
             >
               <Card className="text-center">
                 <div className="text-md-on-surface-variant text-sm mb-2">
-                  总 $RWA 数量
+                  总 RWA 数量
                 </div>
                 <div className="text-4xl font-bold text-md-primary mb-1">
                   <CountUp end={mockMetrics.totalRwa} duration={2.5} separator="," />
@@ -266,7 +266,7 @@ export default function Home() {
               准备好开始了吗？
             </h2>
             <p className="text-lg text-md-on-surface-variant mb-8">
-              立即体验 积分 & $RWA 双资产模型，让消费创造长期价值
+              立即体验 积分 & RWA 双资产模型，让消费创造长期价值
             </p>
             <Link href="/merchants">
               <Button size="lg">

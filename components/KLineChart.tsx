@@ -101,7 +101,7 @@ export default function KLineChart() {
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-lg font-semibold text-md-on-background">
-            $RWA 价格
+            RWA 价格
           </h3>
           <span className="text-xs text-md-on-surface-variant px-3 py-1 rounded-full bg-md-surface-container-high">
             实时

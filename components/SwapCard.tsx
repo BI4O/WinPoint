@@ -48,10 +48,10 @@ export default function SwapCard() {
 
     if (direction === 'rwaToUsdt') {
       if (input > user.rwa) {
-        alert('$RWA 余额不足');
+        alert('RWA 余额不足');
         return;
       }
-      // TODO: 实现 $RWA -> USDT 交换逻辑
+      // TODO: 实现 RWA -> USDT 交换逻辑
       setSuccessData({
         title: '卖出成功！',
         amount: parseFloat(outputAmount),
@@ -61,11 +61,11 @@ export default function SwapCard() {
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 2500);
     } else {
-      // TODO: 实现 USDT -> $RWA 交换逻辑
+      // TODO: 实现 USDT -> RWA 交换逻辑
       setSuccessData({
         title: '购买成功！',
         amount: parseFloat(outputAmount),
-        unit: '$RWA',
+        unit: 'RWA',
         emoji: '🎉'
       });
       setShowSuccess(true);
@@ -76,8 +76,8 @@ export default function SwapCard() {
   };
 
   const isRwaToUsdt = direction === 'rwaToUsdt';
-  const inputToken = isRwaToUsdt ? '$RWA' : 'USDT';
-  const outputToken = isRwaToUsdt ? 'USDT' : '$RWA';
+  const inputToken = isRwaToUsdt ? 'RWA' : 'USDT';
+  const outputToken = isRwaToUsdt ? 'USDT' : 'RWA';
   const inputBalance = isRwaToUsdt ? user.rwa : 0; // USDT 余额暂时为 0
 
   return (
@@ -88,7 +88,7 @@ export default function SwapCard() {
           交易
         </h3>
         <p className="text-xs text-md-on-surface-variant">
-          当前价格: <span className="text-md-primary font-semibold">${currentPrice.toFixed(2)}</span> / $RWA
+          当前价格: <span className="text-md-primary font-semibold">${currentPrice.toFixed(2)}</span> / RWA
         </p>
       </div>
 
@@ -161,7 +161,7 @@ export default function SwapCard() {
           <div className="flex items-center justify-between text-sm">
             <span className="text-md-on-surface-variant">价格</span>
             <span className="text-md-on-background font-medium">
-              1 $RWA = ${currentPrice.toFixed(2)} USDT
+              1 RWA = ${currentPrice.toFixed(2)} USDT
             </span>
           </div>
           <div className="flex items-center justify-between text-sm">
@@ -181,7 +181,7 @@ export default function SwapCard() {
           disabled={!inputAmount || parseFloat(inputAmount) <= 0}
           className="w-full"
         >
-          {isRwaToUsdt ? '卖出 $RWA' : '购买 $RWA'}
+          {isRwaToUsdt ? '卖出 RWA' : '购买 RWA'}
         </Button>
 
         {/* 提示信息 */}

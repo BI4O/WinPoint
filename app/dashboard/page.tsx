@@ -29,7 +29,7 @@ export default function DashboardPage() {
             我的资产
           </h1>
           <p className="text-md-on-surface-variant">
-            查看您的 Point、$RWA 和收益情况
+            查看您的 Point、RWA 和收益情况
           </p>
         </motion.div>
 

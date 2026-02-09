@@ -70,7 +70,7 @@ export default function StakeForm({ availablePoint, onStake }: StakeFormProps) {
             <Coins className="h-5 w-5 text-white" />
           </div>
           <h2 className="text-2xl font-bold text-md-on-surface">
-            质押积分获得 $RWA
+            质押积分获得 RWA
           </h2>
         </div>
 
@@ -169,13 +169,13 @@ export default function StakeForm({ availablePoint, onStake }: StakeFormProps) {
           >
             <div className="flex items-center gap-2 mb-3">
               <Share2 className="h-5 w-5 text-md-primary" />
-              <span className="text-sm text-md-on-primary-container">将获得 $RWA</span>
+              <span className="text-sm text-md-on-primary-container">将获得 RWA</span>
             </div>
             <p className="text-3xl font-bold text-md-primary mb-1">
               {rwaToReceive.toFixed(2)}
             </p>
             <p className="text-xs text-md-on-primary-container/70">
-              1 积分 = 1 $RWA
+              1 积分 = 1 RWA
             </p>
           </motion.div>
 

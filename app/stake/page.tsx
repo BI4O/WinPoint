@@ -47,7 +47,7 @@ export default function StakePage() {
             </div>
           </div>
           <p className="text-md-on-surface-variant ml-1">
-            将 积分 质押以获得 $RWA，参与收益分配
+            将 积分 质押以获得 RWA，参与收益分配
           </p>
         </motion.div>
 
@@ -91,8 +91,8 @@ export default function StakePage() {
                   },
                   {
                     step: 2,
-                    title: '获得 $RWA',
-                    description: '立即获得对应数量的 $RWA (1:1 比例)'
+                    title: '获得 RWA',
+                    description: '立即获得对应数量的 RWA (1:1 比例)'
                   },
                   {
                     step: 3,
@@ -102,7 +102,7 @@ export default function StakePage() {
                   {
                     step: 4,
                     title: '自由交易',
-                    description: '$RWA 可在市场自由交易，随时变现'
+                    description: 'RWA 可在市场自由交易，随时变现'
                   }
                 ].map((item, index) => (
                   <motion.div
@@ -170,7 +170,7 @@ export default function StakePage() {
                     {stakedAmount.toFixed(2)} 积分
                   </p>
                   <p className="text-md-on-surface-variant">
-                    获得 {stakedAmount.toFixed(2)} $RWA
+                    获得 {stakedAmount.toFixed(2)} RWA
                   </p>
                 </div>
 

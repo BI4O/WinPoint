@@ -33,7 +33,7 @@ export default function EarningsTooltip() {
             <div className="space-y-3 text-xs text-md-on-surface-variant">
               <div className="flex gap-2">
                 <span className="text-md-primary font-medium shrink-0">每日</span>
-                <span>持有 $RWA 产生收益，累积到待发放账户</span>
+                <span>持有 RWA 产生收益，累积到待发放账户</span>
               </div>
 
               <div className="flex gap-2">
