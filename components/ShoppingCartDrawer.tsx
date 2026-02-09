@@ -120,7 +120,7 @@ export default function ShoppingCartDrawer({ isOpen, onClose }: ShoppingCartDraw
                     </div>
                     <div className="flex justify-between text-md-success">
                       <span>将获得:</span>
-                      <span className="font-bold">{totalPoint.toFixed(1)} 积分</span>
+                      <span className="font-bold">{totalPoint.toFixed(1)} Point</span>
                     </div>
                   </div>
 

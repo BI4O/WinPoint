@@ -146,7 +146,7 @@ export default function CheckoutModal({
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-md-success">将获得 积分:</span>
+                      <span className="text-md-success">将获得 Point:</span>
                       <span className="text-lg font-bold text-md-success">
                         {totalPoint.toFixed(1)}
                       </span>
@@ -156,7 +156,7 @@ export default function CheckoutModal({
                   {/* 提示信息 */}
                   <div className="bg-md-primary-container/40 rounded-2xl p-4">
                     <p className="text-sm text-md-on-surface-variant">
-                      💡 提示: 积分 可用于质押获得 $RWA，参与收益分配
+                      💡 提示: Point 可用于质押获得 $RWA，参与收益分配
                     </p>
                   </div>
                 </div>
