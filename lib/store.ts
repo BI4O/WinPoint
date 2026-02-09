@@ -3,11 +3,15 @@ import {
   mockUserInitial,
   mockOrdersInitial,
   mockActivitiesInitial,
+  mockOrderBook,
+  mockUserOrders,
   type Order,
   type Activity,
   type CartItem,
   type Product,
-  type RedemptionRecord
+  type RedemptionRecord,
+  type OrderBook,
+  type TradeOrder
 } from './mock-data';
 
 interface UserState {
@@ -27,6 +31,11 @@ interface AppState {
 
   // 兑换记录（需求 2）
   redemptions: RedemptionRecord[];
+
+  // 交易市场相关（需求 3）
+  orderBook: OrderBook;
+  currentOrders: TradeOrder[];
+  historicalOrders: TradeOrder[];
 
   // 原有 actions
   consumeAtMerchant: (merchantId: string, merchantName: string, amount: number) => void;
@@ -52,6 +61,12 @@ interface AppState {
     pointCost: number
   ) => boolean;
   getUserRedemptions: () => RedemptionRecord[];
+
+  // 交易市场 actions（需求 3）
+  placeBuyOrder: (price: number, quantity: number) => boolean;
+  placeSellOrder: (price: number, quantity: number) => boolean;
+  cancelOrder: (orderId: string) => boolean;
+  refreshOrders: () => void;
 }
 
 export const useStore = create<AppState>((set, get) => ({
@@ -60,6 +75,9 @@ export const useStore = create<AppState>((set, get) => ({
   activities: mockActivitiesInitial,
   cart: [],
   redemptions: [],
+  orderBook: mockOrderBook,
+  currentOrders: mockUserOrders.filter(o => o.status === 'pending' || o.status === 'partial'),
+  historicalOrders: mockUserOrders.filter(o => o.status === 'fulfilled' || o.status === 'cancelled'),
 
   consumeAtMerchant: (merchantId, merchantName, amount) => {
     const pointEarned = amount / 10;
@@ -280,5 +298,159 @@ export const useStore = create<AppState>((set, get) => ({
 
   getUserRedemptions: () => {
     return get().redemptions;
+  },
+
+  // 交易市场 actions（需求 3）
+  placeBuyOrder: (price, quantity) => {
+    const { user } = get();
+    const totalAmount = price * quantity;
+
+    // 检查 USDT 余额
+    if (user.earnings < totalAmount) {
+      return false;
+    }
+
+    // 创建买单
+    const newOrder: TradeOrder = {
+      id: `trade-${Date.now()}`,
+      type: 'buy',
+      price,
+      quantity,
+      totalAmount,
+      timestamp: Date.now(),
+      status: 'pending',
+      filledQuantity: 0
+    };
+
+    // 简化版订单匹配：检查是否有匹配的卖单
+    const matchingSellOrder = get().orderBook.sellOrders.find(
+      order => order.price <= price
+    );
+
+    if (matchingSellOrder) {
+      // 立即成交
+      newOrder.status = 'fulfilled';
+      newOrder.filledQuantity = quantity;
+
+      set(state => ({
+        user: {
+          ...state.user,
+          earnings: state.user.earnings - totalAmount,
+          rwa: state.user.rwa + quantity
+        },
+        historicalOrders: [newOrder, ...state.historicalOrders]
+      }));
+    } else {
+      // 挂单
+      set(state => ({
+        user: {
+          ...state.user,
+          earnings: state.user.earnings - totalAmount
+        },
+        currentOrders: [newOrder, ...state.currentOrders]
+      }));
+    }
+
+    return true;
+  },
+
+  placeSellOrder: (price, quantity) => {
+    const { user } = get();
+    const totalAmount = price * quantity;
+
+    // 检查 RWA 余额
+    if (user.rwa < quantity) {
+      return false;
+    }
+
+    // 创建卖单
+    const newOrder: TradeOrder = {
+      id: `trade-${Date.now()}`,
+      type: 'sell',
+      price,
+      quantity,
+      totalAmount,
+      timestamp: Date.now(),
+      status: 'pending',
+      filledQuantity: 0
+    };
+
+    // 简化版订单匹配：检查是否有匹配的买单
+    const matchingBuyOrder = get().orderBook.buyOrders.find(
+      order => order.price >= price
+    );
+
+    if (matchingBuyOrder) {
+      // 立即成交
+      newOrder.status = 'fulfilled';
+      newOrder.filledQuantity = quantity;
+
+      set(state => ({
+        user: {
+          ...state.user,
+          rwa: state.user.rwa - quantity,
+          earnings: state.user.earnings + totalAmount
+        },
+        historicalOrders: [newOrder, ...state.historicalOrders]
+      }));
+    } else {
+      // 挂单
+      set(state => ({
+        user: {
+          ...state.user,
+          rwa: state.user.rwa - quantity
+        },
+        currentOrders: [newOrder, ...state.currentOrders]
+      }));
+    }
+
+    return true;
+  },
+
+  cancelOrder: (orderId) => {
+    const { currentOrders } = get();
+    const order = currentOrders.find(o => o.id === orderId);
+
+    if (!order) {
+      return false;
+    }
+
+    // 退还未成交的资金
+    const unfilledQuantity = order.quantity - (order.filledQuantity || 0);
+    const refundAmount = order.price * unfilledQuantity;
+
+    // 更新订单状态
+    const cancelledOrder: TradeOrder = {
+      ...order,
+      status: 'cancelled'
+    };
+
+    set(state => ({
+      user: {
+        ...state.user,
+        // 买单退还 USDT，卖单退还 RWA
+        earnings: order.type === 'buy'
+          ? state.user.earnings + refundAmount
+          : state.user.earnings,
+        rwa: order.type === 'sell'
+          ? state.user.rwa + unfilledQuantity
+          : state.user.rwa
+      },
+      currentOrders: state.currentOrders.filter(o => o.id !== orderId),
+      historicalOrders: [cancelledOrder, ...state.historicalOrders]
+    }));
+
+    return true;
+  },
+
+  refreshOrders: () => {
+    // 这个方法用于刷新订单状态，当前是简化实现
+    // 在真实场景中，这里会从后端重新获取订单数据
+    const allOrders = [...get().currentOrders, ...get().historicalOrders];
+
+    set({
+      currentOrders: allOrders.filter(o => o.status === 'pending' || o.status === 'partial'),
+      historicalOrders: allOrders.filter(o => o.status === 'fulfilled' || o.status === 'cancelled')
+    });
   }
 }));

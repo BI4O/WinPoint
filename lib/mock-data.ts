@@ -95,6 +95,36 @@ export interface MarketOrder {
   total: number;
 }
 
+// 交易订单接口（需求 3）
+export interface TradeOrder {
+  id: string;
+  type: 'buy' | 'sell';
+  price: number;
+  quantity: number;
+  totalAmount: number;
+  timestamp: number;
+  status: 'pending' | 'partial' | 'fulfilled' | 'cancelled';
+  filledQuantity?: number;
+}
+
+// 订单簿条目接口
+export interface OrderBookEntry {
+  price: number;
+  quantity: number;
+  totalAmount: number;
+  depth: number;
+  depthPercentage: number;
+}
+
+// 订单簿接口
+export interface OrderBook {
+  sellOrders: OrderBookEntry[];
+  buyOrders: OrderBookEntry[];
+  lastPrice: number;
+  priceChange24h: number;
+  priceChangePercent24h: number;
+}
+
 // 星巴克咖啡商品
 const starbucksProducts: Product[] = [
   { id: 'sb-1', merchantId: 'starbucks', name: '☕ 美式咖啡', price: 32, image: 'emoji:☕', stock: 999 },
@@ -197,8 +227,8 @@ export const mockMerchants: Merchant[] = [
 export const mockUserInitial = {
   address: "0x1234...5678",
   point: 5000,
-  rwa: 50,
-  earnings: 12.5
+  rwa: 500,
+  earnings: 10000
 };
 
 // 使用固定的基准时间戳 (2024-02-01) 避免 SSR hydration 问题
@@ -424,6 +454,92 @@ export const mockMetrics = {
 };
 
 // 兑换商品数据（需求 2）
+// 订单簿数据（需求 3）
+export const mockOrderBook: OrderBook = {
+  // 卖单：从高到低排列，深度从大到小（上面长下面短），带明显波动
+  sellOrders: [
+    { price: 0.1565, quantity: 142.45, totalAmount: 22.30, depth: 142.45, depthPercentage: 100 },
+    { price: 0.1560, quantity: 68.32, totalAmount: 10.66, depth: 210.77, depthPercentage: 78 },
+    { price: 0.1555, quantity: 155.67, totalAmount: 24.21, depth: 366.44, depthPercentage: 65 },
+    { price: 0.1550, quantity: 45.18, totalAmount: 7.00, depth: 411.62, depthPercentage: 52 },
+    { price: 0.1545, quantity: 138.89, totalAmount: 21.46, depth: 550.51, depthPercentage: 41 },
+    { price: 0.1540, quantity: 72.45, totalAmount: 11.16, depth: 622.96, depthPercentage: 33 },
+    { price: 0.1535, quantity: 95.76, totalAmount: 14.70, depth: 718.72, depthPercentage: 24 },
+    { price: 0.1530, quantity: 58.92, totalAmount: 9.01, depth: 777.64, depthPercentage: 18 },
+    { price: 0.1525, quantity: 125.34, totalAmount: 19.11, depth: 902.98, depthPercentage: 11 },
+    { price: 0.1520, quantity: 42.58, totalAmount: 6.47, depth: 945.56, depthPercentage: 5 }
+  ],
+  // 买单：从高到低排列，深度从小到大（上面短下面长），带明显波动
+  buyOrders: [
+    { price: 0.1510, quantity: 38.23, totalAmount: 5.77, depth: 38.23, depthPercentage: 4 },
+    { price: 0.1505, quantity: 95.48, totalAmount: 14.37, depth: 133.71, depthPercentage: 12 },
+    { price: 0.1500, quantity: 52.91, totalAmount: 7.94, depth: 186.62, depthPercentage: 22 },
+    { price: 0.1495, quantity: 118.76, totalAmount: 17.76, depth: 305.38, depthPercentage: 35 },
+    { price: 0.1490, quantity: 45.34, totalAmount: 6.76, depth: 350.72, depthPercentage: 48 },
+    { price: 0.1485, quantity: 132.12, totalAmount: 19.62, depth: 482.84, depthPercentage: 61 },
+    { price: 0.1480, quantity: 68.67, totalAmount: 10.16, depth: 551.51, depthPercentage: 72 },
+    { price: 0.1475, quantity: 105.89, totalAmount: 15.62, depth: 657.40, depthPercentage: 84 },
+    { price: 0.1470, quantity: 55.23, totalAmount: 8.12, depth: 712.63, depthPercentage: 92 },
+    { price: 0.1465, quantity: 88.67, totalAmount: 12.99, depth: 801.30, depthPercentage: 100 }
+  ],
+  lastPrice: 0.1515,
+  priceChange24h: 0.0050,
+  priceChangePercent24h: 3.41
+};
+
+// 用户交易订单历史（需求 3）
+export const mockUserOrders: TradeOrder[] = [
+  {
+    id: 'trade-1',
+    type: 'buy',
+    price: 0.1489,
+    quantity: 10.5,
+    totalAmount: 1.5635,
+    timestamp: BASE_TIMESTAMP - 86400000, // 1天前
+    status: 'fulfilled',
+    filledQuantity: 10.5
+  },
+  {
+    id: 'trade-2',
+    type: 'sell',
+    price: 0.2370,
+    quantity: 5.2,
+    totalAmount: 1.2324,
+    timestamp: BASE_TIMESTAMP - 172800000, // 2天前
+    status: 'fulfilled',
+    filledQuantity: 5.2
+  },
+  {
+    id: 'trade-3',
+    type: 'buy',
+    price: 0.1477,
+    quantity: 8.0,
+    totalAmount: 1.1816,
+    timestamp: BASE_TIMESTAMP - 259200000, // 3天前
+    status: 'cancelled'
+  },
+  {
+    id: 'trade-4',
+    type: 'sell',
+    price: 0.2358,
+    quantity: 12.3,
+    totalAmount: 2.9003,
+    timestamp: BASE_TIMESTAMP - 345600000, // 4天前
+    status: 'fulfilled',
+    filledQuantity: 12.3
+  },
+  {
+    id: 'trade-5',
+    type: 'buy',
+    price: 0.1465,
+    quantity: 15.0,
+    totalAmount: 2.1975,
+    timestamp: BASE_TIMESTAMP - 432000000, // 5天前
+    status: 'partial',
+    filledQuantity: 7.5
+  }
+];
+
 export const mockRewardProducts: RewardProduct[] = [
   // 母婴商品（重点展示）
   {
