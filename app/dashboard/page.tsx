@@ -54,9 +54,9 @@ export default function DashboardPage() {
             transition={{ delay: 0.2, type: 'tween', duration: 0.4, ease: [0.2, 0, 0, 1] }}
           >
             <AssetCard
-              title="$RWA"
+              title="RWA"
               value={user.rwa.toFixed(2)}
-              subtitle="持有 $RWA"
+              subtitle="持有 RWA"
               icon={Share2}
               glow="tertiary"
             />
