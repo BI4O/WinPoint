@@ -71,7 +71,7 @@ export default function SuccessNotification({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6, type: 'tween', duration: 0.3, ease: [0.2, 0, 0, 1] }}
-                className="text-sm text-md-on-surface-variant flex items-center justify-center gap-2"
+                className="text-sm text-md-on-surface-variant flex items-center justify-center gap-2 whitespace-pre-line"
               >
                 {showLoading && (
                   <motion.div

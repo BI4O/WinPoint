@@ -58,7 +58,10 @@ export default function CheckoutModal({
 
     // 显示成功通知
     setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 2000);
+    setTimeout(() => {
+      setShowSuccess(false);
+      router.push('/dashboard');
+    }, 2000);
 
     // 通知父组件关闭购物车
     onCheckoutSuccess?.();
@@ -202,11 +205,15 @@ export default function CheckoutModal({
       {/* 成功通知 */}
       <SuccessNotification
         isOpen={showSuccess}
-        onClose={() => setShowSuccess(false)}
+        onClose={() => {
+          setShowSuccess(false);
+          router.push('/dashboard');
+        }}
         title="购买成功!"
         amount={earnedPoint}
         unit="积分"
-        message="积分已到账，可用于质押或兑换商品"
+        message={`积分已到账，可用于质押或兑换商品
+正在跳转到资产页面...`}
         emoji="🎉"
       />
     </>
