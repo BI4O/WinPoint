@@ -11,7 +11,7 @@ export default function MerchantsPage() {
 
   const handleMerchantClick = (merchant: Merchant) => {
     // 跳转到店铺详情页
-    router.push(`/merchants/${merchant.id}`);
+    router.push(`/merchant/${merchant.id}`);
   };
 
   return (

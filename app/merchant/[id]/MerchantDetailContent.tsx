@@ -1,45 +1,27 @@
 'use client';
 
 import { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Store, Tag } from 'lucide-react';
 import { useStore } from '@/lib/store';
-import { mockMerchants } from '@/lib/mock-data';
+import { Merchant } from '@/lib/mock-data';
 import ProductCard from '@/components/ProductCard';
 import CartFloatingButton from '@/components/CartFloatingButton';
 import ShoppingCartDrawer from '@/components/ShoppingCartDrawer';
 
-export default function MerchantDetailPage() {
-  const params = useParams();
-  const router = useRouter();
-  const merchantId = params.id as string;
+interface MerchantDetailContentProps {
+  merchant: Merchant;
+}
 
+export default function MerchantDetailContent({ merchant }: MerchantDetailContentProps) {
+  const router = useRouter();
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   const cart = useStore(state => state.cart);
   const addToCart = useStore(state => state.addToCart);
   const getCartItemCount = useStore(state => state.getCartItemCount);
   const getCartTotal = useStore(state => state.getCartTotal);
-
-  // 查找商家
-  const merchant = mockMerchants.find(m => m.id === merchantId);
-
-  if (!merchant) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-xl text-md-on-surface-variant mb-4">商家不存在</p>
-          <button
-            onClick={() => router.push('/merchants')}
-            className="text-md-primary hover:underline"
-          >
-            返回商家列表
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-md-background pb-24">
@@ -81,7 +63,7 @@ export default function MerchantDetailPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Tag className="w-4 h-4" />
-                  <span>消费可获得 积分 (10:1)</span>
+                  <span>消费可获得 Point (10:1)</span>
                 </div>
               </div>
 
