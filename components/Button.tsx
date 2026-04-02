@@ -4,8 +4,14 @@ import { forwardRef, type ReactNode } from 'react';
 import { motion, type HTMLMotionProps } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
+/**
+ * variant: 'filled' | 'secondary' | 'outlined'
+ * - filled: 主按钮，红色背景，白色文字
+ * - secondary: 次要按钮，深灰背景，白色文字
+ * - outlined: 再次要按钮，白色背景，灰色边框
+ */
 interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'variants'> {
-  variant?: 'filled' | 'tonal' | 'outlined' | 'text';
+  variant?: 'filled' | 'secondary' | 'outlined';
   size?: 'sm' | 'md' | 'lg';
   children: ReactNode;
 }
@@ -14,13 +20,24 @@ const MotionButton = motion.button;
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'filled', size = 'md', children, type = 'button', ...props }, ref) => {
-    const baseStyles = 'inline-flex items-center justify-center rounded-full font-medium disabled:opacity-50 disabled:cursor-not-allowed';
+    const baseStyles = 'inline-flex items-center justify-center rounded-md font-medium disabled:opacity-50 disabled:cursor-not-allowed';
 
     const variants = {
-      filled: 'bg-md-primary text-md-on-primary shadow-sm',
-      tonal: 'bg-md-secondary-container text-md-on-secondary-container',
-      outlined: 'border border-md-outline text-md-primary',
-      text: 'text-md-primary'
+      filled: `
+        bg-primary text-white
+        hover:bg-primary-hover
+        focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2
+      `,
+      secondary: `
+        bg-gray-333 text-white
+        hover:bg-gray-222
+        focus-visible:outline-2 focus-visible:outline-gray-333 focus-visible:outline-offset-2
+      `,
+      outlined: `
+        bg-white text-gray-333 border border-gray-2
+        hover:bg-gray-100
+        focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2
+      `,
     };
 
     const sizes = {
