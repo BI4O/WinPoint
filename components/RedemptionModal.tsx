@@ -4,13 +4,13 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import Button from './Button';
-import { RewardProduct } from '@/lib/mock-data';
+import { MerchantProduct } from '@/lib/mock-data';
 import { useStore } from '@/lib/store';
 
 interface RedemptionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  product: RewardProduct | null;
+  product: MerchantProduct | null;
   userPoint: number;
   onConfirm: (productId: string) => void;
 }
@@ -33,7 +33,7 @@ export default function RedemptionModal({
 
   if (!product) return null;
 
-  const remainingPoint = userPoint - product.pointCost;
+  const remainingPoint = userPoint - product.pointPrice;
   const isEmoji = product.image.startsWith('emoji:');
   const imageContent = isEmoji ? product.image.replace('emoji:', '') : product.image;
 
@@ -51,8 +51,8 @@ export default function RedemptionModal({
       product.name,
       product.merchantId,
       product.merchantName,
-      product.originalPrice,
-      product.pointCost,
+      product.cashPrice,
+      product.pointPrice,
       shippingAddress
     );
     onConfirm(product.id);
@@ -115,7 +115,7 @@ export default function RedemptionModal({
                   </h3>
                   <div className="flex items-baseline gap-2">
                     <span className="text-xl font-bold text-md-primary">
-                      {product.pointCost}
+                      {product.pointPrice}
                     </span>
                     <span className="text-sm text-md-on-surface-variant">Point</span>
                   </div>
@@ -133,7 +133,7 @@ export default function RedemptionModal({
                 <div className="flex justify-between text-sm">
                   <span className="text-md-on-surface-variant">兑换消耗</span>
                   <span className="font-medium text-md-error">
-                    -{product.pointCost} Point
+                    -{product.pointPrice} Point
                   </span>
                 </div>
                 <div className="h-px bg-md-on-surface/10 my-2" />
