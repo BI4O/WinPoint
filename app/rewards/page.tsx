@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useStore } from '@/lib/store';
-import { mockRewardProducts, type RewardProduct } from '@/lib/mock-data';
+import { type MerchantProduct } from '@/lib/mock-data';
 import RewardProductCard from '@/components/RewardProductCard';
 import CategoryFilter from '@/components/CategoryFilter';
 import RedemptionModal from '@/components/RedemptionModal';
@@ -13,23 +13,25 @@ import AtmosphericBackground from '@/components/AtmosphericBackground';
 
 export default function RewardsPage() {
   const router = useRouter();
+  const merchantProducts = useStore(state => state.merchantProducts);
   const user = useStore(state => state.user);
   const redeemProduct = useStore(state => state.redeemProduct);
   const [activeCategory, setActiveCategory] = useState('全部');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<RewardProduct | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<MerchantProduct | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [redeemedProduct, setRedeemedProduct] = useState<RewardProduct | null>(null);
+  const [redeemedProduct, setRedeemedProduct] = useState<MerchantProduct | null>(null);
 
-  // 获取所有分类
-  const categories = ['全部', ...Array.from(new Set(mockRewardProducts.map(p => p.category)))];
+  // 过滤上架商品并获取所有分类
+  const listedProducts = merchantProducts.filter(p => p.isListed);
+  const categories = ['全部', ...Array.from(new Set(listedProducts.map(p => p.category)))];
 
   // 筛选商品
   const filteredProducts = activeCategory === '全部'
-    ? mockRewardProducts
-    : mockRewardProducts.filter(p => p.category === activeCategory);
+    ? listedProducts
+    : listedProducts.filter(p => p.category === activeCategory);
 
-  const handleRedeem = (product: RewardProduct) => {
+  const handleRedeem = (product: MerchantProduct) => {
     setSelectedProduct(product);
     setIsModalOpen(true);
   };
@@ -40,8 +42,10 @@ export default function RewardsPage() {
     const success = redeemProduct(
       productId,
       selectedProduct.name,
+      selectedProduct.merchantId,
       selectedProduct.merchantName,
-      selectedProduct.pointCost
+      selectedProduct.cashPrice,
+      selectedProduct.pointPrice
     );
 
     if (success) {
@@ -78,7 +82,7 @@ export default function RewardsPage() {
               </div>
               <div>
                 <h1 className="text-4xl font-bold text-gray-333">
-                  兑换
+                  积分商城
                 </h1>
               </div>
             </div>
@@ -99,7 +103,7 @@ export default function RewardsPage() {
           </div>
 
           <p className="text-gray-1 ml-1">
-            使用 Point 兑换心仪商品，1 Point = ¥1 商品价值
+            浏览并兑换积分商城的精选商品
           </p>
         </motion.div>
 
@@ -178,7 +182,7 @@ export default function RewardsPage() {
           router.push('/dashboard');
         }}
         title="兑换成功!"
-        amount={redeemedProduct ? -redeemedProduct.pointCost : 0}
+        amount={redeemedProduct ? -redeemedProduct.pointPrice : 0}
         unit="Point"
         message={`商品将在 3-5 个工作日内发送
 正在跳转到资产页面...`}
