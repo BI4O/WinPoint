@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useStore } from '@/lib/store';
-import { Wallet, Home, Store, Gift, LayoutDashboard, TrendingUp, Menu, X } from 'lucide-react';
+import { Wallet, Home, Store, Gift, LayoutDashboard, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 
@@ -16,9 +16,9 @@ export default function Header() {
   const navItems = [
     { href: '/', label: '首页', icon: Home },
     { href: '/merchants', label: '商家', icon: Store },
-    { href: '/rewards', label: '兑换', icon: Gift },
+    { href: '/rewards', label: '积分商城', icon: Gift },
     { href: '/dashboard', label: '资产', icon: LayoutDashboard },
-    { href: '/market', label: '市场', icon: TrendingUp },
+    { href: '/merchant/manage', label: '商户管理', icon: Store },
   ];
 
   return (
