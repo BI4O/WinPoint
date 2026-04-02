@@ -5,7 +5,8 @@ import { motion } from 'framer-motion';
 import { useStore } from '@/lib/store';
 import { mockMerchants } from '@/lib/mock-data';
 import AddProductModal from '@/components/AddProductModal';
-import { Plus } from 'lucide-react';
+import MerchantStatsCard from '@/components/MerchantStatsCard';
+import { Plus, AlertTriangle } from 'lucide-react';
 import Button from '@/components/Button';
 import MerchantProductRow from '@/components/MerchantProductRow';
 import MerchantOrderRow from '@/components/MerchantOrderRow';
@@ -16,7 +17,7 @@ export default function MerchantManagePage() {
   const merchantOrders = useStore(state => state.merchantOrders);
   const identityMode = useStore(state => state.identityMode);
   const currentMerchantId = useStore(state => state.currentMerchantId);
-  const [activeTab, setActiveTab] = useState<'products' | 'orders'>('products');
+  const [activeTab, setActiveTab] = useState<'products' | 'orders' | 'stats'>('products');
   const [showAddModal, setShowAddModal] = useState(false);
 
   // 商户模式下使用 store 的 currentMerchantId，否则用默认的 starbucks
@@ -24,6 +25,17 @@ export default function MerchantManagePage() {
   const currentMerchant = mockMerchants.find(m => m.id === selectedMerchantId);
   const merchantProductsList = merchantProducts.filter(p => p.merchantId === selectedMerchantId);
   const merchantOrdersList = merchantOrders.filter(o => o.merchantId === selectedMerchantId);
+
+  // 计算商户统计数据
+  const totalProducts = merchantProductsList.length;
+  const listedProducts = merchantProductsList.filter(p => p.isListed).length;
+  const lowStockProducts = merchantProductsList.filter(p => p.stock > 0 && p.stock < 10).length;
+  const outOfStockProducts = merchantProductsList.filter(p => p.stock === 0).length;
+  const totalOrders = merchantOrdersList.length;
+  const pendingOrders = merchantOrdersList.filter(o => o.status === 'pending').length;
+  const shippedOrders = merchantOrdersList.filter(o => o.status === 'shipped').length;
+  const totalSales = merchantOrdersList.reduce((sum, o) => sum + o.cashPrice * o.quantity, 0);
+  const totalPointsEarned = merchantOrdersList.reduce((sum, o) => sum + o.pointPrice * o.quantity, 0);
 
   return (
     <AtmosphericBackground className="min-h-screen bg-md-background">
@@ -95,6 +107,16 @@ export default function MerchantManagePage() {
             >
               订单管理 ({merchantOrdersList.length})
             </button>
+            <button
+              onClick={() => setActiveTab('stats')}
+              className={`pb-3 px-1 text-sm font-medium transition-colors ${
+                activeTab === 'stats'
+                  ? 'text-md-primary border-b-2 border-md-primary'
+                  : 'text-gray-500 hover:text-gray-333'
+              }`}
+            >
+              数据概览
+            </button>
           </div>
         </motion.div>
 
@@ -135,7 +157,7 @@ export default function MerchantManagePage() {
                 </tbody>
               </table>
             </div>
-          ) : (
+          ) : activeTab === 'orders' ? (
             <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
               <table className="w-full">
                 <thead className="bg-gray-50">
@@ -162,6 +184,82 @@ export default function MerchantManagePage() {
                   )}
                 </tbody>
               </table>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {/* 概览卡片 */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <MerchantStatsCard
+                  title="商品总数"
+                  value={totalProducts}
+                  subtitle={`${listedProducts} 上架中`}
+                  icon="📦"
+                />
+                <MerchantStatsCard
+                  title="总订单数"
+                  value={totalOrders}
+                  subtitle={`${pendingOrders} 待处理`}
+                  icon="🛒"
+                />
+                <MerchantStatsCard
+                  title="销售额"
+                  value={`¥${totalSales.toFixed(2)}`}
+                  subtitle={`积分收入: ${totalPointsEarned}`}
+                  icon="💰"
+                />
+                <MerchantStatsCard
+                  title="库存预警"
+                  value={lowStockProducts + outOfStockProducts}
+                  subtitle={`${outOfStockProducts} 已售罄`}
+                  icon="⚠️"
+                />
+              </div>
+
+              {/* 低库存商品列表 */}
+              {lowStockProducts > 0 && (
+                <div className="bg-white rounded-2xl shadow-sm p-6">
+                  <h3 className="text-lg font-bold text-gray-333 mb-4 flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5 text-orange-500" />
+                    库存不足
+                  </h3>
+                  <div className="space-y-2">
+                    {merchantProductsList
+                      .filter(p => p.stock > 0 && p.stock < 10)
+                      .map(product => (
+                        <div key={product.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl">{product.image.startsWith('emoji:') ? product.image.replace('emoji:', '') : product.image}</span>
+                            <span className="font-medium text-gray-333">{product.name}</span>
+                          </div>
+                          <span className="text-orange-500 font-medium">剩余 {product.stock} 件</span>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
+
+              {/* 售罄商品列表 */}
+              {outOfStockProducts > 0 && (
+                <div className="bg-white rounded-2xl shadow-sm p-6">
+                  <h3 className="text-lg font-bold text-gray-333 mb-4 flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5 text-red-500" />
+                    已售罄
+                  </h3>
+                  <div className="space-y-2">
+                    {merchantProductsList
+                      .filter(p => p.stock === 0)
+                      .map(product => (
+                        <div key={product.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl">{product.image.startsWith('emoji:') ? product.image.replace('emoji:', '') : product.image}</span>
+                            <span className="font-medium text-gray-333">{product.name}</span>
+                          </div>
+                          <span className="text-red-500 font-medium">售罄</span>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </motion.div>
