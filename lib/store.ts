@@ -14,8 +14,8 @@ import {
 } from './mock-data';
 
 // 身份状态
-type IdentityMode = 'user' | 'merchant';
-type MerchantId = 'starbucks' | 'nike' | 'apple' | 'baby' | 'jewelry';
+export type IdentityMode = 'user' | 'merchant';
+export type MerchantId = 'starbucks' | 'nike' | 'apple' | 'baby' | 'jewelry';
 
 interface UserState {
   address: string;

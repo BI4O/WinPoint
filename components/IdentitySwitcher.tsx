@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { useStore } from '@/lib/store';
+import { useStore, type MerchantId } from '@/lib/store';
 import { mockMerchants } from '@/lib/mock-data';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, User, Store } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 
 export default function IdentitySwitcher() {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,7 +18,7 @@ export default function IdentitySwitcher() {
   const displayLabel = currentMerchant?.name || '用户';
 
   const handleSelect = (mode: 'user' | 'merchant', merchantId?: string) => {
-    setIdentityMode(mode, merchantId as any);
+    setIdentityMode(mode, merchantId as MerchantId);
     setIsOpen(false);
   };
 
