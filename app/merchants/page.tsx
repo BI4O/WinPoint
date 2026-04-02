@@ -1,13 +1,25 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { mockMerchants, type Merchant } from '@/lib/mock-data';
 import MerchantCard from '@/components/MerchantCard';
+import { useStore } from '@/lib/store';
 import AtmosphericBackground from '@/components/AtmosphericBackground';
 
 export default function MerchantsPage() {
   const router = useRouter();
+
+  const identityMode = useStore(state => state.identityMode);
+  const currentMerchantId = useStore(state => state.currentMerchantId);
+
+  // 商户模式下直接跳转自家店铺
+  useEffect(() => {
+    if (identityMode === 'merchant' && currentMerchantId) {
+      router.push(`/merchant/${currentMerchantId}`);
+    }
+  }, [identityMode, currentMerchantId, router]);
 
   const handleMerchantClick = (merchant: Merchant) => {
     // 跳转到店铺详情页
