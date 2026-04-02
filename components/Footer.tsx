@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
@@ -23,10 +24,14 @@ export default function Footer() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-primary font-bold text-lg shadow-md">
-              P&R
-            </div>
-            <span className="font-bold text-lg">Point & RWA</span>
+            <Image
+              src="/images/winpoint_logo_red.svg"
+              alt="WinPoint"
+              width={40}
+              height={40}
+              className="h-10 w-10"
+            />
+            <span className="font-bold text-lg text-primary">WinPoint</span>
           </motion.div>
 
           {/* 链接 */}
@@ -49,7 +54,7 @@ export default function Footer() {
         {/* 版权信息 */}
         <div className="text-center">
           <p className="text-sm text-white/60">
-            © 2026 Point & RWA. 保留所有权利.
+            © 2026 WinPoint. 保留所有权利.
           </p>
         </div>
       </div>
