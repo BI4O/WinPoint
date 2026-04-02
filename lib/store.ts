@@ -13,6 +13,10 @@ import {
   type CartItem
 } from './mock-data';
 
+// 身份状态
+type IdentityMode = 'user' | 'merchant';
+type MerchantId = 'starbucks' | 'nike' | 'apple' | 'baby' | 'jewelry';
+
 interface UserState {
   address: string;
   point: number;
@@ -30,6 +34,14 @@ interface AppState {
   // 商户商品管理
   merchantProducts: MerchantProduct[];
   merchantOrders: MerchantOrder[];
+
+  // 身份状态
+  identityMode: IdentityMode;
+  currentMerchantId: MerchantId | null;
+
+  // actions
+  setIdentityMode: (mode: IdentityMode, merchantId?: MerchantId) => void;
+  addMerchantProduct: (product: Omit<MerchantProduct, 'id'>) => void;
 
   // 原有 actions
   consumeAtMerchant: (merchantId: string, merchantName: string, amount: number) => void;
@@ -75,6 +87,26 @@ export const useStore = create<AppState>((set, get) => ({
   cart: [],
   merchantProducts: mockMerchantProducts,
   merchantOrders: mockMerchantOrders,
+
+  identityMode: 'user' as IdentityMode,
+  currentMerchantId: null as MerchantId | null,
+
+  setIdentityMode: (mode, merchantId) => {
+    set({
+      identityMode: mode,
+      currentMerchantId: mode === 'merchant' ? (merchantId || 'starbucks') : null
+    });
+  },
+
+  addMerchantProduct: (product) => {
+    const newProduct: MerchantProduct = {
+      ...product,
+      id: `mp-${Date.now()}`
+    };
+    set(state => ({
+      merchantProducts: [...state.merchantProducts, newProduct]
+    }));
+  },
 
   consumeAtMerchant: (merchantId, merchantName, amount) => {
     const pointEarned = amount / 10;
