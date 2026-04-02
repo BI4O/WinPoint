@@ -25,6 +25,39 @@ export interface MerchantProduct {
   category?: string;
 }
 
+// 商户权益接口
+export interface MerchantBenefit {
+  id: string;
+  merchantId: string;
+  merchantName: string;
+  name: string;
+  type: 'parking' | 'dining' | 'gift' | 'beverage' | 'custom';
+  winPrice: number;
+  stock: number | null;       // null = 无限
+  dailyLimit: number | null;   // null = 无限
+  validDays: number;           // 有效期（天）
+  isListed: boolean;
+  description?: string;
+  image: string;              // emoji:☕ 格式
+}
+
+// 商户权益订单接口
+export interface MerchantBenefitOrder {
+  id: string;
+  benefitId: string;
+  benefitName: string;
+  merchantId: string;
+  merchantName: string;
+  userId: string;
+  userAddress: string;
+  winPrice: number;
+  cashPrice: number;
+  voucherCode: string;        // WIN-ABC12345 格式
+  status: 'pending' | 'used' | 'expired' | 'cancelled';
+  timestamp: number;
+  usedAt?: number;            // 核销时间
+}
+
 // 商户订单接口
 export interface MerchantOrder {
   id: string;
@@ -160,6 +193,15 @@ export interface OrderBook {
   priceChange24h: number;
   priceChangePercent24h: number;
 }
+
+// 权益类型预设
+export const BENEFIT_TYPES = [
+  { type: 'parking' as const, icon: '🅿️', label: '停车券' },
+  { type: 'dining' as const, icon: '🍽️', label: '餐饮券' },
+  { type: 'gift' as const, icon: '🎁', label: '礼品券' },
+  { type: 'beverage' as const, icon: '☕', label: '饮品券' },
+  { type: 'custom' as const, icon: '📦', label: '自定义' },
+];
 
 // 星巴克咖啡商品
 const starbucksProducts: Product[] = [
@@ -794,6 +836,73 @@ export const mockMerchantOrders: MerchantOrder[] = [
     timestamp: Date.now() - 604800000,
     status: 'shipped',
     shippingAddress: { name: '林五', phone: '15500155000', address: '厦门市思明区某某街741号' }
+  },
+];
+
+// 商户权益数据
+export const mockMerchantBenefits: MerchantBenefit[] = [
+  // 星巴克
+  { id: 'mb-sb-1', merchantId: 'starbucks', merchantName: '星巴克咖啡', name: '停车2小时', type: 'parking', winPrice: 100, stock: 50, dailyLimit: null, validDays: 30, isListed: true, description: '适用于星巴克门店停车场', image: 'emoji:🅿️' },
+  { id: 'mb-sb-2', merchantId: 'starbucks', merchantName: '星巴克咖啡', name: '免费升杯', type: 'beverage', winPrice: 50, stock: null, dailyLimit: 1, validDays: 7, isListed: true, description: '任意中杯升大杯', image: 'emoji:☕' },
+  { id: 'mb-sb-3', merchantId: 'starbucks', merchantName: '星巴克咖啡', name: '月饼礼盒8折券', type: 'dining', winPrice: 200, stock: 20, dailyLimit: null, validDays: 30, isListed: false, description: '中秋月饼礼盒专属折扣', image: 'emoji:🥮' },
+  // Nike
+  { id: 'mb-nk-1', merchantId: 'nike', merchantName: 'Nike 运动', name: '运动毛巾', type: 'gift', winPrice: 200, stock: 30, dailyLimit: null, validDays: 30, isListed: true, description: '精选运动毛巾一条', image: 'emoji:🎁' },
+  { id: 'mb-nk-2', merchantId: 'nike', merchantName: 'Nike 运动', name: '85折优惠券', type: 'dining', winPrice: 300, stock: 15, dailyLimit: null, validDays: 14, isListed: true, description: '正价商品85折', image: 'emoji:🏷️' },
+  // Apple
+  { id: 'mb-ap-1', merchantId: 'apple', merchantName: 'Apple Store', name: '免费贴膜服务', type: 'custom', winPrice: 150, stock: 20, dailyLimit: 5, validDays: 14, isListed: true, description: '指定门店贴膜服务', image: 'emoji:🛡️' },
+  { id: 'mb-ap-2', merchantId: 'apple', merchantName: 'Apple Store', name: 'AirPods清洁服务', type: 'beverage', winPrice: 100, stock: null, dailyLimit: null, validDays: 7, isListed: true, description: 'AirPods 专业清洁', image: 'emoji:🎧' },
+  // 母婴
+  { id: 'mb-bb-1', merchantId: 'baby', merchantName: 'Ealing 母婴旗舰店', name: '免费理发一次', type: 'custom', winPrice: 250, stock: 10, dailyLimit: null, validDays: 30, isListed: true, description: '0-6岁儿童专业理发', image: 'emoji:✂️' },
+  { id: 'mb-bb-2', merchantId: 'baby', merchantName: 'Ealing 母婴旗舰店', name: '孕妇摄影套餐', type: 'gift', winPrice: 500, stock: 5, dailyLimit: null, validDays: 60, isListed: true, description: '孕妇摄影套餐抵用券', image: 'emoji:📷' },
+  // 珠宝
+  { id: 'mb-jw-1', merchantId: 'jewelry', merchantName: 'DIMD 珠宝精品', name: '免费清洗服务', type: 'custom', winPrice: 100, stock: null, dailyLimit: null, validDays: 7, isListed: true, description: '珠宝专业清洗保养', image: 'emoji:💎' },
+  { id: 'mb-jw-2', merchantId: 'jewelry', merchantName: 'DIMD 珠宝精品', name: '新品体验券', type: 'dining', winPrice: 300, stock: 10, dailyLimit: null, validDays: 30, isListed: false, description: '新品体验专属优惠', image: 'emoji:🎀' },
+];
+
+// 商户权益订单数据
+export const mockBenefitOrders: MerchantBenefitOrder[] = [
+  {
+    id: 'bo-1',
+    benefitId: 'mb-sb-1',
+    benefitName: '停车2小时',
+    merchantId: 'starbucks',
+    merchantName: '星巴克咖啡',
+    userId: '0x1234...5678',
+    userAddress: '0x1234...5678',
+    winPrice: 100,
+    cashPrice: 0,
+    voucherCode: 'WIN-A1B2C3D4',
+    status: 'pending',
+    timestamp: Date.now() - 3600000,
+  },
+  {
+    id: 'bo-2',
+    benefitId: 'mb-nk-1',
+    benefitName: '运动毛巾',
+    merchantId: 'nike',
+    merchantName: 'Nike 运动',
+    userId: '0x2345...6789',
+    userAddress: '0x2345...6789',
+    winPrice: 200,
+    cashPrice: 0,
+    voucherCode: 'WIN-E5F6G7H8',
+    status: 'used',
+    timestamp: Date.now() - 86400000,
+    usedAt: Date.now() - 43200000,
+  },
+  {
+    id: 'bo-3',
+    benefitId: 'mb-ap-1',
+    benefitName: '免费贴膜服务',
+    merchantId: 'apple',
+    merchantName: 'Apple Store',
+    userId: '0x3456...7890',
+    userAddress: '0x3456...7890',
+    winPrice: 150,
+    cashPrice: 0,
+    voucherCode: 'WIN-I9J0K1L2',
+    status: 'pending',
+    timestamp: Date.now() - 7200000,
   },
 ];
 
