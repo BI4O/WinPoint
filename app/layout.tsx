@@ -11,7 +11,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "P&R",
+  title: "WinPoint",
   description: "通过积分 & RWA 双资产模型，让每一次消费都成为长期价值的积累",
 };
 
