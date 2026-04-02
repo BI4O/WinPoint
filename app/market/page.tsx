@@ -73,10 +73,10 @@ export default function MarketPage() {
             className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8"
           >
             <div>
-              <h1 className="text-4xl font-bold text-md-on-background mb-2">
+              <h1 className="text-4xl font-bold text-gray-333 mb-2">
                 交易市场
               </h1>
-              <p className="text-md-on-surface-variant">
+              <p className="text-gray-1">
                 实时查看 RWA 价格走势，随时进行交易
               </p>
             </div>

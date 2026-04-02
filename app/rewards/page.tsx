@@ -77,7 +77,7 @@ export default function RewardsPage() {
                 <span className="text-2xl">🎁</span>
               </div>
               <div>
-                <h1 className="text-4xl font-bold text-md-on-background">
+                <h1 className="text-4xl font-bold text-gray-333">
                   兑换
                 </h1>
               </div>
@@ -90,7 +90,7 @@ export default function RewardsPage() {
               transition={{ type: 'tween', duration: 0.2, ease: [0.2, 0, 0, 1] }}
             >
               <div className="flex items-center gap-2">
-                <span className="text-sm text-md-on-surface-variant">我的 Point</span>
+                <span className="text-sm text-gray-1">我的 Point</span>
                 <span className="text-2xl font-bold text-md-primary">
                   {user.point.toFixed(2)}
                 </span>
@@ -98,7 +98,7 @@ export default function RewardsPage() {
             </motion.div>
           </div>
 
-          <p className="text-md-on-surface-variant ml-1">
+          <p className="text-gray-1 ml-1">
             使用 Point 兑换心仪商品，1 Point = ¥1 商品价值
           </p>
         </motion.div>
@@ -153,7 +153,7 @@ export default function RewardsPage() {
             className="text-center py-20"
           >
             <div className="text-6xl mb-4">📦</div>
-            <p className="text-md-on-surface-variant">
+            <p className="text-gray-1">
               该分类暂无商品
             </p>
           </motion.div>

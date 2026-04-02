@@ -29,12 +29,12 @@ export default function MerchantsPage() {
               <span className="text-2xl">🏪</span>
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-md-on-background">
+              <h1 className="text-4xl font-bold text-gray-333">
                 合作商家
               </h1>
             </div>
           </div>
-          <p className="text-md-on-surface-variant ml-1">
+          <p className="text-gray-1 ml-1">
             在合作商家消费，赚取 积分 奖励，开启收益之旅
           </p>
         </motion.div>

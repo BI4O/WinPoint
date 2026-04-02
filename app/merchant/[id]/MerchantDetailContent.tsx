@@ -29,7 +29,7 @@ export default function MerchantDetailContent({ merchant }: MerchantDetailConten
       <div className="container mx-auto px-4 py-6">
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-2 text-md-on-surface hover:text-md-primary transition-colors"
+          className="flex items-center gap-2 text-gray-333 hover:text-md-primary transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
           <span className="font-medium">返回</span>
@@ -43,7 +43,7 @@ export default function MerchantDetailContent({ merchant }: MerchantDetailConten
         transition={{ duration: 0.4, ease: [0.2, 0, 0, 1] }}
         className="container mx-auto px-4 mb-8"
       >
-        <div className="bg-md-surface-container rounded-[32px] p-8 shadow-sm">
+        <div className="bg-white rounded-[32px] p-8 shadow-sm">
           <div className="flex items-start gap-6">
             {/* Logo */}
             <div className="w-20 h-20 rounded-2xl bg-md-primary/10 flex items-center justify-center text-4xl flex-shrink-0">
@@ -52,11 +52,11 @@ export default function MerchantDetailContent({ merchant }: MerchantDetailConten
 
             {/* 信息 */}
             <div className="flex-1">
-              <h1 className="text-3xl font-bold text-md-on-surface mb-2">
+              <h1 className="text-3xl font-bold text-gray-333 mb-2">
                 {merchant.name}
               </h1>
 
-              <div className="flex items-center gap-4 text-md-on-surface-variant mb-3">
+              <div className="flex items-center gap-4 text-gray-333-variant mb-3">
                 <div className="flex items-center gap-2">
                   <Store className="w-4 h-4" />
                   <span>{merchant.category}</span>
@@ -67,7 +67,7 @@ export default function MerchantDetailContent({ merchant }: MerchantDetailConten
                 </div>
               </div>
 
-              <p className="text-md-on-surface-variant">
+              <p className="text-gray-333-variant">
                 {merchant.description}
               </p>
             </div>

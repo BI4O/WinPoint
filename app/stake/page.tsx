@@ -41,12 +41,12 @@ export default function StakePage() {
               <span className="text-2xl">💎</span>
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-md-on-background">
+              <h1 className="text-4xl font-bold text-gray-333">
                 质押 积分
               </h1>
             </div>
           </div>
-          <p className="text-md-on-surface-variant ml-1">
+          <p className="text-gray-1 ml-1">
             将 积分 质押以获得 RWA，参与收益分配
           </p>
         </motion.div>
@@ -77,7 +77,7 @@ export default function StakePage() {
                 <div className="w-10 h-10 rounded-xl bg-md-primary/20 flex items-center justify-center">
                   <Info className="h-5 w-5 text-md-primary" />
                 </div>
-                <h3 className="text-lg font-bold text-md-on-background">
+                <h3 className="text-lg font-bold text-gray-333">
                   质押说明
                 </h3>
               </div>
@@ -116,10 +116,10 @@ export default function StakePage() {
                       {item.step}
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-semibold text-md-on-background mb-1">
+                      <h4 className="font-semibold text-gray-333 mb-1">
                         {item.title}
                       </h4>
-                      <p className="text-sm text-md-on-surface-variant leading-relaxed">
+                      <p className="text-sm text-gray-1 leading-relaxed">
                         {item.description}
                       </p>
                     </div>
@@ -145,7 +145,7 @@ export default function StakePage() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.8, opacity: 0 }}
                 transition={{ type: 'spring', duration: 0.5, ease: [0.2, 0, 0, 1] }}
-                className="bg-md-surface-container rounded-[40px] p-10 max-w-md w-full text-center shadow-2xl border border-white/10"
+                className="bg-white rounded-[40px] p-10 max-w-md w-full text-center shadow-2xl border border-white/10"
               >
                 <motion.div
                   initial={{ scale: 0 }}
@@ -158,24 +158,24 @@ export default function StakePage() {
                   </div>
                 </motion.div>
 
-                <h2 className="text-2xl font-bold text-md-on-background mb-4">
+                <h2 className="text-2xl font-bold text-gray-333 mb-4">
                   质押成功!
                 </h2>
 
-                <div className="bg-md-surface-container-high rounded-2xl p-6 mb-6">
-                  <p className="text-md-on-surface-variant mb-2">
+                <div className="bg-white-high rounded-2xl p-6 mb-6">
+                  <p className="text-gray-1 mb-2">
                     已质押
                   </p>
                   <p className="text-3xl font-bold text-md-primary mb-1">
                     {stakedAmount.toFixed(2)} 积分
                   </p>
-                  <p className="text-md-on-surface-variant">
+                  <p className="text-gray-1">
                     获得 {stakedAmount.toFixed(2)} RWA
                   </p>
                 </div>
 
                 <motion.div
-                  className="flex items-center justify-center gap-2 text-sm text-md-on-surface-variant"
+                  className="flex items-center justify-center gap-2 text-sm text-gray-1"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.4, type: 'tween', duration: 0.3, ease: [0.2, 0, 0, 1] }}

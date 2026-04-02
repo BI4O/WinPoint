@@ -25,10 +25,10 @@ export default function DashboardPage() {
           transition={{ type: 'tween', duration: 0.4, ease: [0.2, 0, 0, 1] }}
           className="mb-10"
         >
-          <h1 className="text-4xl font-bold text-md-on-background mb-2">
+          <h1 className="text-4xl font-bold text-gray-333 mb-2">
             我的资产
           </h1>
-          <p className="text-md-on-surface-variant">
+          <p className="text-gray-1">
             查看您的 Point、RWA 和收益情况
           </p>
         </motion.div>
@@ -83,7 +83,7 @@ export default function DashboardPage() {
           transition={{ delay: 0.4, type: 'tween', duration: 0.4, ease: [0.2, 0, 0, 1] }}
           className="mb-10"
         >
-          <h2 className="text-2xl font-bold text-md-on-background mb-6">
+          <h2 className="text-2xl font-bold text-gray-333 mb-6">
             快速操作
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
