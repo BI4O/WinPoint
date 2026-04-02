@@ -6,30 +6,22 @@ import { cn } from '@/lib/utils';
 
 interface CardProps extends Omit<HTMLMotionProps<'div'>, 'whileHover'> {
   hover?: boolean;
-  glow?: 'primary' | 'tertiary' | 'none';
   children: ReactNode;
 }
 
 const MotionDiv = motion.div;
 
 const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ className, hover = false, glow = 'none', children, ...props }, ref) => {
-    const glowClasses = {
-      primary: 'group-hover:glow-primary',
-      tertiary: 'group-hover:glow-tertiary',
-      none: ''
-    };
-
+  ({ className, hover = false, children, ...props }, ref) => {
     return (
       <MotionDiv
         ref={ref}
         className={cn(
           'group',
-          'rounded-3xl bg-md-surface-container p-6',
-          'shadow-sm',
+          'rounded-xl bg-white border border-gray-2 p-6',
+          'shadow-none hover:shadow-sm',
           'transition-all duration-300 ease-md',
-          hover && 'hover:shadow-md hover:scale-[1.02] cursor-pointer',
-          glow !== 'none' && glowClasses[glow],
+          hover && 'hover:scale-[1.01] cursor-pointer',
           className
         )}
         whileHover={hover ? { y: -2 } : undefined}
