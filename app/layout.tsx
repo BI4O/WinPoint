@@ -12,7 +12,7 @@ const roboto = Roboto({
 
 export const metadata: Metadata = {
   title: "WinPoint",
-  description: "通过积分 & RWA 双资产模型，让每一次消费都成为长期价值的积累",
+  description: "消费即积累，积分兑换超值好物",
 };
 
 export default function RootLayout({
