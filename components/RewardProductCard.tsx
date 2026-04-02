@@ -3,12 +3,12 @@
 import { motion } from 'framer-motion';
 import Card from './Card';
 import Button from './Button';
-import { RewardProduct } from '@/lib/mock-data';
+import { MerchantProduct } from '@/lib/mock-data';
 
 interface RewardProductCardProps {
-  product: RewardProduct;
+  product: MerchantProduct;
   userPoint: number;
-  onRedeem: (product: RewardProduct) => void;
+  onRedeem: (product: MerchantProduct) => void;
 }
 
 export default function RewardProductCard({
@@ -16,7 +16,7 @@ export default function RewardProductCard({
   userPoint,
   onRedeem
 }: RewardProductCardProps) {
-  const canAfford = userPoint >= product.pointCost;
+  const canAfford = userPoint >= product.pointPrice;
   const isEmoji = product.image.startsWith('emoji:');
   const imageContent = isEmoji ? product.image.replace('emoji:', '') : product.image;
 
@@ -56,13 +56,14 @@ export default function RewardProductCard({
           <div className="flex items-baseline gap-2">
             <div className="flex items-center gap-1">
               <span className="text-2xl font-bold text-md-primary">
-                {product.pointCost}
+                ¥{product.cashPrice}
               </span>
-              <span className="text-sm text-md-on-surface-variant">Point</span>
+              <span className="text-sm text-md-on-surface-variant">+</span>
+              <span className="text-xl font-bold text-md-primary">
+                {product.pointPrice}
+              </span>
+              <span className="text-sm text-md-on-surface-variant">积分</span>
             </div>
-            <span className="text-sm text-md-on-surface-variant line-through">
-              ¥{product.originalPrice}
-            </span>
           </div>
 
           {/* Stock Info */}
