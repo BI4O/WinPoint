@@ -12,7 +12,7 @@ interface MerchantCardProps {
 
 export default function MerchantCard({ merchant, onConsume }: MerchantCardProps) {
   return (
-    <Card hover glow="primary" className="flex flex-col h-full">
+    <Card hover className="flex flex-col h-full">
       <div className="flex flex-col items-center text-center space-y-4">
         {/* Logo with subtle animation */}
         <motion.div

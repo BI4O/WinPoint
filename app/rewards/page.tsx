@@ -8,7 +8,6 @@ import { type MerchantProduct } from '@/lib/mock-data';
 import RewardProductCard from '@/components/RewardProductCard';
 import CategoryFilter from '@/components/CategoryFilter';
 import RedemptionModal from '@/components/RedemptionModal';
-import SuccessNotification from '@/components/SuccessNotification';
 import AtmosphericBackground from '@/components/AtmosphericBackground';
 
 export default function RewardsPage() {
@@ -24,7 +23,7 @@ export default function RewardsPage() {
 
   // 过滤上架商品并获取所有分类
   const listedProducts = merchantProducts.filter(p => p.isListed);
-  const categories = ['全部', ...Array.from(new Set(listedProducts.map(p => p.category)))];
+  const categories = ['全部', ...Array.from(new Set(listedProducts.map(p => p.category).filter(Boolean)))] as string[];
 
   // 筛选商品
   const filteredProducts = activeCategory === '全部'
@@ -37,32 +36,16 @@ export default function RewardsPage() {
   };
 
   const handleConfirmRedeem = (productId: string) => {
-    if (!selectedProduct) return;
+    // RedemptionModal already called redeemProduct, just close modal and show success
+    setIsModalOpen(false);
+    setRedeemedProduct(selectedProduct);
+    setShowSuccess(true);
+    setSelectedProduct(null);
 
-    const success = redeemProduct(
-      productId,
-      selectedProduct.name,
-      selectedProduct.merchantId,
-      selectedProduct.merchantName,
-      selectedProduct.cashPrice,
-      selectedProduct.pointPrice
-    );
-
-    if (success) {
-      setIsModalOpen(false);
-      setRedeemedProduct(selectedProduct);
-      setSelectedProduct(null);
-
-      // 显示成功通知
-      setShowSuccess(true);
-      setTimeout(() => {
-        setShowSuccess(false);
-        setRedeemedProduct(null);
-        router.push('/dashboard');
-      }, 3000);
-
-      // 移除自动跳转: router.push('/dashboard');
-    }
+    setTimeout(() => {
+      setShowSuccess(false);
+      setRedeemedProduct(null);
+    }, 3000);
   };
 
   return (
@@ -174,21 +157,20 @@ export default function RewardsPage() {
       />
 
       {/* 成功通知 */}
-      <SuccessNotification
-        isOpen={showSuccess}
-        onClose={() => {
-          setShowSuccess(false);
-          setRedeemedProduct(null);
-          router.push('/dashboard');
-        }}
-        title="兑换成功!"
-        amount={redeemedProduct ? -redeemedProduct.pointPrice : 0}
-        unit="Point"
-        message={`商品将在 3-5 个工作日内发送
-正在跳转到资产页面...`}
-        emoji="🎁"
-        countdown={3}
-      />
+      {showSuccess && redeemedProduct && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+        >
+          <div className="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl">
+            <div className="text-6xl mb-4">🎁</div>
+            <h2 className="text-2xl font-bold text-gray-333 mb-2">兑换成功!</h2>
+            <p className="text-gray-1 mb-2">商品将在 3-5 个工作日内发货</p>
+            <p className="text-md-primary font-bold">-{redeemedProduct.pointPrice} Point</p>
+          </div>
+        </motion.div>
+      )}
     </AtmosphericBackground>
   );
 }

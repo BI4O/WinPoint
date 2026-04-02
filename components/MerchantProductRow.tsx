@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { MerchantProduct } from '@/lib/mock-data';
 import { useStore } from '@/lib/store';
-import { Switch } from '@mui/material';
 import { Edit2, Save, X } from 'lucide-react';
 
 interface MerchantProductRowProps {
@@ -74,12 +73,16 @@ export default function MerchantProductRow({ product }: MerchantProductRowProps)
         )}
       </td>
       <td className="py-3 px-4">
-        <Switch
-          checked={editData.isListed}
-          onChange={(e) => setEditData(prev => ({ ...prev, isListed: e.target.checked }))}
-          disabled={!isEditing}
-          size="small"
-        />
+        <label className="relative inline-flex items-center cursor-pointer">
+          <input
+            type="checkbox"
+            checked={editData.isListed}
+            onChange={(e) => setEditData(prev => ({ ...prev, isListed: e.target.checked }))}
+            disabled={!isEditing}
+            className="sr-only peer"
+          />
+          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-md-primary/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-md-primary peer-disabled:opacity-50"></div>
+        </label>
       </td>
       <td className="py-3 px-4">
         {isEditing ? (

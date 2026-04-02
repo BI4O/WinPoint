@@ -8,7 +8,9 @@ import {
   type Order,
   type Activity,
   type MerchantProduct,
-  type MerchantOrder
+  type MerchantOrder,
+  type Product,
+  type CartItem
 } from './mock-data';
 
 interface UserState {
@@ -22,12 +24,25 @@ interface AppState {
   orders: Order[];
   activities: Activity[];
 
+  // 购物车相关
+  cart: CartItem[];
+
   // 商户商品管理
   merchantProducts: MerchantProduct[];
   merchantOrders: MerchantOrder[];
 
   // 原有 actions
   consumeAtMerchant: (merchantId: string, merchantName: string, amount: number) => void;
+
+  // 购物车 actions
+  addToCart: (product: Product) => void;
+  removeFromCart: (productId: string) => void;
+  updateCartItemQuantity: (productId: string, quantity: number) => void;
+  clearCart: () => void;
+  checkout: (merchantId: string, merchantName: string) => void;
+  getCartTotal: () => number;
+  getCartPointTotal: () => number;
+  getCartItemCount: () => number;
 
   // 商户商品 actions
   updateMerchantProduct: (productId: string, updates: Partial<MerchantProduct>) => void;
@@ -57,6 +72,7 @@ export const useStore = create<AppState>((set, get) => ({
   },
   orders: mockOrdersInitial,
   activities: mockActivitiesInitial,
+  cart: [],
   merchantProducts: mockMerchantProducts,
   merchantOrders: mockMerchantOrders,
 
@@ -89,6 +105,105 @@ export const useStore = create<AppState>((set, get) => ({
       orders: [newOrder, ...state.orders],
       activities: [newActivity, ...state.activities]
     }));
+  },
+
+  // 购物车 actions
+  addToCart: (product) => {
+    const { cart } = get();
+    const existingItem = cart.find(item => item.product.id === product.id);
+
+    if (existingItem) {
+      set({
+        cart: cart.map(item =>
+          item.product.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+      });
+    } else {
+      set({ cart: [...cart, { product, quantity: 1 }] });
+    }
+  },
+
+  removeFromCart: (productId) => {
+    set(state => ({
+      cart: state.cart.filter(item => item.product.id !== productId)
+    }));
+  },
+
+  updateCartItemQuantity: (productId, quantity) => {
+    if (quantity <= 0) {
+      get().removeFromCart(productId);
+      return;
+    }
+
+    set(state => ({
+      cart: state.cart.map(item =>
+        item.product.id === productId
+          ? { ...item, quantity }
+          : item
+      )
+    }));
+  },
+
+  clearCart: () => {
+    set({ cart: [] });
+  },
+
+  checkout: (merchantId, merchantName) => {
+    const { cart, user } = get();
+    const totalAmount = get().getCartTotal();
+    const pointEarned = get().getCartPointTotal();
+
+    // 创建订单
+    const order: Order = {
+      id: `order-${Date.now()}`,
+      timestamp: Date.now(),
+      merchantId,
+      merchantName,
+      items: cart.map(item => ({
+        productId: item.product.id,
+        productName: item.product.name,
+        price: item.product.price,
+        quantity: item.quantity
+      })),
+      totalAmount,
+      pointEarned,
+      status: 'completed'
+    };
+
+    // 创建活动记录
+    const activity: Activity = {
+      id: `activity-${Date.now()}`,
+      type: 'point_earned',
+      amount: pointEarned,
+      merchant: merchantName,
+      timestamp: Date.now()
+    };
+
+    set(state => ({
+      user: {
+        ...state.user,
+        point: state.user.point + pointEarned
+      },
+      orders: [order, ...state.orders],
+      activities: [activity, ...state.activities],
+      cart: []
+    }));
+  },
+
+  getCartTotal: () => {
+    const { cart } = get();
+    return cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
+  },
+
+  getCartPointTotal: () => {
+    return get().getCartTotal() / 10; // 10:1 比例
+  },
+
+  getCartItemCount: () => {
+    const { cart } = get();
+    return cart.reduce((count, item) => count + item.quantity, 0);
   },
 
   // 商户商品 actions

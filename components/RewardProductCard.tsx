@@ -21,7 +21,7 @@ export default function RewardProductCard({
   const imageContent = isEmoji ? product.image.replace('emoji:', '') : product.image;
 
   return (
-    <Card hover glow="tertiary" className="flex flex-col h-full">
+    <Card hover className="flex flex-col h-full">
       <div className="flex flex-col space-y-4">
         {/* Product Image */}
         <motion.div

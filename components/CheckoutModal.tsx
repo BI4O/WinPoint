@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation';
 import { useStore } from '@/lib/store';
 import { mockMerchants } from '@/lib/mock-data';
 import Button from './Button';
-import SuccessNotification from './SuccessNotification';
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -159,7 +158,7 @@ export default function CheckoutModal({
                   {/* 提示信息 */}
                   <div className="bg-md-primary-container/40 rounded-2xl p-4">
                     <p className="text-sm text-md-on-surface-variant">
-                      💡 提示: Point 可用于质押获得 RWA，参与收益分配
+                      💡 提示: Point 可用于兑换积分商城商品
                     </p>
                   </div>
                 </div>
@@ -203,20 +202,20 @@ export default function CheckoutModal({
       </AnimatePresence>
 
       {/* 成功通知 */}
-      <SuccessNotification
-        isOpen={showSuccess}
-        onClose={() => {
-          setShowSuccess(false);
-          router.push('/dashboard');
-        }}
-        title="购买成功!"
-        amount={earnedPoint}
-        unit="Point"
-        message={`Point 已到账，可用于质押或兑换商品
-正在跳转到资产页面...`}
-        emoji="🎉"
-        countdown={3}
-      />
+      {showSuccess && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 z-[70] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+        >
+          <div className="bg-md-background rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl">
+            <div className="text-6xl mb-4">🎉</div>
+            <h2 className="text-2xl font-bold text-md-on-background mb-2">购买成功!</h2>
+            <p className="text-md-on-surface-variant mb-2">获得 {earnedPoint.toFixed(1)} Point</p>
+            <p className="text-sm text-md-on-surface-variant">Point 已到账，可用于兑换商品</p>
+          </div>
+        </motion.div>
+      )}
     </>
   );
 }
