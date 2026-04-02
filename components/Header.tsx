@@ -35,9 +35,9 @@ export default function Header() {
               <Image
                 src="/images/winpoint_logo_white.svg"
                 alt="WinPoint"
-                width={40}
-                height={40}
-                className="h-10 w-10"
+                width={60}
+                height={60}
+                className="h-14 w-14"
               />
               <span className="font-bold text-lg">WinPoint</span>
             </motion.div>
@@ -149,9 +149,9 @@ export default function Header() {
                     <Image
                       src="/images/winpoint_logo_white.svg"
                       alt="WinPoint"
-                      width={40}
-                      height={40}
-                      className="h-10 w-10"
+                      width={60}
+                      height={60}
+                      className="h-14 w-14"
                     />
                     <span className="font-bold text-lg">WinPoint</span>
                   </div>
