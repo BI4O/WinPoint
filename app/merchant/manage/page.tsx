@@ -14,10 +14,13 @@ import AtmosphericBackground from '@/components/AtmosphericBackground';
 export default function MerchantManagePage() {
   const merchantProducts = useStore(state => state.merchantProducts);
   const merchantOrders = useStore(state => state.merchantOrders);
-  const [selectedMerchantId, setSelectedMerchantId] = useState('starbucks');
+  const identityMode = useStore(state => state.identityMode);
+  const currentMerchantId = useStore(state => state.currentMerchantId);
   const [activeTab, setActiveTab] = useState<'products' | 'orders'>('products');
   const [showAddModal, setShowAddModal] = useState(false);
 
+  // 商户模式下使用 store 的 currentMerchantId，否则用默认的 starbucks
+  const selectedMerchantId = identityMode === 'merchant' && currentMerchantId ? currentMerchantId : 'starbucks';
   const currentMerchant = mockMerchants.find(m => m.id === selectedMerchantId);
   const merchantProductsList = merchantProducts.filter(p => p.merchantId === selectedMerchantId);
   const merchantOrdersList = merchantOrders.filter(o => o.merchantId === selectedMerchantId);
@@ -40,28 +43,29 @@ export default function MerchantManagePage() {
           </p>
         </motion.div>
 
-        {/* Merchant Selector */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.1 }}
-          className="mb-6"
-        >
-          <label className="block text-sm font-medium text-gray-333 mb-2">
-            当前商户
-          </label>
-          <select
-            value={selectedMerchantId}
-            onChange={(e) => setSelectedMerchantId(e.target.value)}
-            className="px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:border-md-primary focus:outline-none w-64"
+        {/* Merchant Selector - 仅用户模式显示 */}
+        {identityMode !== 'merchant' && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="mb-6"
           >
-            {mockMerchants.map(merchant => (
-              <option key={merchant.id} value={merchant.id}>
-                {merchant.logo} {merchant.name}
-              </option>
-            ))}
-          </select>
-        </motion.div>
+            <label className="block text-sm font-medium text-gray-333 mb-2">
+              当前商户
+            </label>
+            <select
+              value={selectedMerchantId}
+              className="px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:border-md-primary focus:outline-none w-64"
+            >
+              {mockMerchants.map(merchant => (
+                <option key={merchant.id} value={merchant.id}>
+                  {merchant.logo} {merchant.name}
+                </option>
+              ))}
+            </select>
+          </motion.div>
+        )}
 
         {/* Tabs */}
         <motion.div
