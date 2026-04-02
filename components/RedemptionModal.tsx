@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import Button from './Button';
 import { RewardProduct } from '@/lib/mock-data';
+import { useStore } from '@/lib/store';
 
 interface RedemptionModalProps {
   isOpen: boolean;
@@ -22,6 +23,13 @@ export default function RedemptionModal({
   onConfirm
 }: RedemptionModalProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [shippingAddress, setShippingAddress] = useState({
+    name: '',
+    phone: '',
+    address: ''
+  });
+
+  const redeemProduct = useStore((state) => state.redeemProduct);
 
   if (!product) return null;
 
@@ -30,9 +38,23 @@ export default function RedemptionModal({
   const imageContent = isEmoji ? product.image.replace('emoji:', '') : product.image;
 
   const handleConfirm = async () => {
+    // Validate address fields
+    if (!shippingAddress.name || !shippingAddress.phone || !shippingAddress.address) {
+      return;
+    }
+
     setIsLoading(true);
     // 模拟网络请求
     await new Promise(resolve => setTimeout(resolve, 1500));
+    redeemProduct(
+      product.id,
+      product.name,
+      product.merchantId,
+      product.merchantName,
+      product.originalPrice,
+      product.pointCost,
+      shippingAddress
+    );
     onConfirm(product.id);
     setIsLoading(false);
   };
@@ -127,8 +149,36 @@ export default function RedemptionModal({
             {/* Info Message */}
             <div className="mb-6 p-4 rounded-2xl bg-md-tertiary/10 border border-md-tertiary/20">
               <p className="text-sm text-md-on-surface-variant text-center">
-                兑换后商品将在 3-5 个工作日内发送到您的注册地址
+                兑换后商品将在 3-5 个工作日内发货，请填写收货信息
               </p>
+            </div>
+
+            {/* Shipping Address Form */}
+            <div className="mb-6 space-y-3">
+              <h4 className="text-sm font-medium text-md-on-surface">收货信息</h4>
+              <div className="space-y-2">
+                <input
+                  type="text"
+                  placeholder="收货人姓名"
+                  value={shippingAddress.name}
+                  onChange={(e) => setShippingAddress({ ...shippingAddress, name: e.target.value })}
+                  className="w-full px-4 py-3 rounded-xl bg-md-surface-container-low border border-md-on-surface/10 text-md-on-surface placeholder:text-md-on-surface-variant focus:outline-none focus:border-md-primary transition-colors"
+                />
+                <input
+                  type="tel"
+                  placeholder="联系电话"
+                  value={shippingAddress.phone}
+                  onChange={(e) => setShippingAddress({ ...shippingAddress, phone: e.target.value })}
+                  className="w-full px-4 py-3 rounded-xl bg-md-surface-container-low border border-md-on-surface/10 text-md-on-surface placeholder:text-md-on-surface-variant focus:outline-none focus:border-md-primary transition-colors"
+                />
+                <input
+                  type="text"
+                  placeholder="收货地址"
+                  value={shippingAddress.address}
+                  onChange={(e) => setShippingAddress({ ...shippingAddress, address: e.target.value })}
+                  className="w-full px-4 py-3 rounded-xl bg-md-surface-container-low border border-md-on-surface/10 text-md-on-surface placeholder:text-md-on-surface-variant focus:outline-none focus:border-md-primary transition-colors"
+                />
+              </div>
             </div>
 
             {/* Action Buttons */}
@@ -147,7 +197,7 @@ export default function RedemptionModal({
                 variant="filled"
                 size="lg"
                 className="flex-1"
-                disabled={isLoading}
+                disabled={isLoading || !shippingAddress.name || !shippingAddress.phone || !shippingAddress.address}
               >
                 {isLoading ? '兑换中...' : '确认兑换'}
               </Button>
