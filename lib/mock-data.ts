@@ -10,6 +10,41 @@ export interface Product {
   category?: string;
 }
 
+// 商户商品接口（含积分定价和上架状态）
+export interface MerchantProduct {
+  id: string;
+  merchantId: string;
+  name: string;
+  cashPrice: number;        // 现金价格
+  pointPrice: number;       // 积分价格（积分可抵扣部分）
+  image: string;
+  description?: string;
+  stock: number;            // 库存数量
+  isListed: boolean;        // 是否上架积分商城
+  category?: string;
+}
+
+// 商户订单接口
+export interface MerchantOrder {
+  id: string;
+  userId: string;
+  userAddress: string;
+  productId: string;
+  productName: string;
+  merchantId: string;
+  merchantName: string;
+  cashPrice: number;
+  pointPrice: number;
+  quantity: number;
+  timestamp: number;
+  status: 'pending' | 'shipped';
+  shippingAddress: {
+    name: string;
+    phone: string;
+    address: string;
+  };
+}
+
 // 购物车商品项接口
 export interface CartItem {
   product: Product;
@@ -539,6 +574,61 @@ export const mockUserOrders: TradeOrder[] = [
     timestamp: 1765305600000, // 2025-12-10 00:00:00
     status: 'partial',
     filledQuantity: 7.5
+  }
+];
+
+// 商户商品数据（积分商城用）
+export const mockMerchantProducts: MerchantProduct[] = [
+  // 星巴克
+  { id: 'mp-sb-1', merchantId: 'starbucks', name: '☕ 美式咖啡', cashPrice: 22, pointPrice: 100, image: 'emoji:☕', stock: 100, isListed: true, category: '餐饮' },
+  { id: 'mp-sb-2', merchantId: 'starbucks', name: '☕ 拿铁咖啡', cashPrice: 28, pointPrice: 100, image: 'emoji:☕', stock: 100, isListed: true, category: '餐饮' },
+  { id: 'mp-sb-3', merchantId: 'starbucks', name: '☕ 卡布奇诺', cashPrice: 28, pointPrice: 100, image: 'emoji:☕', stock: 100, isListed: false, category: '餐饮' },
+  // Nike
+  { id: 'mp-nk-1', merchantId: 'nike', name: '👟 Air Max 运动鞋', cashPrice: 799, pointPrice: 1000, image: 'emoji:👟', stock: 50, isListed: true, category: '运动' },
+  { id: 'mp-nk-2', merchantId: 'nike', name: '👕 Dri-FIT 运动T恤', cashPrice: 199, pointPrice: 300, image: 'emoji:👕', stock: 80, isListed: true, category: '运动' },
+  { id: 'mp-nk-3', merchantId: 'nike', name: '🩳 运动短裤', cashPrice: 299, pointPrice: 400, image: 'emoji:🩳', stock: 60, isListed: false, category: '运动' },
+  // Apple
+  { id: 'mp-ap-1', merchantId: 'apple', name: '🎧 AirPods Pro', cashPrice: 1499, pointPrice: 2000, image: 'emoji:🎧', stock: 30, isListed: true, category: '电子产品' },
+  { id: 'mp-ap-2', merchantId: 'apple', name: '⌚ Apple Watch SE', cashPrice: 1699, pointPrice: 2000, image: 'emoji:⌚', stock: 20, isListed: true, category: '电子产品' },
+  // 母婴
+  { id: 'mp-bb-1', merchantId: 'baby', name: 'Ealing 4合1滑梯秋千套装', cashPrice: 669, pointPrice: 800, image: '/products/baby/bb-1.jpeg', stock: 10, isListed: true, category: '母婴' },
+  { id: 'mp-bb-2', merchantId: 'baby', name: 'Ealing 儿童沙发滑梯', cashPrice: 429, pointPrice: 500, image: '/products/baby/bb-2.jpeg', stock: 15, isListed: true, category: '母婴' },
+  // 珠宝
+  { id: 'mp-jw-1', merchantId: 'jewelry', name: '18K白金橄榄石戒指', cashPrice: 3100, pointPrice: 5000, image: '/products/jewelry/01-olivine-ring.png', stock: 5, isListed: true, category: '奢侈品' },
+  { id: 'mp-jw-2', merchantId: 'jewelry', name: '18K白红金粉红宝石戒指', cashPrice: 1400, pointPrice: 3000, image: '/products/jewelry/02-ruby-ring.png', stock: 3, isListed: false, category: '奢侈品' },
+];
+
+// 商户订单数据
+export const mockMerchantOrders: MerchantOrder[] = [
+  {
+    id: 'mo-1',
+    userId: '0x1234...5678',
+    userAddress: '0x1234...5678',
+    productId: 'mp-sb-1',
+    productName: '☕ 美式咖啡',
+    merchantId: 'starbucks',
+    merchantName: '星巴克咖啡',
+    cashPrice: 22,
+    pointPrice: 100,
+    quantity: 1,
+    timestamp: Date.now() - 86400000,
+    status: 'pending',
+    shippingAddress: { name: '张三', phone: '13800138000', address: '北京市朝阳区某某路123号' }
+  },
+  {
+    id: 'mo-2',
+    userId: '0x1234...5678',
+    userAddress: '0x1234...5678',
+    productId: 'mp-nk-1',
+    productName: '👟 Air Max 运动鞋',
+    merchantId: 'nike',
+    merchantName: 'Nike 运动',
+    cashPrice: 799,
+    pointPrice: 1000,
+    quantity: 1,
+    timestamp: Date.now() - 172800000,
+    status: 'shipped',
+    shippingAddress: { name: '李四', phone: '13900139000', address: '上海市浦东新区某某大道456号' }
   }
 ];
 
