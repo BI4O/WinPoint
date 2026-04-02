@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useStore } from '@/lib/store';
-import { Home, Store, Gift, LayoutDashboard, Menu, X } from 'lucide-react';
+import { Home, Store, Gift, LayoutDashboard, Menu, X, Settings } from 'lucide-react';
 import IdentitySwitcher from './IdentitySwitcher';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
@@ -17,7 +17,7 @@ export default function Header() {
   // Determine nav items based on identity mode
   const navItems = identityMode === 'merchant'
     ? [
-        { href: '/merchant/manage', label: '后台管理', icon: Store },
+        { href: '/merchant/manage', label: '后台管理', icon: Settings },
         { href: '/rewards', label: '积分商城', icon: Gift },
         { href: '/merchants', label: '商家', icon: Store },
       ]

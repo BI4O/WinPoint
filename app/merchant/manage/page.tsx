@@ -17,7 +17,7 @@ export default function MerchantManagePage() {
   const merchantOrders = useStore(state => state.merchantOrders);
   const identityMode = useStore(state => state.identityMode);
   const currentMerchantId = useStore(state => state.currentMerchantId);
-  const [activeTab, setActiveTab] = useState<'products' | 'orders' | 'stats'>('products');
+  const [activeTab, setActiveTab] = useState<'products' | 'orders'>('products');
   const [showAddModal, setShowAddModal] = useState(false);
   const [userSelectedMerchantId, setUserSelectedMerchantId] = useState('starbucks');
 
@@ -81,6 +81,93 @@ export default function MerchantManagePage() {
           </motion.div>
         )}
 
+        {/* Stats Overview - 商户视角直接显示 */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          className="mb-8"
+        >
+          {/* Stats Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <MerchantStatsCard
+              title="商品总数"
+              value={totalProducts}
+              subtitle={`${listedProducts} 上架中`}
+              icon="📦"
+            />
+            <MerchantStatsCard
+              title="总订单数"
+              value={totalOrders}
+              subtitle={`${pendingOrders} 待处理`}
+              icon="🛒"
+            />
+            <MerchantStatsCard
+              title="销售额"
+              value={`¥${totalSales.toFixed(0)}`}
+              subtitle={`积分 ${totalPointsEarned}`}
+              icon="💰"
+            />
+            <MerchantStatsCard
+              title="库存预警"
+              value={lowStockProducts + outOfStockProducts}
+              subtitle={`${outOfStockProducts} 已售罄`}
+              icon="⚠️"
+            />
+          </div>
+
+          {/* Warning Lists */}
+          {(lowStockProducts > 0 || outOfStockProducts > 0) && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* 低库存商品 */}
+              {lowStockProducts > 0 && (
+                <div className="bg-gradient-to-r from-orange-50 to-orange-100 rounded-2xl p-5 border border-orange-200">
+                  <h3 className="text-base font-bold text-orange-600 mb-3 flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5" />
+                    库存不足 ({lowStockProducts})
+                  </h3>
+                  <div className="space-y-2">
+                    {merchantProductsList
+                      .filter(p => p.stock > 0 && p.stock < 10)
+                      .map(product => (
+                        <div key={product.id} className="flex items-center justify-between bg-white/80 rounded-xl px-4 py-2">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xl">{product.image.startsWith('emoji:') ? product.image.replace('emoji:', '') : product.image}</span>
+                            <span className="text-sm font-medium text-gray-700">{product.name}</span>
+                          </div>
+                          <span className="text-sm font-bold text-orange-500">剩余 {product.stock} 件</span>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
+
+              {/* 售罄商品 */}
+              {outOfStockProducts > 0 && (
+                <div className="bg-gradient-to-r from-red-50 to-red-100 rounded-2xl p-5 border border-red-200">
+                  <h3 className="text-base font-bold text-red-600 mb-3 flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5" />
+                    已售罄 ({outOfStockProducts})
+                  </h3>
+                  <div className="space-y-2">
+                    {merchantProductsList
+                      .filter(p => p.stock === 0)
+                      .map(product => (
+                        <div key={product.id} className="flex items-center justify-between bg-white/80 rounded-xl px-4 py-2">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xl">{product.image.startsWith('emoji:') ? product.image.replace('emoji:', '') : product.image}</span>
+                            <span className="text-sm font-medium text-gray-700">{product.name}</span>
+                          </div>
+                          <span className="text-sm font-bold text-red-500">售罄</span>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </motion.div>
+
         {/* Tabs */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -108,16 +195,6 @@ export default function MerchantManagePage() {
               }`}
             >
               订单管理 ({merchantOrdersList.length})
-            </button>
-            <button
-              onClick={() => setActiveTab('stats')}
-              className={`pb-3 px-1 text-sm font-medium transition-colors ${
-                activeTab === 'stats'
-                  ? 'text-md-primary border-b-2 border-md-primary'
-                  : 'text-gray-500 hover:text-gray-333'
-              }`}
-            >
-              数据概览
             </button>
           </div>
         </motion.div>
