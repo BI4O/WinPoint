@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useStore } from '@/lib/store';
@@ -31,10 +32,14 @@ export default function Header() {
               whileTap={{ scale: 0.98 }}
               transition={{ type: 'tween', duration: 0.2, ease: [0.2, 0, 0, 1] }}
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-md-primary to-md-secondary-container text-md-on-primary font-bold text-lg shadow-md">
-                P&R
-              </div>
-              <span className="font-bold text-lg">Point & RWA</span>
+              <Image
+                src="/images/winpoint_logo_white.svg"
+                alt="WinPoint"
+                width={40}
+                height={40}
+                className="h-10 w-10"
+              />
+              <span className="font-bold text-lg">WinPoint</span>
             </motion.div>
           </Link>
 
@@ -141,10 +146,14 @@ export default function Header() {
                 {/* 头部 */}
                 <div className="flex items-center justify-between p-6 border-b border-gray-200">
                   <div className="flex items-center space-x-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-md-primary to-md-secondary-container text-md-on-primary font-bold text-lg shadow-md">
-                      P&R
-                    </div>
-                    <span className="font-bold text-lg">Point & RWA</span>
+                    <Image
+                      src="/images/winpoint_logo_white.svg"
+                      alt="WinPoint"
+                      width={40}
+                      height={40}
+                      className="h-10 w-10"
+                    />
+                    <span className="font-bold text-lg">WinPoint</span>
                   </div>
                   <motion.button
                     className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 text-gray-333"
