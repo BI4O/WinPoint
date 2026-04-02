@@ -4,22 +4,27 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useStore } from '@/lib/store';
-import { Wallet, Home, Store, Gift, LayoutDashboard, Menu, X } from 'lucide-react';
+import { Home, Store, Gift, LayoutDashboard, Menu, X } from 'lucide-react';
+import IdentitySwitcher from './IdentitySwitcher';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 
 export default function Header() {
   const pathname = usePathname();
-  const { user } = useStore();
+  const { user, identityMode } = useStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const navItems = [
-    { href: '/', label: '首页', icon: Home },
-    { href: '/merchants', label: '商家', icon: Store },
-    { href: '/rewards', label: '积分商城', icon: Gift },
-    { href: '/dashboard', label: '资产', icon: LayoutDashboard },
-    { href: '/merchant/manage', label: '商户管理', icon: Store },
-  ];
+  // Determine nav items based on identity mode
+  const navItems = identityMode === 'merchant'
+    ? [
+        { href: '/merchant/manage', label: '商户管理', icon: Store },
+      ]
+    : [
+        { href: '/', label: '首页', icon: Home },
+        { href: '/merchants', label: '商家', icon: Store },
+        { href: '/rewards', label: '积分商城', icon: Gift },
+        { href: '/dashboard', label: '资产', icon: LayoutDashboard },
+      ];
 
   return (
     <>
@@ -97,15 +102,7 @@ export default function Header() {
                 {user.point.toFixed(1)}
               </motion.span>
             </motion.div>
-            <motion.button
-              className="flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white text-primary font-semibold shadow-sm hover:bg-white/90"
-              whileHover={{ scale: 1.02, backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
-              whileTap={{ scale: 0.96 }}
-              transition={{ type: 'tween', duration: 0.2, ease: [0.2, 0, 0, 1] }}
-            >
-              <Wallet className="h-4 w-4" />
-              <span className="text-sm font-semibold hidden sm:inline">{user.address}</span>
-            </motion.button>
+            <IdentitySwitcher />
 
             {/* 移动端汉堡菜单按钮 */}
             <motion.button
@@ -208,17 +205,7 @@ export default function Header() {
 
                 {/* 底部用户信息 */}
                 <div className="p-4 border-t border-gray-200 bg-gray-50/30">
-                  <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white border border-gray-200">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white">
-                      <Wallet className="h-5 w-5" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-gray-333 truncate">{user.address}</p>
-                      <p className="text-xs text-gray-500">
-                        {user.point.toFixed(1)} Point
-                      </p>
-                    </div>
-                  </div>
+                  <IdentitySwitcher />
                 </div>
               </div>
             </motion.div>
