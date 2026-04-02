@@ -12,18 +12,13 @@ export default function Home() {
   const steps = [
     {
       icon: <Wallet className="w-8 h-8" />,
-      title: '消费获得 积分',
+      title: '消费获得积分',
       description: '在合作商家消费，每10元获得1个积分，积累消费价值'
     },
     {
       icon: <Coins className="w-8 h-8" />,
-      title: '质押获得 RWA',
-      description: '将积分质押，1:1获得RWA，成为商家生态的股东'
-    },
-    {
-      icon: <TrendingUp className="w-8 h-8" />,
-      title: '持续获得收益',
-      description: '商家产生收入，RWA持有者按比例获得收益分配'
+      title: '积分兑换商品',
+      description: '用积分抵扣部分价格，换购心仪商品，超值优惠'
     }
   ];
 
@@ -74,7 +69,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              消费即积累，长期获得收益
+              消费即积累，积分兑换超值好物
             </motion.h1>
             <motion.p
               className="text-xl md:text-2xl text-gray-1 mb-12 max-w-2xl mx-auto"
@@ -82,7 +77,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              通过 积分 & RWA 双资产模型，让每一次消费都成为长期价值的积累
+              通过积分商城，让每一次消费都能兑换心仪商品
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -119,11 +114,11 @@ export default function Home() {
               如何运作
             </h2>
             <p className="text-lg text-gray-1 max-w-2xl mx-auto">
-              三个简单步骤，开启您的收益之旅
+              两个简单步骤，开启您的积分之旅
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {steps.map((step, index) => (
               <motion.div
                 key={index}
@@ -266,7 +261,7 @@ export default function Home() {
               准备好开始了吗？
             </h2>
             <p className="text-lg text-gray-1 mb-8">
-              立即体验 积分 & RWA 双资产模型，让消费创造长期价值
+              立即体验积分商城，消费同时积累积分，兑换超值好物
             </p>
             <Link href="/merchants">
               <Button size="lg">
