@@ -19,9 +19,10 @@ export default function MerchantManagePage() {
   const currentMerchantId = useStore(state => state.currentMerchantId);
   const [activeTab, setActiveTab] = useState<'products' | 'orders' | 'stats'>('products');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [userSelectedMerchantId, setUserSelectedMerchantId] = useState('starbucks');
 
-  // 商户模式下使用 store 的 currentMerchantId，否则用默认的 starbucks
-  const selectedMerchantId = identityMode === 'merchant' && currentMerchantId ? currentMerchantId : 'starbucks';
+  // 商户模式下使用 store 的 currentMerchantId，否则用用户选择的
+  const selectedMerchantId = identityMode === 'merchant' && currentMerchantId ? currentMerchantId : userSelectedMerchantId;
   const currentMerchant = mockMerchants.find(m => m.id === selectedMerchantId);
   const merchantProductsList = merchantProducts.filter(p => p.merchantId === selectedMerchantId);
   const merchantOrdersList = merchantOrders.filter(o => o.merchantId === selectedMerchantId);
@@ -67,7 +68,8 @@ export default function MerchantManagePage() {
               当前商户
             </label>
             <select
-              value={selectedMerchantId}
+              value={userSelectedMerchantId}
+              onChange={(e) => setUserSelectedMerchantId(e.target.value)}
               className="px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:border-md-primary focus:outline-none w-64"
             >
               {mockMerchants.map(merchant => (
