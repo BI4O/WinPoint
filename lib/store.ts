@@ -5,10 +5,14 @@ import {
   mockActivitiesInitial,
   mockMerchantProducts,
   mockMerchantOrders,
+  mockMerchantBenefits,
+  mockBenefitOrders,
   type Order,
   type Activity,
   type MerchantProduct,
   type MerchantOrder,
+  type MerchantBenefit,
+  type MerchantBenefitOrder,
   type Product,
   type CartItem
 } from './mock-data';
@@ -34,6 +38,19 @@ interface AppState {
   // 商户商品管理
   merchantProducts: MerchantProduct[];
   merchantOrders: MerchantOrder[];
+
+  // WIN 积分相关
+  merchantWinBalance: Record<string, number>;  // 商户WIN余额 merchantId -> balance
+  merchantBenefits: MerchantBenefit[];          // 商户权益列表
+  merchantBenefitOrders: MerchantBenefitOrder[]; // 权益订单列表
+
+  // WIN 积分 actions
+  purchaseWin: (merchantId: string, amount: number) => void;
+  addMerchantBenefit: (benefit: Omit<MerchantBenefit, 'id'>) => void;
+  updateMerchantBenefit: (benefitId: string, updates: Partial<MerchantBenefit>) => void;
+  deleteMerchantBenefit: (benefitId: string) => void;
+  redeemBenefit: (benefitId: string, userId: string) => boolean;
+  useVoucher: (voucherCode: string) => boolean;
 
   // 身份状态
   identityMode: IdentityMode;
@@ -87,6 +104,16 @@ export const useStore = create<AppState>((set, get) => ({
   cart: [],
   merchantProducts: mockMerchantProducts,
   merchantOrders: mockMerchantOrders,
+
+  merchantWinBalance: {
+    starbucks: 10000,
+    nike: 8000,
+    apple: 12000,
+    baby: 6000,
+    jewelry: 15000,
+  },
+  merchantBenefits: mockMerchantBenefits,
+  merchantBenefitOrders: mockBenefitOrders,
 
   identityMode: 'user' as IdentityMode,
   currentMerchantId: null as MerchantId | null,
@@ -315,6 +342,99 @@ export const useStore = create<AppState>((set, get) => ({
       ),
       merchantOrders: [newOrder, ...state.merchantOrders],
       activities: [newActivity, ...state.activities]
+    }));
+
+    return true;
+  },
+
+  // WIN 积分 actions
+  purchaseWin: (merchantId, amount) => {
+    set(state => ({
+      merchantWinBalance: {
+        ...state.merchantWinBalance,
+        [merchantId]: (state.merchantWinBalance[merchantId] || 0) + amount
+      }
+    }));
+  },
+
+  addMerchantBenefit: (benefit) => {
+    const newBenefit: MerchantBenefit = {
+      ...benefit,
+      id: `mb-${Date.now()}`
+    };
+    set(state => ({
+      merchantBenefits: [...state.merchantBenefits, newBenefit]
+    }));
+  },
+
+  updateMerchantBenefit: (benefitId, updates) => {
+    set(state => ({
+      merchantBenefits: state.merchantBenefits.map(b =>
+        b.id === benefitId ? { ...b, ...updates } : b
+      )
+    }));
+  },
+
+  deleteMerchantBenefit: (benefitId) => {
+    set(state => ({
+      merchantBenefits: state.merchantBenefits.filter(b => b.id !== benefitId)
+    }));
+  },
+
+  redeemBenefit: (benefitId, userId) => {
+    const { merchantBenefits, user, merchantWinBalance } = get();
+    const benefit = merchantBenefits.find(b => b.id === benefitId);
+
+    if (!benefit || !benefit.isListed) return false;
+    if (benefit.stock !== null && benefit.stock < 1) return false;
+    if (user.point < benefit.winPrice) return false;
+
+    // 生成券码
+    const voucherCode = `WIN-${Math.random().toString(36).substring(2, 10).toUpperCase()}`;
+
+    const newOrder: MerchantBenefitOrder = {
+      id: `bo-${Date.now()}`,
+      benefitId: benefit.id,
+      benefitName: benefit.name,
+      merchantId: benefit.merchantId,
+      merchantName: benefit.merchantName,
+      userId,
+      userAddress: user.address,
+      winPrice: benefit.winPrice,
+      cashPrice: benefit.cashPrice || 0,
+      voucherCode,
+      status: 'pending',
+      timestamp: Date.now()
+    };
+
+    set(state => ({
+      user: {
+        ...state.user,
+        point: state.user.point - benefit.winPrice
+      },
+      merchantBenefits: state.merchantBenefits.map(b =>
+        b.id === benefitId && b.stock !== null
+          ? { ...b, stock: b.stock - 1 }
+          : b
+      ),
+      merchantBenefitOrders: [newOrder, ...state.merchantBenefitOrders]
+    }));
+
+    return true;
+  },
+
+  useVoucher: (voucherCode) => {
+    const { merchantBenefitOrders } = get();
+    const order = merchantBenefitOrders.find(o => o.voucherCode === voucherCode);
+
+    if (!order || order.status !== 'pending') return false;
+
+    set(state => ({
+      merchantBenefitOrders: state.merchantBenefitOrders.map(o =>
+        o.voucherCode === voucherCode
+          ? { ...o, status: 'used', usedAt: Date.now() }
+          : o
+      )
     }));
 
     return true;
