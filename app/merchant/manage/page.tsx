@@ -49,7 +49,7 @@ export default function MerchantManagePage() {
           className="mb-8"
         >
           <h1 className="text-4xl font-bold text-gray-333 mb-2">
-            商户管理
+            后台管理
           </h1>
           <p className="text-gray-1">
             管理您的商品和订单

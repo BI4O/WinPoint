@@ -17,7 +17,7 @@ export default function Header() {
   // Determine nav items based on identity mode
   const navItems = identityMode === 'merchant'
     ? [
-        { href: '/merchant/manage', label: '商户管理', icon: Store },
+        { href: '/merchant/manage', label: '后台管理', icon: Store },
         { href: '/rewards', label: '积分商城', icon: Gift },
         { href: '/merchants', label: '商家', icon: Store },
       ]
