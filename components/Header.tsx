@@ -18,6 +18,8 @@ export default function Header() {
   const navItems = identityMode === 'merchant'
     ? [
         { href: '/merchant/manage', label: '商户管理', icon: Store },
+        { href: '/rewards', label: '积分商城', icon: Gift },
+        { href: '/merchants', label: '商家', icon: Store },
       ]
     : [
         { href: '/', label: '首页', icon: Home },
