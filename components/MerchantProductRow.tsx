@@ -36,7 +36,7 @@ export default function MerchantProductRow({ product }: MerchantProductRowProps)
     <tr className="border-b border-gray-100 hover:bg-gray-50">
       <td className="py-3 px-4">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">{product.image}</span>
+          <span className="text-2xl">{product.image.startsWith('emoji:') ? product.image.replace('emoji:', '') : product.image}</span>
           <div>
             <p className="font-medium text-gray-333">{product.name}</p>
             <p className="text-xs text-gray-500">{product.category}</p>
