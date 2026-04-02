@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useStore } from '@/lib/store';
 import { mockMerchants } from '@/lib/mock-data';
+import AddProductModal from '@/components/AddProductModal';
+import { Plus } from 'lucide-react';
+import Button from '@/components/Button';
 import MerchantProductRow from '@/components/MerchantProductRow';
 import MerchantOrderRow from '@/components/MerchantOrderRow';
 import AtmosphericBackground from '@/components/AtmosphericBackground';
@@ -13,6 +16,7 @@ export default function MerchantManagePage() {
   const merchantOrders = useStore(state => state.merchantOrders);
   const [selectedMerchantId, setSelectedMerchantId] = useState('starbucks');
   const [activeTab, setActiveTab] = useState<'products' | 'orders'>('products');
+  const [showAddModal, setShowAddModal] = useState(false);
 
   const currentMerchant = mockMerchants.find(m => m.id === selectedMerchantId);
   const merchantProductsList = merchantProducts.filter(p => p.merchantId === selectedMerchantId);
@@ -98,6 +102,17 @@ export default function MerchantManagePage() {
         >
           {activeTab === 'products' ? (
             <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+              <div className="flex justify-between items-center p-4 border-b border-gray-100">
+                <h3 className="text-lg font-bold text-gray-333">商品列表</h3>
+                <Button
+                  onClick={() => setShowAddModal(true)}
+                  size="sm"
+                  className="flex items-center gap-1"
+                >
+                  <Plus className="w-4 h-4" />
+                  新增商品
+                </Button>
+              </div>
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
@@ -147,6 +162,12 @@ export default function MerchantManagePage() {
           )}
         </motion.div>
       </div>
+      <AddProductModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        merchantId={selectedMerchantId}
+        merchantName={currentMerchant?.name || ''}
+      />
     </AtmosphericBackground>
   );
 }
