@@ -15,6 +15,8 @@ export default function RewardsPage() {
   const merchantProducts = useStore(state => state.merchantProducts);
   const user = useStore(state => state.user);
   const redeemProduct = useStore(state => state.redeemProduct);
+  const identityMode = useStore(state => state.identityMode);
+  const currentMerchantId = useStore(state => state.currentMerchantId);
   const [activeCategory, setActiveCategory] = useState('全部');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<MerchantProduct | null>(null);
@@ -29,6 +31,12 @@ export default function RewardsPage() {
   const filteredProducts = activeCategory === '全部'
     ? listedProducts
     : listedProducts.filter(p => p.category === activeCategory);
+
+  // 商户模式下只显示自家商品
+  const isMerchantMode = identityMode === 'merchant' && currentMerchantId;
+  const merchantFilteredProducts = isMerchantMode
+    ? filteredProducts.filter(p => p.merchantId === currentMerchantId)
+    : filteredProducts;
 
   const handleRedeem = (product: MerchantProduct) => {
     setSelectedProduct(product);
@@ -90,19 +98,21 @@ export default function RewardsPage() {
           </p>
         </motion.div>
 
-        {/* Category Filter */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.1, type: 'tween', duration: 0.4, ease: [0.2, 0, 0, 1] }}
-          className="mb-8"
-        >
-          <CategoryFilter
-            categories={categories}
-            activeCategory={activeCategory}
-            onCategoryChange={setActiveCategory}
-          />
-        </motion.div>
+        {/* Category Filter - 仅用户模式显示 */}
+        {!isMerchantMode && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.1, type: 'tween', duration: 0.4, ease: [0.2, 0, 0, 1] }}
+            className="mb-8"
+          >
+            <CategoryFilter
+              categories={categories}
+              activeCategory={activeCategory}
+              onCategoryChange={setActiveCategory}
+            />
+          </motion.div>
+        )}
 
         {/* Products Grid */}
         <motion.div
@@ -111,7 +121,7 @@ export default function RewardsPage() {
           transition={{ delay: 0.2, type: 'tween', duration: 0.4, ease: [0.2, 0, 0, 1] }}
           className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
         >
-          {filteredProducts.map((product, index) => (
+          {merchantFilteredProducts.map((product, index) => (
             <motion.div
               key={product.id}
               initial={{ opacity: 0, y: 30 }}
@@ -133,7 +143,7 @@ export default function RewardsPage() {
         </motion.div>
 
         {/* Empty State */}
-        {filteredProducts.length === 0 && (
+        {merchantFilteredProducts.length === 0 && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -141,7 +151,7 @@ export default function RewardsPage() {
           >
             <div className="text-6xl mb-4">📦</div>
             <p className="text-gray-1">
-              该分类暂无商品
+              {isMerchantMode ? '暂无上架商品' : '该分类暂无商品'}
             </p>
           </motion.div>
         )}
