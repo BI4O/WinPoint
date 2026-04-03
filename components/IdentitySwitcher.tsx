@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useStore, type MerchantId } from '@/lib/store';
 import { mockMerchants } from '@/lib/mock-data';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 
 export default function IdentitySwitcher() {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const { identityMode, currentMerchantId, setIdentityMode } = useStore();
 
@@ -20,6 +22,13 @@ export default function IdentitySwitcher() {
   const handleSelect = (mode: 'user' | 'merchant', merchantId?: string) => {
     setIdentityMode(mode, merchantId as MerchantId);
     setIsOpen(false);
+
+    // 切换后跳转到对应页面
+    if (mode === 'user') {
+      router.push('/dashboard');
+    } else {
+      router.push('/merchant/manage');
+    }
   };
 
   return (
