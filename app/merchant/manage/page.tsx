@@ -6,6 +6,7 @@ import { useStore } from '@/lib/store';
 import { mockMerchants } from '@/lib/mock-data';
 import AddProductModal from '@/components/AddProductModal';
 import MerchantStatsCard from '@/components/MerchantStatsCard';
+import MerchantStatsChart from '@/components/MerchantStatsChart';
 import { Plus, AlertTriangle } from 'lucide-react';
 import Button from '@/components/Button';
 import MerchantProductRow from '@/components/MerchantProductRow';
@@ -22,7 +23,7 @@ export default function MerchantManagePage() {
   const merchantBenefitOrders = useStore(state => state.merchantBenefitOrders);
   const identityMode = useStore(state => state.identityMode);
   const currentMerchantId = useStore(state => state.currentMerchantId);
-  const [activeTab, setActiveTab] = useState<'overview' | 'win' | 'products' | 'benefits' | 'orders'>('overview');
+  const [activeTab, setActiveTab] = useState<'win' | 'products' | 'benefits' | 'orders'>('win');
   const [showAddModal, setShowAddModal] = useState(false);
   const [userSelectedMerchantId, setUserSelectedMerchantId] = useState('starbucks');
 
@@ -174,6 +175,16 @@ export default function MerchantManagePage() {
           )}
         </motion.div>
 
+        {/* 数据趋势图表 */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="mb-8"
+        >
+          <MerchantStatsChart />
+        </motion.div>
+
         {/* Tabs */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -183,7 +194,6 @@ export default function MerchantManagePage() {
         >
           <div className="flex gap-4 border-b border-gray-200 overflow-x-auto">
             {[
-              { key: 'overview', label: '数据概览' },
               { key: 'win', label: 'WIN积分' },
               { key: 'products', label: '商品管理' },
               { key: 'benefits', label: '权益管理' },
@@ -210,87 +220,7 @@ export default function MerchantManagePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          {activeTab === 'overview' ? (
-            // 数据概览内容
-            <div className="space-y-6">
-              {/* 概览卡片 */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <MerchantStatsCard
-                  title="商品总数"
-                  value={totalProducts}
-                  subtitle={`${listedProducts} 上架中`}
-                  icon="📦"
-                />
-                <MerchantStatsCard
-                  title="总订单数"
-                  value={totalOrders}
-                  subtitle={`${pendingOrders} 待处理`}
-                  icon="🛒"
-                />
-                <MerchantStatsCard
-                  title="销售额"
-                  value={`¥${totalSales.toFixed(0)}`}
-                  subtitle={`积分 ${totalPointsEarned}`}
-                  icon="💰"
-                />
-                <MerchantStatsCard
-                  title="WIN 余额"
-                  value={merchantWinBalance[selectedMerchantId]?.toLocaleString() || '0'}
-                  subtitle="≈ ¥xxx"
-                  icon="🪙"
-                />
-              </div>
-
-              {/* 库存预警 */}
-              {(lowStockProducts > 0 || outOfStockProducts > 0) && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {lowStockProducts > 0 && (
-                    <div className="bg-gradient-to-r from-orange-50 to-orange-100 rounded-2xl p-5 border border-orange-200">
-                      <h3 className="text-base font-bold text-orange-600 mb-3 flex items-center gap-2">
-                        <AlertTriangle className="w-5 h-5" />
-                        库存不足 ({lowStockProducts})
-                      </h3>
-                      <div className="space-y-2">
-                        {merchantProductsList
-                          .filter(p => p.stock > 0 && p.stock < 10)
-                          .map(product => (
-                            <div key={product.id} className="flex items-center justify-between bg-white/80 rounded-xl px-4 py-2">
-                              <div className="flex items-center gap-2">
-                                <span className="text-xl">{product.image.startsWith('emoji:') ? product.image.replace('emoji:', '') : product.image}</span>
-                                <span className="text-sm font-medium text-gray-700">{product.name}</span>
-                              </div>
-                              <span className="text-sm font-bold text-orange-500">剩余 {product.stock} 件</span>
-                            </div>
-                          ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {outOfStockProducts > 0 && (
-                    <div className="bg-gradient-to-r from-red-50 to-red-100 rounded-2xl p-5 border border-red-200">
-                      <h3 className="text-base font-bold text-red-600 mb-3 flex items-center gap-2">
-                        <AlertTriangle className="w-5 h-5" />
-                        已售罄 ({outOfStockProducts})
-                      </h3>
-                      <div className="space-y-2">
-                        {merchantProductsList
-                          .filter(p => p.stock === 0)
-                          .map(product => (
-                            <div key={product.id} className="flex items-center justify-between bg-white/80 rounded-xl px-4 py-2">
-                              <div className="flex items-center gap-2">
-                                <span className="text-xl">{product.image.startsWith('emoji:') ? product.image.replace('emoji:', '') : product.image}</span>
-                                <span className="text-sm font-medium text-gray-700">{product.name}</span>
-                              </div>
-                              <span className="text-sm font-bold text-red-500">售罄</span>
-                            </div>
-                          ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          ) : activeTab === 'win' ? (
+          {activeTab === 'win' ? (
             <WinPointsPanel />
           ) : activeTab === 'benefits' ? (
             <BenefitsList />
