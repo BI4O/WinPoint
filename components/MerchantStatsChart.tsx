@@ -148,7 +148,7 @@ export default function MerchantStatsChart({ defaultMetric = 'sales' }: Merchant
                 const date = new Date(label);
                 return `${date.getMonth() + 1}月${date.getDate()}日`;
               }}
-              formatter={(value: number) => [formatTooltip(value, config.unit), config.label]}
+              formatter={(value: number | undefined) => value !== undefined ? [formatTooltip(value, config.unit), config.label] : ['', '']}
               contentStyle={{
                 backgroundColor: 'white',
                 border: '1px solid #e5e5e5',

@@ -401,7 +401,7 @@ export const useStore = create<AppState>((set, get) => ({
       userId,
       userAddress: user.address,
       winPrice: benefit.winPrice,
-      cashPrice: benefit.cashPrice || 0,
+      cashPrice: 0,
       voucherCode,
       status: 'pending',
       timestamp: Date.now()
