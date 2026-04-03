@@ -11,13 +11,18 @@ import Button from '@/components/Button';
 import MerchantProductRow from '@/components/MerchantProductRow';
 import MerchantOrderRow from '@/components/MerchantOrderRow';
 import AtmosphericBackground from '@/components/AtmosphericBackground';
+import WinPointsPanel from '@/components/WinPointsPanel';
+import BenefitsList from '@/components/BenefitsList';
+import BenefitOrderRow from '@/components/BenefitOrderRow';
 
 export default function MerchantManagePage() {
   const merchantProducts = useStore(state => state.merchantProducts);
   const merchantOrders = useStore(state => state.merchantOrders);
+  const merchantWinBalance = useStore(state => state.merchantWinBalance);
+  const merchantBenefitOrders = useStore(state => state.merchantBenefitOrders);
   const identityMode = useStore(state => state.identityMode);
   const currentMerchantId = useStore(state => state.currentMerchantId);
-  const [activeTab, setActiveTab] = useState<'products' | 'orders'>('products');
+  const [activeTab, setActiveTab] = useState<'overview' | 'win' | 'products' | 'benefits' | 'orders'>('overview');
   const [showAddModal, setShowAddModal] = useState(false);
   const [userSelectedMerchantId, setUserSelectedMerchantId] = useState('starbucks');
 
@@ -26,6 +31,7 @@ export default function MerchantManagePage() {
   const currentMerchant = mockMerchants.find(m => m.id === selectedMerchantId);
   const merchantProductsList = merchantProducts.filter(p => p.merchantId === selectedMerchantId);
   const merchantOrdersList = merchantOrders.filter(o => o.merchantId === selectedMerchantId);
+  const merchantBenefitOrdersList = merchantBenefitOrders.filter(o => o.merchantId === selectedMerchantId);
 
   // 计算商户统计数据
   const totalProducts = merchantProductsList.length;
@@ -175,27 +181,26 @@ export default function MerchantManagePage() {
           transition={{ delay: 0.2 }}
           className="mb-6"
         >
-          <div className="flex gap-4 border-b border-gray-200">
-            <button
-              onClick={() => setActiveTab('products')}
-              className={`pb-3 px-1 text-sm font-medium transition-colors ${
-                activeTab === 'products'
-                  ? 'text-md-primary border-b-2 border-md-primary'
-                  : 'text-gray-500 hover:text-gray-333'
-              }`}
-            >
-              商品管理 ({merchantProductsList.length})
-            </button>
-            <button
-              onClick={() => setActiveTab('orders')}
-              className={`pb-3 px-1 text-sm font-medium transition-colors ${
-                activeTab === 'orders'
-                  ? 'text-md-primary border-b-2 border-md-primary'
-                  : 'text-gray-500 hover:text-gray-333'
-              }`}
-            >
-              订单管理 ({merchantOrdersList.length})
-            </button>
+          <div className="flex gap-4 border-b border-gray-200 overflow-x-auto">
+            {[
+              { key: 'overview', label: '数据概览' },
+              { key: 'win', label: 'WIN积分' },
+              { key: 'products', label: '商品管理' },
+              { key: 'benefits', label: '权益管理' },
+              { key: 'orders', label: '订单管理' },
+            ].map(tab => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key as typeof activeTab)}
+                className={`pb-3 px-1 text-sm font-medium transition-colors whitespace-nowrap ${
+                  activeTab === tab.key
+                    ? 'text-md-primary border-b-2 border-md-primary'
+                    : 'text-gray-500 hover:text-gray-333'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
         </motion.div>
 
@@ -205,7 +210,92 @@ export default function MerchantManagePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          {activeTab === 'products' ? (
+          {activeTab === 'overview' ? (
+            // 数据概览内容
+            <div className="space-y-6">
+              {/* 概览卡片 */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <MerchantStatsCard
+                  title="商品总数"
+                  value={totalProducts}
+                  subtitle={`${listedProducts} 上架中`}
+                  icon="📦"
+                />
+                <MerchantStatsCard
+                  title="总订单数"
+                  value={totalOrders}
+                  subtitle={`${pendingOrders} 待处理`}
+                  icon="🛒"
+                />
+                <MerchantStatsCard
+                  title="销售额"
+                  value={`¥${totalSales.toFixed(0)}`}
+                  subtitle={`积分 ${totalPointsEarned}`}
+                  icon="💰"
+                />
+                <MerchantStatsCard
+                  title="WIN 余额"
+                  value={merchantWinBalance[selectedMerchantId]?.toLocaleString() || '0'}
+                  subtitle="≈ ¥xxx"
+                  icon="🪙"
+                />
+              </div>
+
+              {/* 库存预警 */}
+              {(lowStockProducts > 0 || outOfStockProducts > 0) && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {lowStockProducts > 0 && (
+                    <div className="bg-gradient-to-r from-orange-50 to-orange-100 rounded-2xl p-5 border border-orange-200">
+                      <h3 className="text-base font-bold text-orange-600 mb-3 flex items-center gap-2">
+                        <AlertTriangle className="w-5 h-5" />
+                        库存不足 ({lowStockProducts})
+                      </h3>
+                      <div className="space-y-2">
+                        {merchantProductsList
+                          .filter(p => p.stock > 0 && p.stock < 10)
+                          .map(product => (
+                            <div key={product.id} className="flex items-center justify-between bg-white/80 rounded-xl px-4 py-2">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xl">{product.image.startsWith('emoji:') ? product.image.replace('emoji:', '') : product.image}</span>
+                                <span className="text-sm font-medium text-gray-700">{product.name}</span>
+                              </div>
+                              <span className="text-sm font-bold text-orange-500">剩余 {product.stock} 件</span>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {outOfStockProducts > 0 && (
+                    <div className="bg-gradient-to-r from-red-50 to-red-100 rounded-2xl p-5 border border-red-200">
+                      <h3 className="text-base font-bold text-red-600 mb-3 flex items-center gap-2">
+                        <AlertTriangle className="w-5 h-5" />
+                        已售罄 ({outOfStockProducts})
+                      </h3>
+                      <div className="space-y-2">
+                        {merchantProductsList
+                          .filter(p => p.stock === 0)
+                          .map(product => (
+                            <div key={product.id} className="flex items-center justify-between bg-white/80 rounded-xl px-4 py-2">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xl">{product.image.startsWith('emoji:') ? product.image.replace('emoji:', '') : product.image}</span>
+                                <span className="text-sm font-medium text-gray-700">{product.name}</span>
+                              </div>
+                              <span className="text-sm font-bold text-red-500">售罄</span>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ) : activeTab === 'win' ? (
+            <WinPointsPanel />
+          ) : activeTab === 'benefits' ? (
+            <BenefitsList />
+          ) : activeTab === 'products' ? (
+            // 商品管理 Tab
             <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
               <div className="flex justify-between items-center p-4 border-b border-gray-100">
                 <h3 className="text-lg font-bold text-gray-333">商品列表</h3>
@@ -236,109 +326,73 @@ export default function MerchantManagePage() {
                 </tbody>
               </table>
             </div>
-          ) : activeTab === 'orders' ? (
-            <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">订单信息</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">商品</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">价格</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">收货信息</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">状态</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">操作</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {merchantOrdersList.length === 0 ? (
-                    <tr>
-                      <td colSpan={6} className="text-center py-12 text-gray-500">
-                        暂无订单
-                      </td>
-                    </tr>
-                  ) : (
-                    merchantOrdersList.map(order => (
-                      <MerchantOrderRow key={order.id} order={order} />
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
           ) : (
+            // 订单管理 Tab
             <div className="space-y-6">
-              {/* 概览卡片 */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <MerchantStatsCard
-                  title="商品总数"
-                  value={totalProducts}
-                  subtitle={`${listedProducts} 上架中`}
-                  icon="📦"
-                />
-                <MerchantStatsCard
-                  title="总订单数"
-                  value={totalOrders}
-                  subtitle={`${pendingOrders} 待处理`}
-                  icon="🛒"
-                />
-                <MerchantStatsCard
-                  title="销售额"
-                  value={`¥${totalSales.toFixed(2)}`}
-                  subtitle={`积分收入: ${totalPointsEarned}`}
-                  icon="💰"
-                />
-                <MerchantStatsCard
-                  title="库存预警"
-                  value={lowStockProducts + outOfStockProducts}
-                  subtitle={`${outOfStockProducts} 已售罄`}
-                  icon="⚠️"
-                />
+              {/* 商品订单 */}
+              <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+                <div className="p-4 border-b border-gray-100">
+                  <h3 className="text-lg font-bold text-gray-333">商品订单</h3>
+                </div>
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">商品</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">用户</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">价格</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">状态</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">时间</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {merchantOrdersList.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} className="text-center py-12 text-gray-500">
+                          暂无商品订单
+                        </td>
+                      </tr>
+                    ) : (
+                      merchantOrdersList.map(order => (
+                        <MerchantOrderRow key={order.id} order={order} />
+                      ))
+                    )}
+                  </tbody>
+                </table>
               </div>
 
-              {/* 低库存商品列表 */}
-              {lowStockProducts > 0 && (
-                <div className="bg-white rounded-2xl shadow-sm p-6">
-                  <h3 className="text-lg font-bold text-gray-333 mb-4 flex items-center gap-2">
-                    <AlertTriangle className="w-5 h-5 text-orange-500" />
-                    库存不足
-                  </h3>
-                  <div className="space-y-2">
-                    {merchantProductsList
-                      .filter(p => p.stock > 0 && p.stock < 10)
-                      .map(product => (
-                        <div key={product.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl">{product.image.startsWith('emoji:') ? product.image.replace('emoji:', '') : product.image}</span>
-                            <span className="font-medium text-gray-333">{product.name}</span>
-                          </div>
-                          <span className="text-orange-500 font-medium">剩余 {product.stock} 件</span>
-                        </div>
-                      ))}
-                  </div>
+              {/* 权益订单 */}
+              <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+                <div className="p-4 border-b border-gray-100">
+                  <h3 className="text-lg font-bold text-gray-333">权益订单</h3>
                 </div>
-              )}
-
-              {/* 售罄商品列表 */}
-              {outOfStockProducts > 0 && (
-                <div className="bg-white rounded-2xl shadow-sm p-6">
-                  <h3 className="text-lg font-bold text-gray-333 mb-4 flex items-center gap-2">
-                    <AlertTriangle className="w-5 h-5 text-red-500" />
-                    已售罄
-                  </h3>
-                  <div className="space-y-2">
-                    {merchantProductsList
-                      .filter(p => p.stock === 0)
-                      .map(product => (
-                        <div key={product.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl">{product.image.startsWith('emoji:') ? product.image.replace('emoji:', '') : product.image}</span>
-                            <span className="font-medium text-gray-333">{product.name}</span>
-                          </div>
-                          <span className="text-red-500 font-medium">售罄</span>
-                        </div>
-                      ))}
-                  </div>
-                </div>
-              )}
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">权益</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">用户</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">券码</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">WIN</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">时间</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">状态</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {merchantBenefitOrdersList.length === 0 ? (
+                      <tr>
+                        <td colSpan={7} className="text-center py-12 text-gray-500">
+                          暂无权益订单
+                        </td>
+                      </tr>
+                    ) : (
+                      merchantBenefitOrdersList.map(order => (
+                        <BenefitOrderRow key={order.id} order={order} />
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </motion.div>
