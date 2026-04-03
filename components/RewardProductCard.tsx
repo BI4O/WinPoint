@@ -22,15 +22,15 @@ export default function RewardProductCard({
 
   return (
     <Card hover className="flex flex-col h-full">
-      <div className="flex flex-col space-y-4">
+      <div className="flex flex-col space-y-3">
         {/* Product Image */}
         <motion.div
-          className="w-full aspect-square rounded-2xl bg-md-surface-container-low flex items-center justify-center overflow-hidden"
+          className="w-24 h-24 rounded-2xl bg-md-surface-container-low flex items-center justify-center overflow-hidden mx-auto"
           whileHover={{ scale: 1.05 }}
           transition={{ type: 'tween', duration: 0.3, ease: [0.2, 0, 0, 1] }}
         >
           {isEmoji ? (
-            <span className="text-6xl">{imageContent}</span>
+            <span className="text-5xl">{imageContent}</span>
           ) : (
             <img
               src={imageContent}
@@ -82,7 +82,7 @@ export default function RewardProductCard({
             size="lg"
             disabled={!canAfford}
           >
-            {canAfford ? '立即兑换' : 'Point 不足'}
+            {canAfford ? '立即兑换' : 'WIN积分 不足'}
           </Button>
         </div>
       </div>

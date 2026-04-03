@@ -35,7 +35,7 @@ export default function MerchantProductRow({ product }: MerchantProductRowProps)
   return (
     <tr className="border-b border-gray-100 hover:bg-gray-50">
       <td className="py-3 px-4">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 align-middle">
           <span className="text-2xl">{product.image.startsWith('emoji:') ? product.image.replace('emoji:', '') : product.image}</span>
           <div>
             <p className="font-medium text-gray-333">{product.name}</p>
@@ -46,19 +46,19 @@ export default function MerchantProductRow({ product }: MerchantProductRowProps)
       <td className="py-3 px-4 text-center">
         ¥{product.cashPrice}
       </td>
-      <td className="py-3 px-4">
+      <td className="py-3 px-4 text-center">
         {isEditing ? (
           <input
             type="number"
             value={editData.pointPrice}
             onChange={(e) => setEditData(prev => ({ ...prev, pointPrice: Number(e.target.value) }))}
-            className="w-24 px-2 py-1 border border-gray-200 rounded-lg text-center"
+            className="w-20 px-2 py-1 border border-gray-200 rounded-lg text-center"
           />
         ) : (
           <span className="text-md-primary font-medium">{product.pointPrice}</span>
         )}
       </td>
-      <td className="py-3 px-4">
+      <td className="py-3 px-4 text-center">
         {isEditing ? (
           <input
             type="number"
@@ -73,41 +73,53 @@ export default function MerchantProductRow({ product }: MerchantProductRowProps)
         )}
       </td>
       <td className="py-3 px-4">
-        <label className="relative inline-flex items-center cursor-pointer">
-          <input
-            type="checkbox"
-            checked={editData.isListed}
-            onChange={(e) => setEditData(prev => ({ ...prev, isListed: e.target.checked }))}
+        <div className="flex justify-center">
+          <button
+            onClick={() => {
+              if (isEditing) {
+                updateMerchantProduct(product.id, { isListed: !editData.isListed });
+              }
+              setEditData(prev => ({ ...prev, isListed: !prev.isListed }));
+            }}
+            className={`relative w-11 h-6 rounded-full transition-colors ${
+              editData.isListed ? 'bg-md-primary' : 'bg-gray-200'
+            } ${!isEditing ? 'cursor-default' : 'cursor-pointer'}`}
             disabled={!isEditing}
-            className="sr-only peer"
-          />
-          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-md-primary/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-md-primary peer-disabled:opacity-50"></div>
-        </label>
+          >
+            <div
+              className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${
+                editData.isListed ? 'translate-x-6' : 'translate-x-1'
+              }`}
+            />
+          </button>
+        </div>
       </td>
       <td className="py-3 px-4">
-        {isEditing ? (
-          <div className="flex items-center gap-2 justify-center">
+        <div className="flex justify-center">
+          {isEditing ? (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleSave}
+                className="p-2 rounded-lg bg-green-500 text-white hover:bg-green-600"
+              >
+                <Save className="w-4 h-4" />
+              </button>
+              <button
+                onClick={handleCancel}
+                className="p-2 rounded-lg bg-gray-200 text-gray-600 hover:bg-gray-300"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
             <button
-              onClick={handleSave}
-              className="p-2 rounded-lg bg-green-500 text-white hover:bg-green-600"
+              onClick={() => setIsEditing(true)}
+              className="p-2 rounded-lg hover:bg-gray-100 text-gray-500"
             >
-              <Save className="w-4 h-4" />
+              <Edit2 className="w-4 h-4" />
             </button>
-            <button
-              onClick={handleCancel}
-              className="p-2 rounded-lg bg-gray-200 text-gray-600 hover:bg-gray-300"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        ) : (
-          <button
-            onClick={() => setIsEditing(true)}
-            className="p-2 rounded-lg hover:bg-gray-100 text-gray-500"
-          >
-            <Edit2 className="w-4 h-4" />
-          </button>
-        )}
+          )}
+        </div>
       </td>
     </tr>
   );

@@ -56,7 +56,7 @@ export default function BenefitsList() {
           <p className="text-sm text-gray-400 mt-1">点击上方按钮创建您的第一个权益</p>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {merchantBenefitsList.map((benefit, index) => (
             <motion.div
               key={benefit.id}
@@ -65,17 +65,19 @@ export default function BenefitsList() {
               transition={{ delay: index * 0.05 }}
             >
               <Card hover className={`p-5 ${!benefit.isListed ? 'opacity-60' : ''}`}>
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <span className="text-4xl">{benefit.image.startsWith('emoji:')
+                <div className="flex flex-col space-y-3">
+                  {/* Icon - centered */}
+                  <div className="w-24 h-24 rounded-2xl bg-md-surface-container-low flex items-center justify-center overflow-hidden mx-auto">
+                    <span className="text-5xl">{benefit.image.startsWith('emoji:')
                       ? benefit.image.replace('emoji:', '')
                       : benefit.image}</span>
-                    <div>
+                  </div>
+
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1 text-center">
                       <h4 className="font-bold text-gray-333">{benefit.name}</h4>
                       <p className="text-xs text-gray-500">{getBenefitIcon(benefit.type)} {BENEFIT_TYPES.find(t => t.type === benefit.type)?.label}</p>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-1">
                     <button
                       onClick={() => handleToggleListed(benefit.id, benefit.isListed)}
                       className={`p-2 rounded-lg transition-colors ${
@@ -88,43 +90,47 @@ export default function BenefitsList() {
                       {benefit.isListed ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                     </button>
                   </div>
-                </div>
 
-                <div className="flex items-center justify-between mb-3">
-                  <div>
-                    <p className="text-2xl font-bold text-md-primary">{benefit.winPrice}</p>
-                    <p className="text-xs text-gray-400">WIN 积分</p>
+                  <div className="flex items-center justify-center gap-6 py-2">
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-md-primary">{benefit.winPrice}</p>
+                      <p className="text-xs text-gray-400">WIN</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm text-gray-500">
+                        {benefit.stock === null ? '无限' : benefit.stock}
+                      </p>
+                      <p className="text-xs text-gray-400">库存</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm text-gray-500">{benefit.validDays}</p>
+                      <p className="text-xs text-gray-400">天</p>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm text-gray-500">
-                      {benefit.stock === null ? '无限库存' : `库存 ${benefit.stock}`}
-                    </p>
-                    <p className="text-xs text-gray-400">有效期 {benefit.validDays} 天</p>
+
+                  {benefit.description && (
+                    <p className="text-sm text-gray-500 text-center line-clamp-2">{benefit.description}</p>
+                  )}
+
+                  <div className="flex gap-2 pt-2">
+                    <Button
+                      variant="outlined"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => setEditingBenefit(benefit.id)}
+                    >
+                      <Edit2 className="w-3 h-3 mr-1" />
+                      编辑
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      size="sm"
+                      className="text-red-500 hover:bg-red-50"
+                      onClick={() => deleteMerchantBenefit(benefit.id)}
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </Button>
                   </div>
-                </div>
-
-                {benefit.description && (
-                  <p className="text-sm text-gray-500 mb-3 line-clamp-2">{benefit.description}</p>
-                )}
-
-                <div className="flex gap-2">
-                  <Button
-                    variant="outlined"
-                    size="sm"
-                    className="flex-1"
-                    onClick={() => setEditingBenefit(benefit.id)}
-                  >
-                    <Edit2 className="w-3 h-3 mr-1" />
-                    编辑
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    size="sm"
-                    className="text-red-500 hover:bg-red-50"
-                    onClick={() => deleteMerchantBenefit(benefit.id)}
-                  >
-                    <Trash2 className="w-3 h-3" />
-                  </Button>
                 </div>
               </Card>
             </motion.div>

@@ -63,7 +63,7 @@ export default function MerchantDetailContent({ merchant }: MerchantDetailConten
                 </div>
                 <div className="flex items-center gap-2">
                   <Tag className="w-4 h-4" />
-                  <span>消费可获得 Point (10:1)</span>
+                  <span>消费可获得 WIN积分 (10:1)</span>
                 </div>
               </div>
 
@@ -81,7 +81,7 @@ export default function MerchantDetailContent({ merchant }: MerchantDetailConten
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.4 }}
-          className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6"
+          className="grid grid-cols-2 md:grid-cols-3 gap-10"
         >
           {merchant.products.map((product, index) => (
             <motion.div

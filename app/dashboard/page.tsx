@@ -29,7 +29,7 @@ export default function DashboardPage() {
             我的资产
           </h1>
           <p className="text-gray-1">
-            查看您的 Point、RWA 和收益情况
+            查看您的 WIN积分、RWA 和收益情况
           </p>
         </motion.div>
 
@@ -41,7 +41,7 @@ export default function DashboardPage() {
             transition={{ delay: 0.1, type: 'tween', duration: 0.4, ease: [0.2, 0, 0, 1] }}
           >
             <AssetCard
-              title="Point"
+              title="WIN积分"
               value={user.point.toFixed(2)}
               subtitle="可用余额"
               icon={Coins}

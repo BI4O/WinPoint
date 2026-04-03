@@ -148,7 +148,7 @@ export default function CheckoutModal({
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-md-success">将获得 Point:</span>
+                      <span className="text-md-success">将获得 WIN积分:</span>
                       <span className="text-lg font-bold text-md-success">
                         {totalPoint.toFixed(1)}
                       </span>
@@ -158,7 +158,7 @@ export default function CheckoutModal({
                   {/* 提示信息 */}
                   <div className="bg-md-primary-container/40 rounded-2xl p-4">
                     <p className="text-sm text-md-on-surface-variant">
-                      💡 提示: Point 可用于兑换积分商城商品
+                      💡 提示: WIN积分 可用于兑换积分商城商品
                     </p>
                   </div>
                 </div>
@@ -211,8 +211,8 @@ export default function CheckoutModal({
           <div className="bg-md-background rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl">
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-2xl font-bold text-md-on-background mb-2">购买成功!</h2>
-            <p className="text-md-on-surface-variant mb-2">获得 {earnedPoint.toFixed(1)} Point</p>
-            <p className="text-sm text-md-on-surface-variant">Point 已到账，可用于兑换商品</p>
+            <p className="text-md-on-surface-variant mb-2">获得 {earnedPoint.toFixed(1)} WIN积分</p>
+            <p className="text-sm text-md-on-surface-variant">WIN积分 已到账，可用于兑换商品</p>
           </div>
         </motion.div>
       )}

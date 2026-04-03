@@ -78,14 +78,14 @@ export default function RewardsPage() {
               </div>
             </div>
 
-            {/* Point Balance */}
+            {/* WIN积分余额 */}
             <motion.div
               className="px-6 py-3 rounded-full bg-md-primary/10 border border-md-primary/20"
               whileHover={{ scale: 1.05 }}
               transition={{ type: 'tween', duration: 0.2, ease: [0.2, 0, 0, 1] }}
             >
               <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-1">我的 Point</span>
+                <span className="text-sm text-gray-1">我的 WIN积分</span>
                 <span className="text-2xl font-bold text-md-primary">
                   {user.point.toFixed(2)}
                 </span>
@@ -119,7 +119,7 @@ export default function RewardsPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, type: 'tween', duration: 0.4, ease: [0.2, 0, 0, 1] }}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+          className="grid grid-cols-1 md:grid-cols-3 gap-10"
         >
           {merchantFilteredProducts.map((product, index) => (
             <motion.div
@@ -177,7 +177,7 @@ export default function RewardsPage() {
             <div className="text-6xl mb-4">🎁</div>
             <h2 className="text-2xl font-bold text-gray-333 mb-2">兑换成功!</h2>
             <p className="text-gray-1 mb-2">商品将在 3-5 个工作日内发货</p>
-            <p className="text-md-primary font-bold">-{redeemedProduct.pointPrice} Point</p>
+            <p className="text-md-primary font-bold">-{redeemedProduct.pointPrice} WIN积分</p>
           </div>
         </motion.div>
       )}

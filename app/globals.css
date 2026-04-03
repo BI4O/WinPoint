@@ -6,8 +6,8 @@
   --color-primary-hover: #7A1618;
   --color-on-primary: #FFFFFF;
 
-  /* Background */
-  --color-background: #FFFFFF;
+  /* Background - 暖色淡红 */
+  --color-background: #FEF7F7;
   --color-on-background: #333333;
 
   /* Gray scale */
@@ -19,8 +19,8 @@
   /* Surface (卡片/容器) */
   --color-surface: #FFFFFF;
   --color-surface-container: #FFFFFF;
-  --color-surface-container-low: #F5F5F5;
-  --color-surface-container-high: #FAFAFA;
+  --color-surface-container-low: #FDF5F5;
+  --color-surface-container-high: #FEF8F8;
 
   /* Status colors (保留) */
   --color-success: #10b981;

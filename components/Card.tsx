@@ -18,8 +18,8 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
         ref={ref}
         className={cn(
           'group',
-          'rounded-xl bg-white border border-gray-2 p-6',
-          'shadow-none hover:shadow-sm',
+          'rounded-xl bg-white border border-gray-2 p-5',
+          'shadow-md hover:shadow-xl',
           'transition-all duration-300 ease-md',
           hover && 'hover:scale-[1.01] cursor-pointer',
           className

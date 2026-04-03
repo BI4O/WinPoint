@@ -117,7 +117,7 @@ export default function RedemptionModal({
                     <span className="text-xl font-bold text-md-primary">
                       {product.pointPrice}
                     </span>
-                    <span className="text-sm text-md-on-surface-variant">Point</span>
+                    <span className="text-sm text-md-on-surface-variant">WIN积分</span>
                   </div>
                 </div>
               </div>
@@ -125,22 +125,22 @@ export default function RedemptionModal({
               {/* Point Summary */}
               <div className="bg-md-surface-container-low rounded-2xl p-4 space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-md-on-surface-variant">当前 Point</span>
+                  <span className="text-md-on-surface-variant">当前 WIN积分</span>
                   <span className="font-medium text-md-on-surface">
-                    {userPoint.toFixed(2)} Point
+                    {userPoint.toFixed(2)} WIN积分
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-md-on-surface-variant">兑换消耗</span>
                   <span className="font-medium text-md-error">
-                    -{product.pointPrice} Point
+                    -{product.pointPrice} WIN积分
                   </span>
                 </div>
                 <div className="h-px bg-md-on-surface/10 my-2" />
                 <div className="flex justify-between">
-                  <span className="font-medium text-md-on-surface">剩余 Point</span>
+                  <span className="font-medium text-md-on-surface">剩余 WIN积分</span>
                   <span className="text-lg font-bold text-md-primary">
-                    {remainingPoint.toFixed(2)} Point
+                    {remainingPoint.toFixed(2)} WIN积分
                   </span>
                 </div>
               </div>

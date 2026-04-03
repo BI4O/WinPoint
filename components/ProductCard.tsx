@@ -18,9 +18,9 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
   return (
     <Card hover className="flex flex-col h-full">
       {/* 商品图片 */}
-      <div className="aspect-square rounded-2xl bg-md-surface-container-low flex items-center justify-center mb-4 overflow-hidden">
+      <div className="w-24 h-24 rounded-2xl bg-md-surface-container-low flex items-center justify-center mx-auto mb-3 overflow-hidden">
         {isEmoji ? (
-          <span className="text-6xl">{imageContent}</span>
+          <span className="text-5xl">{imageContent}</span>
         ) : (
           <img
             src={imageContent}
@@ -31,14 +31,14 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
       </div>
 
       {/* 商品信息 */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col text-center">
         <h3 className="text-base font-medium text-md-on-surface mb-2 line-clamp-2">
           {product.name}
         </h3>
 
         <div className="mt-auto">
           <p className="text-2xl font-bold text-md-primary mb-4">
-            ${product.price}
+            ¥{product.price}
           </p>
 
           <Button
