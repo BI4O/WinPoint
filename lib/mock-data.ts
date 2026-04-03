@@ -194,6 +194,46 @@ export interface OrderBook {
   priceChangePercent24h: number;
 }
 
+// 统计数据点接口
+export interface StatsDataPoint {
+  date: string;    // '2026-03-01'
+  value: number;
+}
+
+// 生成30天统计数据
+const generateStatsData = (
+  baseValue: number,
+  volatility: number,
+  trend: 'up' | 'down' | 'flat'
+): StatsDataPoint[] => {
+  const data: StatsDataPoint[] = [];
+  const today = new Date('2026-04-03');
+
+  for (let i = 29; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+
+    const randomChange = (Math.random() - 0.5) * volatility;
+    const trendFactor = trend === 'up' ? 0.02 : trend === 'down' ? -0.02 : 0;
+    const trendValue = baseValue * (1 + trendFactor * (29 - i));
+
+    const value = Math.max(0, Math.round(trendValue + randomChange));
+
+    data.push({
+      date: date.toISOString().split('T')[0],
+      value
+    });
+  }
+
+  return data;
+};
+
+// 30天统计数据
+export const mockSalesData: StatsDataPoint[] = generateStatsData(1000, 200, 'up');
+export const mockWinData: StatsDataPoint[] = generateStatsData(500, 150, 'flat');
+export const mockOrdersData: StatsDataPoint[] = generateStatsData(50, 20, 'up');
+export const mockStockData: StatsDataPoint[] = generateStatsData(200, 30, 'down');
+
 // 权益类型预设
 export const BENEFIT_TYPES = [
   { type: 'parking' as const, icon: '🅿️', label: '停车券' },
