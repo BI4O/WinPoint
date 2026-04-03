@@ -11,7 +11,7 @@ interface BenefitOrderRowProps {
 }
 
 export default function BenefitOrderRow({ order }: BenefitOrderRowProps) {
-  const useVoucher = useStore(state => state.useVoucher);
+  const redeemVoucher = useStore(state => state.useVoucher);
   const [copied, setCopied] = useState(false);
 
   const handleCopyCode = () => {
@@ -21,7 +21,7 @@ export default function BenefitOrderRow({ order }: BenefitOrderRowProps) {
   };
 
   const handleUseVoucher = () => {
-    useVoucher(order.voucherCode);
+    redeemVoucher(order.voucherCode);
   };
 
   const getStatusBadge = () => {
