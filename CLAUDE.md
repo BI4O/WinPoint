@@ -111,6 +111,23 @@ The app uses a custom Material Design 3-inspired theme defined in `app/globals.c
 - **Date Locale**: `zh-CN`
 - All UI text is in Chinese
 
+## Git & Deployment
+
+**Remote Repositories**:
+- `origin` → https://github.com/BI4O/WinPoint.git (主仓库，默认 push 目标)
+- `winpoint` → https://github.com/BI4O/WinPoint.git (备用，同一个仓库)
+
+**Push 规则**:
+- 推送到 `origin` 时，默认推送到当前分支（win1）
+- **重要**: 推送到 `origin` 的 `win1` 分支时，需要同时 push 到 WinPoint 的 `main` 分支：
+  ```bash
+  git push origin win1 && git push origin win1:main
+  ```
+- 或者单独推送到 WinPoint main：
+  ```bash
+  git push origin win1:main
+  ```
+
 ## Import Path Aliases
 
 `@/*` maps to project root (configured in `tsconfig.json`)
