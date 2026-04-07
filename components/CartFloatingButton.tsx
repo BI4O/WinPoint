@@ -23,7 +23,7 @@ export default function CartFloatingButton({
       whileTap={{ scale: 0.95 }}
       transition={{ type: 'spring', duration: 0.3, stiffness: 200 }}
       onClick={onClick}
-      className="fixed bottom-6 right-6 z-40 h-14 rounded-full bg-md-tertiary text-md-on-primary shadow-lg hover:shadow-xl transition-shadow flex items-center gap-3 px-5 pr-6"
+      className="fixed bottom-6 right-6 z-40 h-14 rounded-full bg-md-tertiary text-md-on-tertiary shadow-lg hover:shadow-xl transition-shadow flex items-center gap-3 px-5 pr-6"
     >
       {/* 购物车图标 + 徽章 */}
       <div className="relative">

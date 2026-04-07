@@ -26,12 +26,34 @@
   --color-success: #10b981;
   --color-error: #ef4444;
 
-  /* 兼容旧 MD3 token (映射到新色) */
-  --color-md-primary: var(--color-primary);
-  --color-md-on-primary: var(--color-on-primary);
-  --color-md-on-background: var(--color-on-background);
-  --color-md-surface: var(--color-surface);
-  --color-md-surface-container: var(--color-surface-container);
+  /* 兼容旧 MD3 token (直接颜色值，避免 var 嵌套解析问题) */
+  --color-md-primary: #9B2335;
+  --color-md-on-primary: #FFFFFF;
+  --color-md-background: #FEF7F7;
+  --color-md-surface: #FFFFFF;
+  --color-md-surface-container: #FFFFFF;
+  --color-md-surface-container-low: #FDF5F5;
+  --color-md-surface-container-high: #FEF8F8;
+  --color-md-tertiary: #9B2335;
+  --color-md-on-tertiary: #FFFFFF;
+  --color-md-on-surface: #333333;
+  --color-md-on-surface-variant: #666666;
+  --color-md-on-background: #333333;
+  --color-md-primary-container: #F9D8DC;
+  --color-md-on-primary-container: #9B2335;
+  --color-md-secondary-container: #FDF5F5;
+  --color-md-on-secondary-container: #333333;
+  --color-md-tertiary-container: #FFD8E4;
+  --color-md-on-tertiary-container: #333333;
+  --color-md-outline: #E5E5E5;
+  --color-md-outline-variant: #E5E5E5;
+  --color-md-border: #E5E5E5;
+  --color-md-success: #10b981;
+  --color-md-error: #ef4444;
+  --color-md-success-container: #D1FAE5;
+  --color-md-error-container: #FEE2E2;
+  --color-md-on-success: #FFFFFF;
+  --color-md-on-error: #FFFFFF;
 }
 
 body {
