@@ -24,9 +24,13 @@ export default function ShoppingCartDrawer({ isOpen, onClose }: ShoppingCartDraw
   const clearCart = useStore(state => state.clearCart);
   const getCartTotal = useStore(state => state.getCartTotal);
   const getCartPointTotal = useStore(state => state.getCartPointTotal);
+  const currentMerchantId = useStore(state => state.currentMerchantId);
 
   const totalAmount = getCartTotal();
   const totalPoint = getCartPointTotal();
+
+  // 积分名称：POPMART 模式下叫 POP积分
+  const pointLabel = currentMerchantId === 'popmart' ? 'POP积分' : 'WIN积分';
 
   // 获取商家信息（假设购物车中的商品来自同一商家）
   const merchantId = cart.length > 0 ? cart[0].product.merchantId : '';
@@ -120,7 +124,7 @@ export default function ShoppingCartDrawer({ isOpen, onClose }: ShoppingCartDraw
                     </div>
                     <div className="flex justify-between text-md-success">
                       <span>将获得:</span>
-                      <span className="font-bold">{totalPoint.toFixed(1)} WIN积分</span>
+                      <span className="font-bold">{totalPoint.toFixed(1)} {pointLabel}</span>
                     </div>
                   </div>
 

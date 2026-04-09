@@ -22,6 +22,10 @@ export default function MerchantDetailContent({ merchant }: MerchantDetailConten
   const addToCart = useStore(state => state.addToCart);
   const getCartItemCount = useStore(state => state.getCartItemCount);
   const getCartTotal = useStore(state => state.getCartTotal);
+  const currentMerchantId = useStore(state => state.currentMerchantId);
+
+  // 积分名称：POPMART 模式下叫 POP积分
+  const pointLabel = currentMerchantId === 'popmart' ? 'POP积分' : 'WIN积分';
 
   return (
     <div className="min-h-screen bg-md-background pb-24">
@@ -63,7 +67,7 @@ export default function MerchantDetailContent({ merchant }: MerchantDetailConten
                 </div>
                 <div className="flex items-center gap-2">
                   <Tag className="w-4 h-4" />
-                  <span>消费可获得 WIN积分 (10:1)</span>
+                  <span>消费可获得 {pointLabel} (10:1)</span>
                 </div>
               </div>
 

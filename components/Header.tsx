@@ -103,7 +103,7 @@ export default function Header() {
               whileHover={{ scale: 1.02, backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
               transition={{ type: 'tween', duration: 0.2, ease: [0.2, 0, 0, 1] }}
             >
-              <span className="text-sm font-semibold">WIN</span>
+              <span className="text-sm font-semibold">{isPopmart ? 'POP' : 'WIN'}</span>
               <div className="w-px h-4 bg-white/20" />
               <motion.span
                 className="text-base font-bold tabular-nums"

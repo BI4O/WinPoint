@@ -54,6 +54,9 @@ export default function RewardsPage() {
     ? filteredProducts.filter(p => p.merchantId === currentMerchantId)
     : filteredProducts;
 
+  // 积分名称：POPMART 模式下叫 POP积分
+  const pointLabel = isFilteredMode && currentMerchantId === 'popmart' ? 'POP积分' : 'WIN积分';
+
   const handleRedeem = (product: MerchantProduct) => {
     setSelectedProduct(product);
     setIsModalOpen(true);
@@ -101,7 +104,7 @@ export default function RewardsPage() {
               transition={{ type: 'tween', duration: 0.2, ease: [0.2, 0, 0, 1] }}
             >
               <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-1">我的 WIN积分</span>
+                <span className="text-sm text-gray-1">我的 {pointLabel}</span>
                 <span className="text-2xl font-bold text-md-primary">
                   {user.point.toFixed(2)}
                 </span>
@@ -204,7 +207,7 @@ export default function RewardsPage() {
             <div className="text-6xl mb-4">🎁</div>
             <h2 className="text-2xl font-bold text-gray-333 mb-2">兑换成功!</h2>
             <p className="text-gray-1 mb-2">商品将在 3-5 个工作日内发货</p>
-            <p className="text-md-primary font-bold">-{redeemedProduct.pointPrice} WIN积分</p>
+            <p className="text-md-primary font-bold">-{redeemedProduct.pointPrice} {pointLabel}</p>
           </div>
         </motion.div>
       )}

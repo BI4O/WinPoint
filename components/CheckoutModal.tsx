@@ -32,9 +32,13 @@ export default function CheckoutModal({
   const checkout = useStore(state => state.checkout);
   const getCartTotal = useStore(state => state.getCartTotal);
   const getCartPointTotal = useStore(state => state.getCartPointTotal);
+  const currentMerchantId = useStore(state => state.currentMerchantId);
 
   const totalAmount = getCartTotal();
   const totalPoint = getCartPointTotal();
+
+  // 积分名称：POPMART 模式下叫 POP积分
+  const pointLabel = currentMerchantId === 'popmart' ? 'POP积分' : 'WIN积分';
 
   // 获取商家信息
   const merchant = mockMerchants.find(m => m.id === merchantId);
@@ -148,7 +152,7 @@ export default function CheckoutModal({
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-md-success">将获得 WIN积分:</span>
+                      <span className="text-md-success">将获得 {pointLabel}:</span>
                       <span className="text-lg font-bold text-md-success">
                         {totalPoint.toFixed(1)}
                       </span>
@@ -158,7 +162,7 @@ export default function CheckoutModal({
                   {/* 提示信息 */}
                   <div className="bg-md-primary-container/40 rounded-2xl p-4">
                     <p className="text-sm text-md-on-surface-variant">
-                      💡 提示: WIN积分 可用于兑换积分商城商品
+                      💡 提示: {pointLabel} 可用于兑换积分商城商品
                     </p>
                   </div>
                 </div>
@@ -211,8 +215,8 @@ export default function CheckoutModal({
           <div className="bg-md-background rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl">
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-2xl font-bold text-md-on-background mb-2">购买成功!</h2>
-            <p className="text-md-on-surface-variant mb-2">获得 {earnedPoint.toFixed(1)} WIN积分</p>
-            <p className="text-sm text-md-on-surface-variant">WIN积分 已到账，可用于兑换商品</p>
+            <p className="text-md-on-surface-variant mb-2">获得 {earnedPoint.toFixed(1)} {pointLabel}</p>
+            <p className="text-sm text-md-on-surface-variant">{pointLabel} 已到账，可用于兑换商品</p>
           </div>
         </motion.div>
       )}

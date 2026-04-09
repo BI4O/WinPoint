@@ -30,6 +30,10 @@ export default function RedemptionModal({
   });
 
   const redeemProduct = useStore((state) => state.redeemProduct);
+  const currentMerchantId = useStore((state) => state.currentMerchantId);
+
+  // 积分名称：POPMART 模式下叫 POP积分
+  const pointLabel = currentMerchantId === 'popmart' ? 'POP积分' : 'WIN积分';
 
   if (!product) return null;
 
@@ -117,7 +121,7 @@ export default function RedemptionModal({
                     <span className="text-xl font-bold text-md-primary">
                       {product.pointPrice}
                     </span>
-                    <span className="text-sm text-md-on-surface-variant">WIN积分</span>
+                    <span className="text-sm text-md-on-surface-variant">{pointLabel}</span>
                   </div>
                 </div>
               </div>
@@ -125,22 +129,22 @@ export default function RedemptionModal({
               {/* Point Summary */}
               <div className="bg-md-surface-container-low rounded-2xl p-4 space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-md-on-surface-variant">当前 WIN积分</span>
+                  <span className="text-md-on-surface-variant">当前 {pointLabel}</span>
                   <span className="font-medium text-md-on-surface">
-                    {userPoint.toFixed(2)} WIN积分
+                    {userPoint.toFixed(2)} {pointLabel}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-md-on-surface-variant">兑换消耗</span>
                   <span className="font-medium text-md-error">
-                    -{product.pointPrice} WIN积分
+                    -{product.pointPrice} {pointLabel}
                   </span>
                 </div>
                 <div className="h-px bg-md-on-surface/10 my-2" />
                 <div className="flex justify-between">
-                  <span className="font-medium text-md-on-surface">剩余 WIN积分</span>
+                  <span className="font-medium text-md-on-surface">剩余 {pointLabel}</span>
                   <span className="text-lg font-bold text-md-primary">
-                    {remainingPoint.toFixed(2)} WIN积分
+                    {remainingPoint.toFixed(2)} {pointLabel}
                   </span>
                 </div>
               </div>
