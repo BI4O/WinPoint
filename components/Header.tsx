@@ -50,7 +50,9 @@ export default function Header() {
                 height={60}
                 className={brandInfo.name === 'POPMART' ? 'h-10 w-auto' : 'h-14 w-14'}
               />
-              <span className="font-bold text-lg">{brandInfo.name}</span>
+              {brandInfo.name !== 'POPMART' && (
+                <span className="font-bold text-lg">{brandInfo.name}</span>
+              )}
             </motion.div>
           </Link>
 
@@ -156,7 +158,9 @@ export default function Header() {
                       height={60}
                       className={brandInfo.name === 'POPMART' ? 'h-10 w-auto' : 'h-14 w-14'}
                     />
-                    <span className="font-bold text-lg">{brandInfo.name}</span>
+                    {brandInfo.name !== 'POPMART' && (
+                      <span className="font-bold text-lg">{brandInfo.name}</span>
+                    )}
                   </div>
                   <motion.button
                     className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 text-gray-333"
