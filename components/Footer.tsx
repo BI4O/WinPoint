@@ -7,6 +7,11 @@ import { useBrandInfo } from '@/hooks/useBrand';
 
 export default function Footer() {
   const brandInfo = useBrandInfo();
+  // POPMART logo 只有白色版本，其他品牌用红色版本
+  const footerLogo = brandInfo.name === 'POPMART'
+    ? brandInfo.logo
+    : brandInfo.logo.replace('_white', '_red');
+
   const footerLinks = [
     { href: '/about', label: '关于我们' },
     { href: '/terms', label: '服务条款' },
@@ -27,7 +32,7 @@ export default function Footer() {
             transition={{ duration: 0.5 }}
           >
             <Image
-              src={brandInfo.logo.replace('_white', '_red')}
+              src={footerLogo}
               alt={brandInfo.logoAlt}
               width={40}
               height={40}

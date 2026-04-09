@@ -23,7 +23,7 @@ const brandConfigs: Record<Brand, BrandConfig> = {
   },
   popmart: {
     name: 'POPMART',
-    logo: '/images/popmart_logo_white.svg',
+    logo: '/images/popmart_logo_white.png',
     logoAlt: 'POPMART',
     title: 'POPMART',
     copyright: '© 2026 POPMART. 保留所有权利.',
