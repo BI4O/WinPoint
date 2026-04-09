@@ -16,8 +16,11 @@ export default function IdentitySwitcher() {
     ? mockMerchants.find(m => m.id === currentMerchantId)
     : null;
 
-  const displayEmoji = currentMerchant?.logo || '👤';
-  const displayLabel = currentMerchant?.name || '用户';
+  // 判断当前是否是独立站模式
+  const isPopmartMode = currentMerchantId === 'popmart';
+  const isPopmartUserMode = identityMode === 'user' && currentMerchantId === 'popmart';
+  const displayEmoji = isPopmartMode && identityMode === 'merchant' ? '🫧' : (currentMerchant?.logo || '👤');
+  const displayLabel = isPopmartUserMode ? '用户（POPMART）' : (isPopmartMode ? 'POPMART 独立站' : (currentMerchant?.name || '用户'));
 
   const handleSelect = (mode: 'user' | 'merchant', merchantId?: string) => {
     setIdentityMode(mode, merchantId as MerchantId);
@@ -30,6 +33,10 @@ export default function IdentitySwitcher() {
       router.push('/merchant/manage');
     }
   };
+
+  // 普通商户（排除 POPMART）
+  const regularMerchants = mockMerchants.filter(m => m.id !== 'popmart');
+  const popmartMerchant = mockMerchants.find(m => m.id === 'popmart');
 
   return (
     <div className="relative">
@@ -53,12 +60,13 @@ export default function IdentitySwitcher() {
               exit={{ opacity: 0, y: -10 }}
               className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-xl z-50 overflow-hidden"
             >
+              {/* 用户模式 */}
               <div className="p-2">
                 <p className="px-3 py-2 text-xs font-medium text-gray-500 uppercase">用户模式</p>
                 <button
                   onClick={() => handleSelect('user')}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${
-                    identityMode === 'user'
+                    identityMode === 'user' && currentMerchantId !== 'popmart'
                       ? 'bg-md-primary/10 text-md-primary'
                       : 'text-gray-700 hover:bg-gray-100'
                   }`}
@@ -66,11 +74,26 @@ export default function IdentitySwitcher() {
                   <span className="text-lg">👤</span>
                   <span className="text-sm font-medium">用户</span>
                 </button>
+                {/* POPMART 独立站（用户视角） */}
+                {popmartMerchant && (
+                  <button
+                    onClick={() => handleSelect('user', 'popmart')}
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${
+                      identityMode === 'user' && currentMerchantId === 'popmart'
+                        ? 'bg-md-primary/10 text-md-primary'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    <span className="text-lg">👤</span>
+                    <span className="text-sm font-medium">用户（POPMART）</span>
+                  </button>
+                )}
               </div>
 
+              {/* 商户模式 */}
               <div className="border-t border-gray-100 p-2">
                 <p className="px-3 py-2 text-xs font-medium text-gray-500 uppercase">商户模式</p>
-                {mockMerchants.map(merchant => (
+                {regularMerchants.map(merchant => (
                   <button
                     key={merchant.id}
                     onClick={() => handleSelect('merchant', merchant.id)}
@@ -84,6 +107,20 @@ export default function IdentitySwitcher() {
                     <span className="text-sm font-medium">{merchant.name}</span>
                   </button>
                 ))}
+                {/* POPMART 独立站（商户视角） */}
+                {popmartMerchant && (
+                  <button
+                    onClick={() => handleSelect('merchant', 'popmart')}
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${
+                      identityMode === 'merchant' && currentMerchantId === 'popmart'
+                        ? 'bg-md-primary/10 text-md-primary'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    <span className="text-lg">{popmartMerchant.logo}</span>
+                    <span className="text-sm font-medium">{popmartMerchant.name}</span>
+                  </button>
+                )}
               </div>
             </motion.div>
           </>

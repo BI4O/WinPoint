@@ -53,16 +53,18 @@ export default function RewardProductCard({
           </h3>
 
           {/* Price Info */}
-          <div className="flex items-baseline gap-2">
-            <div className="flex items-center gap-1">
+          <div className="flex items-center gap-3">
+            <div className="flex items-baseline gap-1">
               <span className="text-2xl font-bold text-md-primary">
-                ¥{product.cashPrice}
-              </span>
-              <span className="text-sm text-md-on-surface-variant">+</span>
-              <span className="text-xl font-bold text-md-primary">
                 {product.pointPrice}
               </span>
               <span className="text-sm text-md-on-surface-variant">积分</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="text-sm text-md-on-surface-variant">+</span>
+              <span className="text-base font-medium text-md-on-surface-variant">
+                ¥{product.cashPrice}
+              </span>
             </div>
           </div>
 
@@ -82,7 +84,7 @@ export default function RewardProductCard({
             size="lg"
             disabled={!canAfford}
           >
-            {canAfford ? '立即兑换' : 'WIN积分 不足'}
+            {canAfford ? '立即兑换' : '积分不足'}
           </Button>
         </div>
       </div>

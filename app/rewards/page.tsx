@@ -9,6 +9,7 @@ import RewardProductCard from '@/components/RewardProductCard';
 import CategoryFilter from '@/components/CategoryFilter';
 import RedemptionModal from '@/components/RedemptionModal';
 import AtmosphericBackground from '@/components/AtmosphericBackground';
+import PromotionCarousel from '@/components/PromotionCarousel';
 
 export default function RewardsPage() {
   const router = useRouter();
@@ -25,16 +26,31 @@ export default function RewardsPage() {
 
   // 过滤上架商品并获取所有分类
   const listedProducts = merchantProducts.filter(p => p.isListed);
-  const categories = ['全部', ...Array.from(new Set(listedProducts.map(p => p.category).filter(Boolean)))] as string[];
 
-  // 筛选商品
+  // 分类排序：现金券放最前面
+  const allCategories = Array.from(new Set(listedProducts.map(p => p.category).filter(Boolean))) as string[];
+  const sortedCategories = allCategories.sort((a, b) => {
+    if (a === '现金券') return -1;
+    if (b === '现金券') return 1;
+    return 0;
+  });
+  const categories = ['全部', ...sortedCategories];
+
+  // 筛选商品：全部时现金券排前面
   const filteredProducts = activeCategory === '全部'
-    ? listedProducts
+    ? [...listedProducts].sort((a, b) => {
+        if (a.category === '现金券' && b.category !== '现金券') return -1;
+        if (a.category !== '现金券' && b.category === '现金券') return 1;
+        return 0;
+      })
     : listedProducts.filter(p => p.category === activeCategory);
 
-  // 商户模式下只显示自家商品
-  const isMerchantMode = identityMode === 'merchant' && currentMerchantId;
-  const merchantFilteredProducts = isMerchantMode
+  // 是否是 POPMART 用户模式（用户视角但限定在 POPMART）
+  const isPopmartUserMode = identityMode === 'user' && currentMerchantId === 'popmart';
+
+  // 商户模式或 POPMART 用户模式下只显示自家商品
+  const isFilteredMode = (identityMode === 'merchant' && currentMerchantId) || isPopmartUserMode;
+  const merchantFilteredProducts = isFilteredMode
     ? filteredProducts.filter(p => p.merchantId === currentMerchantId)
     : filteredProducts;
 
@@ -73,7 +89,7 @@ export default function RewardsPage() {
               </div>
               <div>
                 <h1 className="text-4xl font-bold text-gray-333">
-                  积分商城
+                  兑换
                 </h1>
               </div>
             </div>
@@ -99,7 +115,7 @@ export default function RewardsPage() {
         </motion.div>
 
         {/* Category Filter - 仅用户模式显示 */}
-        {!isMerchantMode && (
+        {!isFilteredMode && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -111,6 +127,17 @@ export default function RewardsPage() {
               activeCategory={activeCategory}
               onCategoryChange={setActiveCategory}
             />
+          </motion.div>
+        )}
+
+        {/* 轮播广告 - 仅用户模式显示 */}
+        {!isFilteredMode && activeCategory === '全部' && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15, type: 'tween', duration: 0.4, ease: [0.2, 0, 0, 1] }}
+          >
+            <PromotionCarousel />
           </motion.div>
         )}
 
@@ -151,7 +178,7 @@ export default function RewardsPage() {
           >
             <div className="text-6xl mb-4">📦</div>
             <p className="text-gray-1">
-              {isMerchantMode ? '暂无上架商品' : '该分类暂无商品'}
+              {isFilteredMode ? '暂无上架商品' : '该分类暂无商品'}
             </p>
           </motion.div>
         )}

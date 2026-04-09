@@ -123,3 +123,51 @@ body {
 .glow-tertiary {
   box-shadow: 0 0 30px -10px var(--color-md-tertiary);
 }
+
+/* ============================================
+   POPMART 主题 - 浅红色系
+   ============================================ */
+body.theme-popmart {
+  /* 浅红色主题 - 使用 !important 覆盖 Tailwind @theme */
+  --color-primary: #FF6B6B !important;
+  --color-primary-hover: #FF5252 !important;
+  --color-on-primary: #FFFFFF !important;
+
+  /* 背景色 - 浅粉 */
+  --color-background: #FFF5F5 !important;
+  --color-on-background: #333333 !important;
+
+  /* Surface - 更浅的粉 */
+  --color-surface: #FFFFFF !important;
+  --color-surface-container: #FFFFFF !important;
+  --color-surface-container-low: #FFF8F8 !important;
+  --color-surface-container-high: #FFFAFA !important;
+
+  /* MD3 tokens - 浅红色系 */
+  --color-md-primary: #FF6B6B !important;
+  --color-md-on-primary: #FFFFFF !important;
+  --color-md-background: #FFF5F5 !important;
+  --color-md-surface: #FFFFFF !important;
+  --color-md-surface-container: #FFFFFF !important;
+  --color-md-surface-container-low: #FFF8F8 !important;
+  --color-md-surface-container-high: #FFFAFA !important;
+  --color-md-tertiary: #FF6B6B !important;
+  --color-md-on-tertiary: #FFFFFF !important;
+  --color-md-on-surface: #333333 !important;
+  --color-md-on-surface-variant: #666666 !important;
+  --color-md-on-background: #333333 !important;
+  --color-md-primary-container: #FFE5E5 !important;
+  --color-md-on-primary-container: #FF6B6B !important;
+  --color-md-secondary-container: #FFF0F0 !important;
+  --color-md-on-secondary-container: #333333 !important;
+  --color-md-tertiary-container: #FFE8E8 !important;
+  --color-md-on-tertiary-container: #333333 !important;
+  --color-md-outline: #FFDDDD !important;
+  --color-md-outline-variant: #FFE8E8 !important;
+  --color-md-border: #FFE0E0 !important;
+}
+
+/* POPMART 主题下的 Header */
+body.theme-popmart header {
+  background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%) !important;
+}

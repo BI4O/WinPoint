@@ -71,7 +71,7 @@ export interface MerchantOrder {
   pointPrice: number;
   quantity: number;
   timestamp: number;
-  status: 'pending' | 'shipped';
+  status: 'pending' | 'shipped' | 'delivered';
   shippingAddress: {
     name: string;
     phone: string;
@@ -339,12 +339,42 @@ export const mockMerchants: Merchant[] = [
     description: "高端珠宝定制",
     pointRate: 10,
     products: jewelryProducts
+  },
+  {
+    id: 'popmart',
+    name: "POPMART 独立站",
+    category: "潮玩",
+    logo: "🫧",
+    description: "POPMART 潮玩旗舰店",
+    pointRate: 10,
+    products: [
+      { id: 'pm-1', merchantId: 'popmart', name: 'DIMOO新生日記系列-搪膠毛絨掛件盲盒', price: 120, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20251125_182202_391032____0_____800x800.png', stock: 50, category: '盲盒' },
+      { id: 'pm-2', merchantId: 'popmart', name: 'POLAR-Monster Baby 怪物收藏手冊系列毛絨掛件盲盒 Ver.1', price: 159, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20260120_161534_602881____0_____800x800.png', stock: 30, category: '盲盒' },
+      { id: 'pm-3', merchantId: 'popmart', name: '星星人怦然星動系列手辦', price: 81, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20250521_185804_367846____1_____1200x1200.jpg', stock: 40, category: '手辦' },
+      { id: 'pm-4', merchantId: 'popmart', name: '貓和老鼠星盤奇緣系列手辦', price: 81, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20250521_185804_367846____1_____1200x1200.jpg', stock: 25, category: '手辦' },
+      { id: 'pm-5', merchantId: 'popmart', name: '米奇家族萌在一起掛件系列手辦', price: 120, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20260209_170340_176237_________840x840.png', stock: 35, category: '手辦' },
+      { id: 'pm-6', merchantId: 'popmart', name: '史迪奇穿越系列搪膠毛絨掛件', price: 120, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20250729_135847_788863____1_____800x800.png', stock: 45, category: '掛件' },
+      { id: 'pm-7', merchantId: 'popmart', name: 'MEGA SPACE MOLLY 100% 周年系列4', price: 95, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20250516_145813_308703____1_____1200x1200.jpg', stock: 20, category: 'MEGA' },
+      { id: 'pm-8', merchantId: 'popmart', name: 'Gift For You 立體賀卡系列場景手辦', price: 95, image: 'https://prod-eurasian-res.popmart.com/default/20250408_172633_640033____1_____1200x1200.jpg', stock: 55, category: '手辦' },
+      { id: 'pm-9', merchantId: 'popmart', name: 'Hirono回聲系列手辦', price: 81, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20250826_165031_741365____800-png1-3_____800x800.png', stock: 40, category: '手辦' },
+      { id: 'pm-10', merchantId: 'popmart', name: 'THE MONSTERS心底密碼系列-字母掛件盲盒（A-M）', price: 69, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20250514_173902_175874____1_____1200x1200.jpg', stock: 60, category: '盲盒' },
+      { id: 'pm-11', merchantId: 'popmart', name: '小手拉小手系列手辦', price: 81, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20251011_141750_415974____0_____800x800.png', stock: 30, category: '手辦' },
+      { id: 'pm-12', merchantId: 'popmart', name: '飛天小女警派對驚喜系列手辦', price: 81, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20250703_150341_580282____1200png_____1200x1200.png', stock: 25, category: '手辦' },
+      { id: 'pm-13', merchantId: 'popmart', name: 'Ted2泰迪熊可動毛絨掛件', price: 120, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20251104_093435_527984____0_____800x800.png', stock: 35, category: '掛件' },
+      { id: 'pm-14', merchantId: 'popmart', name: '泡泡萌粒 咖啡工廠系列公仔（1粒裝）', price: 19, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20251208_143711_199900____0_____800x800.png', stock: 200, category: '萌粒' },
+      { id: 'pm-15', merchantId: 'popmart', name: 'CRYBABY出走的月亮-坐坐系列', price: 46, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20251111_224223_862482____0_____800x800.png', stock: 80, category: '手辦' },
+      { id: 'pm-16', merchantId: 'popmart', name: 'THE MONSTERS 凌晨一點系列手办', price: 95, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20250708_171419_408714____1_____800x800.png', stock: 30, category: '手辦' },
+      { id: 'pm-17', merchantId: 'popmart', name: 'DIMOO自然的形狀系列手辦', price: 81, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20251223_191454_932414____0_____800x800.png', stock: 45, category: '手辦' },
+      { id: 'pm-18', merchantId: 'popmart', name: 'DIMOO限定時光系列-香氛掛件盲盒', price: 120, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20250916_191046_629912____0_____800x800.png', stock: 30, category: '盲盒' },
+      { id: 'pm-19', merchantId: 'popmart', name: '小甜豆 記錄我們的每一天系列場景手辦', price: 81, image: 'https://prod-eurasian-res.popmart.com/default/20250107_165344_061054____1_____1200x1200.jpg', stock: 40, category: '手辦' },
+      { id: 'pm-20', merchantId: 'popmart', name: 'HACIPUPU動物貼貼系列手辦', price: 105, image: 'https://prod-eurasian-res.popmart.com/default/20250107_165344_061054____1_____1200x1200.jpg', stock: 35, category: '手辦' },
+    ]
   }
 ];
 
 export const mockUserInitial = {
   address: "0x1234...5678",
-  point: 5000,
+  point: 8560,  // 包含 POPMART 消费积分
   rwa: 500,
   earnings: 10000
 };
@@ -386,6 +416,37 @@ export const mockActivitiesInitial: Activity[] = [
     type: "reward_received",
     amount: 5.2,
     timestamp: BASE_TIMESTAMP - 259200000 // 3天前
+  },
+  // POPMART 活动记录
+  {
+    id: 'activity-pm-1',
+    type: "point_earned",
+    amount: 120,
+    merchant: "POPMART 独立站",
+    timestamp: BASE_TIMESTAMP - 3600000 // 1小时前
+  },
+  {
+    id: 'activity-pm-2',
+    type: "point_redeemed",
+    amount: -950,
+    rewardProductName: "MEGA SPACE MOLLY 100% 周年系列4",
+    pointSpent: 950,
+    timestamp: BASE_TIMESTAMP - 43200000 // 12小时前
+  },
+  {
+    id: 'activity-pm-3',
+    type: "point_earned",
+    amount: 81,
+    merchant: "POPMART 独立站",
+    timestamp: BASE_TIMESTAMP - 86400000 // 2天前
+  },
+  {
+    id: 'activity-pm-4',
+    type: "point_redeemed",
+    amount: -460,
+    rewardProductName: "CRYBABY出走的月亮-坐坐系列",
+    pointSpent: 460,
+    timestamp: BASE_TIMESTAMP - 129600000 // 3天前
   }
 ];
 
@@ -662,6 +723,32 @@ export const mockUserOrders: TradeOrder[] = [
 
 // 商户商品数据（积分商城用）
 export const mockMerchantProducts: MerchantProduct[] = [
+  // 现金券（平台通用）
+  { id: 'vc-10', merchantId: 'winpoint', merchantName: 'WinPoint', name: '¥10 现金券', cashPrice: 1, pointPrice: 1000, image: 'emoji:💰', stock: 999, isListed: true, category: '现金券' },
+  { id: 'vc-50', merchantId: 'winpoint', merchantName: 'WinPoint', name: '¥50 现金券', cashPrice: 1, pointPrice: 5000, image: 'emoji:💵', stock: 500, isListed: true, category: '现金券' },
+  { id: 'vc-100', merchantId: 'winpoint', merchantName: 'WinPoint', name: '¥100 现金券', cashPrice: 1, pointPrice: 10000, image: 'emoji:💎', stock: 200, isListed: true, category: '现金券' },
+  { id: 'vc-500', merchantId: 'winpoint', merchantName: 'WinPoint', name: '¥500 现金券', cashPrice: 1, pointPrice: 50000, image: 'emoji:🏆', stock: 50, isListed: true, category: '现金券' },
+  // POPMART 潮玩（真实商品数据 from popmart.com/hk/collection/3）
+  { id: 'mp-pm-1', merchantId: 'popmart', merchantName: 'POPMART 独立站', name: 'DIMOO新生日記系列-搪膠毛絨掛件盲盒', cashPrice: 120, pointPrice: 1200, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20251125_182202_391032____0_____800x800.png', stock: 50, isListed: true, category: '盲盒' },
+  { id: 'mp-pm-2', merchantId: 'popmart', merchantName: 'POPMART 独立站', name: 'POLAR-Monster Baby 怪物收藏手冊系列毛絨掛件盲盒 Ver.1', cashPrice: 159, pointPrice: 1590, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20260120_161534_602881____0_____800x800.png', stock: 30, isListed: true, category: '盲盒' },
+  { id: 'mp-pm-3', merchantId: 'popmart', merchantName: 'POPMART 独立站', name: '星星人怦然星動系列手辦', cashPrice: 81, pointPrice: 810, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20250521_185804_367846____1_____1200x1200.jpg', stock: 40, isListed: true, category: '手辦' },
+  { id: 'mp-pm-4', merchantId: 'popmart', merchantName: 'POPMART 独立站', name: '貓和老鼠星盤奇緣系列手辦', cashPrice: 81, pointPrice: 810, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20250521_185804_367846____1_____1200x1200.jpg', stock: 25, isListed: true, category: '手辦' },
+  { id: 'mp-pm-5', merchantId: 'popmart', merchantName: 'POPMART 独立站', name: '米奇家族萌在一起掛件系列手辦', cashPrice: 120, pointPrice: 1200, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20260209_170340_176237_________840x840.png', stock: 35, isListed: true, category: '手辦' },
+  { id: 'mp-pm-6', merchantId: 'popmart', merchantName: 'POPMART 独立站', name: '史迪奇穿越系列搪膠毛絨掛件', cashPrice: 120, pointPrice: 1200, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20250729_135847_788863____1_____800x800.png', stock: 45, isListed: true, category: '掛件' },
+  { id: 'mp-pm-7', merchantId: 'popmart', merchantName: 'POPMART 独立站', name: 'MEGA SPACE MOLLY 100% 周年系列4', cashPrice: 95, pointPrice: 950, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20250516_145813_308703____1_____1200x1200.jpg', stock: 20, isListed: true, category: 'MEGA' },
+  { id: 'mp-pm-8', merchantId: 'popmart', merchantName: 'POPMART 独立站', name: 'Gift For You 立體賀卡系列場景手辦', cashPrice: 95, pointPrice: 950, image: 'https://prod-eurasian-res.popmart.com/default/20250408_172633_640033____1_____1200x1200.jpg', stock: 55, isListed: true, category: '手辦' },
+  { id: 'mp-pm-9', merchantId: 'popmart', merchantName: 'POPMART 独立站', name: 'Hirono回聲系列手辦', cashPrice: 81, pointPrice: 810, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20250826_165031_741365____800-png1-3_____800x800.png', stock: 40, isListed: true, category: '手辦' },
+  { id: 'mp-pm-10', merchantId: 'popmart', merchantName: 'POPMART 独立站', name: 'THE MONSTERS心底密碼系列-字母掛件盲盒（A-M）', cashPrice: 69, pointPrice: 690, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20250514_173902_175874____1_____1200x1200.jpg', stock: 60, isListed: true, category: '盲盒' },
+  { id: 'mp-pm-11', merchantId: 'popmart', merchantName: 'POPMART 独立站', name: '小手拉小手系列手辦', cashPrice: 81, pointPrice: 810, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20251011_141750_415974____0_____800x800.png', stock: 30, isListed: true, category: '手辦' },
+  { id: 'mp-pm-12', merchantId: 'popmart', merchantName: 'POPMART 独立站', name: '飛天小女警派對驚喜系列手辦', cashPrice: 81, pointPrice: 810, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20250703_150341_580282____1200png_____1200x1200.png', stock: 25, isListed: true, category: '手辦' },
+  { id: 'mp-pm-13', merchantId: 'popmart', merchantName: 'POPMART 独立站', name: 'Ted2泰迪熊可動毛絨掛件', cashPrice: 120, pointPrice: 1200, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20251104_093435_527984____0_____800x800.png', stock: 35, isListed: true, category: '掛件' },
+  { id: 'mp-pm-14', merchantId: 'popmart', merchantName: 'POPMART 独立站', name: '泡泡萌粒 咖啡工廠系列公仔（1粒裝）', cashPrice: 19, pointPrice: 190, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20251208_143711_199900____0_____800x800.png', stock: 200, isListed: true, category: '萌粒' },
+  { id: 'mp-pm-15', merchantId: 'popmart', merchantName: 'POPMART 独立站', name: 'CRYBABY出走的月亮-坐坐系列', cashPrice: 46, pointPrice: 460, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20251111_224223_862482____0_____800x800.png', stock: 80, isListed: true, category: '手辦' },
+  { id: 'mp-pm-16', merchantId: 'popmart', merchantName: 'POPMART 独立站', name: 'THE MONSTERS 凌晨一點系列手办', cashPrice: 95, pointPrice: 950, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20250708_171419_408714____1_____800x800.png', stock: 30, isListed: true, category: '手辦' },
+  { id: 'mp-pm-17', merchantId: 'popmart', merchantName: 'POPMART 独立站', name: 'DIMOO自然的形狀系列手辦', cashPrice: 81, pointPrice: 810, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20251223_191454_932414____0_____800x800.png', stock: 45, isListed: true, category: '手辦' },
+  { id: 'mp-pm-18', merchantId: 'popmart', merchantName: 'POPMART 独立站', name: 'DIMOO限定時光系列-香氛掛件盲盒', cashPrice: 120, pointPrice: 1200, image: 'https://prod-hk.oss-eu-central-1.aliyuncs.com/default/20250916_191046_629912____0_____800x800.png', stock: 30, isListed: true, category: '盲盒' },
+  { id: 'mp-pm-19', merchantId: 'popmart', merchantName: 'POPMART 独立站', name: '小甜豆 記錄我們的每一天系列場景手辦', cashPrice: 81, pointPrice: 810, image: 'https://prod-eurasian-res.popmart.com/default/20250107_165344_061054____1_____1200x1200.jpg', stock: 40, isListed: true, category: '手辦' },
+  { id: 'mp-pm-20', merchantId: 'popmart', merchantName: 'POPMART 独立站', name: 'HACIPUPU動物貼貼系列手辦', cashPrice: 105, pointPrice: 1050, image: 'https://prod-eurasian-res.popmart.com/default/20250107_165344_061054____1_____1200x1200.jpg', stock: 35, isListed: true, category: '手辦' },
   // 星巴克
   { id: 'mp-sb-1', merchantId: 'starbucks', merchantName: '星巴克咖啡', name: '美式咖啡', cashPrice: 22, pointPrice: 100, image: 'emoji:☕', stock: 100, isListed: true, category: '餐饮' },
   { id: 'mp-sb-2', merchantId: 'starbucks', merchantName: '星巴克咖啡', name: '拿铁咖啡', cashPrice: 28, pointPrice: 120, image: 'emoji:☕', stock: 85, isListed: true, category: '餐饮' },
@@ -692,6 +779,219 @@ export const mockMerchantProducts: MerchantProduct[] = [
 
 // 商户订单数据
 export const mockMerchantOrders: MerchantOrder[] = [
+  // 当前用户的订单（0x1234...5678）
+  // 待发货 - 现金购买
+  {
+    id: 'mo-my-1',
+    userId: '0x1234...5678',
+    userAddress: '0x1234...5678',
+    productId: 'mp-ap-1',
+    productName: 'AirPods Pro',
+    merchantId: 'apple',
+    merchantName: 'Apple Store',
+    cashPrice: 1499,
+    pointPrice: 0,
+    quantity: 1,
+    timestamp: Date.now() - 3600000,
+    status: 'pending',
+    shippingAddress: { name: '张三', phone: '13800138000', address: '北京市朝阳区某某路123号' }
+  },
+  // 运输中 - 现金购买
+  {
+    id: 'mo-my-2',
+    userId: '0x1234...5678',
+    userAddress: '0x1234...5678',
+    productId: 'mp-nk-1',
+    productName: 'Air Max 运动鞋',
+    merchantId: 'nike',
+    merchantName: 'Nike 运动',
+    cashPrice: 799,
+    pointPrice: 0,
+    quantity: 1,
+    timestamp: Date.now() - 86400000,
+    status: 'shipped',
+    shippingAddress: { name: '张三', phone: '13800138000', address: '北京市朝阳区某某路123号' }
+  },
+  // 待收货 - 现金购买
+  {
+    id: 'mo-my-3',
+    userId: '0x1234...5678',
+    userAddress: '0x1234...5678',
+    productId: 'mp-sb-1',
+    productName: '美式咖啡 x2',
+    merchantId: 'starbucks',
+    merchantName: '星巴克咖啡',
+    cashPrice: 44,
+    pointPrice: 0,
+    quantity: 2,
+    timestamp: Date.now() - 172800000,
+    status: 'delivered',
+    shippingAddress: { name: '张三', phone: '13800138000', address: '北京市朝阳区某某路123号' }
+  },
+  // 待发货 - 积分兑换
+  {
+    id: 'mo-my-4',
+    userId: '0x1234...5678',
+    userAddress: '0x1234...5678',
+    productId: 'vc-50',
+    productName: '¥50 现金券',
+    merchantId: 'winpoint',
+    merchantName: 'WinPoint',
+    cashPrice: 0,
+    pointPrice: 5000,
+    quantity: 1,
+    timestamp: Date.now() - 7200000,
+    status: 'pending',
+    shippingAddress: { name: '张三', phone: '13800138000', address: '自动发放至账户' }
+  },
+  // 运输中 - 积分兑换
+  {
+    id: 'mo-my-5',
+    userId: '0x1234...5678',
+    userAddress: '0x1234...5678',
+    productId: 'mp-bb-1',
+    productName: '4合1滑梯秋千套装',
+    merchantId: 'baby',
+    merchantName: 'Ealing 母婴旗舰店',
+    cashPrice: 0,
+    pointPrice: 800,
+    quantity: 1,
+    timestamp: Date.now() - 259200000,
+    status: 'shipped',
+    shippingAddress: { name: '张三', phone: '13800138000', address: '北京市朝阳区某某路123号' }
+  },
+  // 待收货 - 积分兑换
+  {
+    id: 'mo-my-6',
+    userId: '0x1234...5678',
+    userAddress: '0x1234...5678',
+    productId: 'mp-jw-3',
+    productName: '925纯银项链',
+    merchantId: 'jewelry',
+    merchantName: 'DIMD 珠宝精品',
+    cashPrice: 0,
+    pointPrice: 1000,
+    quantity: 1,
+    timestamp: Date.now() - 432000000,
+    status: 'delivered',
+    shippingAddress: { name: '张三', phone: '13800138000', address: '北京市朝阳区某某路123号' }
+  },
+  // 已签收的积分兑换订单（历史订单，不显示状态标签）
+  {
+    id: 'mo-my-7',
+    userId: '0x1234...5678',
+    userAddress: '0x1234...5678',
+    productId: 'mp-sb-2',
+    productName: '拿铁咖啡',
+    merchantId: 'starbucks',
+    merchantName: '星巴克咖啡',
+    cashPrice: 0,
+    pointPrice: 120,
+    quantity: 1,
+    timestamp: Date.now() - 604800000,
+    status: 'delivered',
+    shippingAddress: { name: '张三', phone: '13800138000', address: '北京市朝阳区某某路123号' }
+  },
+
+  // ========== POPMART 用户订单 ==========
+  // 待发货 - 现金购买
+  {
+    id: 'mo-pm-1',
+    userId: '0x1234...5678',
+    userAddress: '0x1234...5678',
+    productId: 'mp-pm-1',
+    productName: 'DIMOO新生日記系列-搪膠毛絨掛件盲盒',
+    merchantId: 'popmart',
+    merchantName: 'POPMART 独立站',
+    cashPrice: 120,
+    pointPrice: 0,
+    quantity: 1,
+    timestamp: Date.now() - 1800000,
+    status: 'pending',
+    shippingAddress: { name: '张三', phone: '13800138000', address: '北京市朝阳区某某路123号' }
+  },
+  // 运输中 - 积分兑换
+  {
+    id: 'mo-pm-2',
+    userId: '0x1234...5678',
+    userAddress: '0x1234...5678',
+    productId: 'mp-pm-7',
+    productName: 'MEGA SPACE MOLLY 100% 周年系列4',
+    merchantId: 'popmart',
+    merchantName: 'POPMART 独立站',
+    cashPrice: 0,
+    pointPrice: 950,
+    quantity: 1,
+    timestamp: Date.now() - 43200000,
+    status: 'shipped',
+    shippingAddress: { name: '张三', phone: '13800138000', address: '北京市朝阳区某某路123号' }
+  },
+  // 待收货 - 现金购买
+  {
+    id: 'mo-pm-3',
+    userId: '0x1234...5678',
+    userAddress: '0x1234...5678',
+    productId: 'mp-pm-14',
+    productName: '泡泡萌粒 咖啡工廠系列公仔 x3',
+    merchantId: 'popmart',
+    merchantName: 'POPMART 独立站',
+    cashPrice: 57,
+    pointPrice: 0,
+    quantity: 3,
+    timestamp: Date.now() - 259200000,
+    status: 'delivered',
+    shippingAddress: { name: '张三', phone: '13800138000', address: '北京市朝阳区某某路123号' }
+  },
+  // 运输中 - 积分兑换
+  {
+    id: 'mo-pm-4',
+    userId: '0x1234...5678',
+    userAddress: '0x1234...5678',
+    productId: 'mp-pm-15',
+    productName: 'CRYBABY出走的月亮-坐坐系列',
+    merchantId: 'popmart',
+    merchantName: 'POPMART 独立站',
+    cashPrice: 0,
+    pointPrice: 460,
+    quantity: 1,
+    timestamp: Date.now() - 86400000,
+    status: 'shipped',
+    shippingAddress: { name: '张三', phone: '13800138000', address: '北京市朝阳区某某路123号' }
+  },
+  // 已签收 - 积分兑换
+  {
+    id: 'mo-pm-5',
+    userId: '0x1234...5678',
+    userAddress: '0x1234...5678',
+    productId: 'mp-pm-3',
+    productName: '星星人怦然星動系列手辦',
+    merchantId: 'popmart',
+    merchantName: 'POPMART 独立站',
+    cashPrice: 0,
+    pointPrice: 810,
+    quantity: 1,
+    timestamp: Date.now() - 604800000,
+    status: 'delivered',
+    shippingAddress: { name: '张三', phone: '13800138000', address: '北京市朝阳区某某路123号' }
+  },
+  // 已签收 - 现金购买
+  {
+    id: 'mo-pm-6',
+    userId: '0x1234...5678',
+    userAddress: '0x1234...5678',
+    productId: 'mp-pm-9',
+    productName: 'Hirono回聲系列手辦',
+    merchantId: 'popmart',
+    merchantName: 'POPMART 独立站',
+    cashPrice: 81,
+    pointPrice: 0,
+    quantity: 2,
+    timestamp: Date.now() - 1209600000,
+    status: 'delivered',
+    shippingAddress: { name: '张三', phone: '13800138000', address: '北京市朝阳区某某路123号' }
+  },
+
+  // 其他用户订单
   // 星巴克订单
   {
     id: 'mo-sb-1',

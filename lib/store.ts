@@ -19,7 +19,7 @@ import {
 
 // 身份状态
 export type IdentityMode = 'user' | 'merchant';
-export type MerchantId = 'starbucks' | 'nike' | 'apple' | 'baby' | 'jewelry';
+export type MerchantId = 'starbucks' | 'nike' | 'apple' | 'baby' | 'jewelry' | 'popmart';
 
 interface UserState {
   address: string;
@@ -111,6 +111,7 @@ export const useStore = create<AppState>((set, get) => ({
     apple: 12000,
     baby: 6000,
     jewelry: 15000,
+    popmart: 20000,
   },
   merchantBenefits: mockMerchantBenefits,
   merchantBenefitOrders: mockBenefitOrders,
@@ -121,7 +122,7 @@ export const useStore = create<AppState>((set, get) => ({
   setIdentityMode: (mode, merchantId) => {
     set({
       identityMode: mode,
-      currentMerchantId: mode === 'merchant' ? (merchantId || 'starbucks') : null
+      currentMerchantId: merchantId || (mode === 'merchant' ? 'starbucks' : null)
     });
   },
 

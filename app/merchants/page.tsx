@@ -14,6 +14,9 @@ export default function MerchantsPage() {
   const identityMode = useStore(state => state.identityMode);
   const currentMerchantId = useStore(state => state.currentMerchantId);
 
+  // 是否是 POPMART 用户模式（用户视角但限定在 POPMART）
+  const isPopmartUserMode = identityMode === 'user' && currentMerchantId === 'popmart';
+
   // 商户模式下直接跳转自家店铺
   useEffect(() => {
     if (identityMode === 'merchant' && currentMerchantId) {
@@ -25,6 +28,11 @@ export default function MerchantsPage() {
     // 跳转到店铺详情页
     router.push(`/merchant/${merchant.id}`);
   };
+
+  // POPMART 用户模式下只显示 POPMART
+  const displayedMerchants = isPopmartUserMode
+    ? mockMerchants.filter(m => m.id === 'popmart')
+    : mockMerchants;
 
   return (
     <AtmosphericBackground className="min-h-screen bg-md-background">
@@ -42,12 +50,12 @@ export default function MerchantsPage() {
             </div>
             <div>
               <h1 className="text-4xl font-bold text-gray-333">
-                合作商家
+                WinPoint网购
               </h1>
             </div>
           </div>
           <p className="text-gray-1 ml-1">
-            在合作商家消费，赚取 积分 奖励，开启收益之旅
+            一次过网购所有顶级品牌
           </p>
         </motion.div>
 
@@ -58,7 +66,7 @@ export default function MerchantsPage() {
           transition={{ delay: 0.2, type: 'tween', duration: 0.4, ease: [0.2, 0, 0, 1] }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
         >
-          {mockMerchants.map((merchant, index) => (
+          {displayedMerchants.map((merchant, index) => (
             <motion.div
               key={merchant.id}
               initial={{ opacity: 0, y: 30 }}

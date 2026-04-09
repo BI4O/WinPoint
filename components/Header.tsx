@@ -11,21 +11,23 @@ import { useState } from 'react';
 
 export default function Header() {
   const pathname = usePathname();
-  const { user, identityMode } = useStore();
+  const { user, identityMode, currentMerchantId } = useStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const isPopmart = currentMerchantId === 'popmart';
 
   // Determine nav items based on identity mode
   const navItems = identityMode === 'merchant'
     ? [
-        { href: '/rewards', label: '积分商城', icon: Gift },
-        { href: '/merchants', label: '商家', icon: Store },
+        { href: '/rewards', label: '兑换', icon: Gift },
+        { href: '/merchants', label: '探索', icon: Store },
         { href: '/merchant/manage', label: '后台管理', icon: Settings },
       ]
     : [
-        { href: '/', label: '首页', icon: Home },
-        { href: '/merchants', label: '商家', icon: Store },
-        { href: '/rewards', label: '积分商城', icon: Gift },
-        { href: '/dashboard', label: '资产', icon: LayoutDashboard },
+        { href: '/', label: '主页', icon: Home },
+        { href: '/merchants', label: '探索', icon: Store },
+        { href: '/rewards', label: '兑换', icon: Gift },
+        { href: '/dashboard', label: '我的', icon: LayoutDashboard },
       ];
 
   return (
@@ -47,6 +49,15 @@ export default function Header() {
                 className="h-14 w-14"
               />
               <span className="font-bold text-lg">WinPoint</span>
+              {isPopmart && (
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="ml-2 px-2 py-1 bg-white/20 rounded-full text-xs font-medium"
+                >
+                  POPMART 独立站
+                </motion.span>
+              )}
             </motion.div>
           </Link>
 

@@ -1,20 +1,35 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Coins, TrendingUp, ArrowUpCircle, ShoppingBag, Gift } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { Coins, Package } from 'lucide-react';
 import { useStore } from '@/lib/store';
-import { mockEarningsHistory } from '@/lib/mock-data';
-import AssetCard from '@/components/AssetCard';
-import EarningsChart from '@/components/EarningsChart';
-import ActivityList from '@/components/ActivityList';
-import Button from '@/components/Button';
+import { mockMerchantOrders } from '@/lib/mock-data';
 import AtmosphericBackground from '@/components/AtmosphericBackground';
+import OrderList from '@/components/OrderList';
+import Card from '@/components/Card';
 
 export default function DashboardPage() {
   const user = useStore((state) => state.user);
-  const activities = useStore((state) => state.activities);
-  const router = useRouter();
+  const identityMode = useStore((state) => state.identityMode);
+  const currentMerchantId = useStore((state) => state.currentMerchantId);
+
+  // 是否是 POPMART 用户模式（用户视角但限定在 POPMART）
+  const isPopmartUserMode = identityMode === 'user' && currentMerchantId === 'popmart';
+
+  // 获取当前用户的订单
+  let userOrders = mockMerchantOrders.filter(
+    (order) => order.userAddress === user.address || order.userId === '0x1234...5678'
+  );
+
+  // POPMART 用户模式下只显示 POPMART 订单
+  if (isPopmartUserMode) {
+    userOrders = userOrders.filter(order => order.merchantId === 'popmart');
+  }
+
+  // 计算已购买商品数量
+  const purchasedCount = userOrders.filter(
+    (order) => order.status === 'shipped' || order.status === 'delivered'
+  ).length + userOrders.length;
 
   return (
     <AtmosphericBackground className="min-h-screen bg-md-background">
@@ -23,95 +38,62 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: 'tween', duration: 0.4, ease: [0.2, 0, 0, 1] }}
-          className="mb-10"
+          className="mb-8"
         >
           <h1 className="text-4xl font-bold text-gray-333 mb-2">
-            我的资产
+            我的
           </h1>
-          <p className="text-gray-1">
-            查看您的 WIN积分、RWA 和收益情况
-          </p>
         </motion.div>
 
-        {/* Asset Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, type: 'tween', duration: 0.4, ease: [0.2, 0, 0, 1] }}
-          >
-            <AssetCard
-              title="WIN积分"
-              value={user.point.toFixed(2)}
-              subtitle="可用余额"
-              icon={Coins}
-              glow="primary"
-            />
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, type: 'tween', duration: 0.4, ease: [0.2, 0, 0, 1] }}
-          >
-            <AssetCard
-              title="收益"
-              value={`$${user.earnings.toFixed(2)}`}
-              subtitle="累计收益"
-              icon={TrendingUp}
-              glow="success"
-            />
-          </motion.div>
-        </div>
-
-        {/* Quick Actions */}
+        {/* 积分余额卡片 */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, type: 'tween', duration: 0.4, ease: [0.2, 0, 0, 1] }}
+          transition={{ delay: 0.1, type: 'tween', duration: 0.4, ease: [0.2, 0, 0, 1] }}
           className="mb-10"
         >
-          <h2 className="text-2xl font-bold text-gray-333 mb-6">
-            快速操作
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Button
-              variant="filled"
-              size="lg"
-              onClick={() => router.push('/rewards')}
-              className="flex items-center justify-center gap-2"
-            >
-              <Gift className="h-5 w-5" />
-              积分商城
-            </Button>
-            <Button
-              variant="filled"
-              size="lg"
-              onClick={() => router.push('/merchants')}
-              className="flex items-center justify-center gap-2"
-            >
-              <ShoppingBag className="h-5 w-5" />
-              浏览商家
-            </Button>
-          </div>
+          <Card hover className="bg-gradient-to-br from-primary to-primary/90 border-0">
+            <div className="flex items-center justify-between p-6">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center">
+                  <Coins className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <p className="text-white/80 text-sm mb-1">我的积分</p>
+                  <motion.h2
+                    className="text-4xl font-bold text-white"
+                    key={user.point}
+                    initial={{ scale: 1.2, opacity: 0.5 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ type: 'spring', duration: 0.4, stiffness: 300 }}
+                  >
+                    {user.point.toFixed(0)}
+                  </motion.h2>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="flex items-center gap-2 text-white/80">
+                  <Package className="h-5 w-5" />
+                  <span className="text-lg">已购买 {purchasedCount} 件商品</span>
+                </div>
+              </div>
+            </div>
+          </Card>
         </motion.div>
 
-        {/* Charts and Activity */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.5, type: 'tween', duration: 0.4, ease: [0.2, 0, 0, 1] }}
-          >
-            <EarningsChart data={mockEarningsHistory} />
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.6, type: 'tween', duration: 0.4, ease: [0.2, 0, 0, 1] }}
-          >
-            <ActivityList activities={activities} />
-          </motion.div>
-        </div>
+        {/* 订单记录 */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, type: 'tween', duration: 0.4, ease: [0.2, 0, 0, 1] }}
+        >
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-333">
+              订单记录
+            </h2>
+          </div>
+          <OrderList orders={userOrders} />
+        </motion.div>
       </div>
     </AtmosphericBackground>
   );
