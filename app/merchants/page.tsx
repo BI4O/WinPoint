@@ -7,9 +7,12 @@ import { mockMerchants, type Merchant } from '@/lib/mock-data';
 import MerchantCard from '@/components/MerchantCard';
 import { useStore } from '@/lib/store';
 import AtmosphericBackground from '@/components/AtmosphericBackground';
+import { useBrandInfo } from '@/hooks/useBrand';
 
 export default function MerchantsPage() {
   const router = useRouter();
+
+  const brandInfo = useBrandInfo();
 
   const identityMode = useStore(state => state.identityMode);
   const currentMerchantId = useStore(state => state.currentMerchantId);
@@ -50,7 +53,7 @@ export default function MerchantsPage() {
             </div>
             <div>
               <h1 className="text-4xl font-bold text-gray-333">
-                WinPoint网购
+                {brandInfo.name === 'POPMART' ? 'POPMART' : 'WinPoint网购'}
               </h1>
             </div>
           </div>
