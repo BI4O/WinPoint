@@ -48,7 +48,7 @@ export default function Header() {
                 alt={brandInfo.logoAlt}
                 width={60}
                 height={60}
-                className="h-14 w-14"
+                className={brandInfo.name === 'POPMART' ? 'h-10 w-auto' : 'h-14 w-14'}
               />
               <span className="font-bold text-lg">{brandInfo.name}</span>
             </motion.div>
@@ -154,7 +154,7 @@ export default function Header() {
                       alt={brandInfo.logoAlt}
                       width={60}
                       height={60}
-                      className="h-14 w-14"
+                      className={brandInfo.name === 'POPMART' ? 'h-10 w-auto' : 'h-14 w-14'}
                     />
                     <span className="font-bold text-lg">{brandInfo.name}</span>
                   </div>
