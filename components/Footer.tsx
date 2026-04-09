@@ -3,8 +3,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useBrandInfo } from '@/hooks/useBrand';
 
 export default function Footer() {
+  const brandInfo = useBrandInfo();
   const footerLinks = [
     { href: '/about', label: '关于我们' },
     { href: '/terms', label: '服务条款' },
@@ -25,13 +27,13 @@ export default function Footer() {
             transition={{ duration: 0.5 }}
           >
             <Image
-              src="/images/winpoint_logo_red.svg"
-              alt="WinPoint"
+              src={brandInfo.logo.replace('_white', '_red')}
+              alt={brandInfo.logoAlt}
               width={40}
               height={40}
               className="h-10 w-10"
             />
-            <span className="font-bold text-lg text-primary">WinPoint</span>
+            <span className="font-bold text-lg text-primary">{brandInfo.name}</span>
           </motion.div>
 
           {/* 链接 */}
@@ -54,7 +56,7 @@ export default function Footer() {
         {/* 版权信息 */}
         <div className="text-center">
           <p className="text-sm text-white/60">
-            © 2026 WinPoint. 保留所有权利.
+            {brandInfo.copyright}
           </p>
         </div>
       </div>
