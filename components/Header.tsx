@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useStore } from '@/lib/store';
+import { useBrandInfo } from '@/hooks/useBrand';
 import { Home, Store, Gift, LayoutDashboard, Menu, X, Settings } from 'lucide-react';
 import IdentitySwitcher from './IdentitySwitcher';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -13,6 +14,7 @@ export default function Header() {
   const pathname = usePathname();
   const { user, identityMode, currentMerchantId } = useStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const brandInfo = useBrandInfo();
 
   const isPopmart = currentMerchantId === 'popmart';
 
@@ -42,22 +44,13 @@ export default function Header() {
               transition={{ type: 'tween', duration: 0.2, ease: [0.2, 0, 0, 1] }}
             >
               <Image
-                src="/images/winpoint_logo_white.svg"
-                alt="WinPoint"
+                src={brandInfo.logo}
+                alt={brandInfo.logoAlt}
                 width={60}
                 height={60}
                 className="h-14 w-14"
               />
-              <span className="font-bold text-lg">WinPoint</span>
-              {isPopmart && (
-                <motion.span
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="ml-2 px-2 py-1 bg-white/20 rounded-full text-xs font-medium"
-                >
-                  POPMART 独立站
-                </motion.span>
-              )}
+              <span className="font-bold text-lg">{brandInfo.name}</span>
             </motion.div>
           </Link>
 
@@ -157,13 +150,13 @@ export default function Header() {
                 <div className="flex items-center justify-between p-6 border-b border-gray-200">
                   <div className="flex items-center space-x-3">
                     <Image
-                      src="/images/winpoint_logo_white.svg"
-                      alt="WinPoint"
+                      src={brandInfo.logo}
+                      alt={brandInfo.logoAlt}
                       width={60}
                       height={60}
                       className="h-14 w-14"
                     />
-                    <span className="font-bold text-lg">WinPoint</span>
+                    <span className="font-bold text-lg">{brandInfo.name}</span>
                   </div>
                   <motion.button
                     className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 text-gray-333"
