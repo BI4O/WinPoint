@@ -2,9 +2,13 @@
 
 import { useEffect } from 'react';
 import { useStore } from '@/lib/store';
+import { BrandProvider, type Brand } from '@/contexts/BrandContext';
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
   const currentMerchantId = useStore((state) => state.currentMerchantId);
+
+  // 根据 currentMerchantId 确定品牌
+  const brand: Brand = currentMerchantId === 'popmart' ? 'popmart' : 'winpoint';
 
   useEffect(() => {
     // 如果当前商户是 POPMART，添加 popmart 主题 class
@@ -20,5 +24,9 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
     };
   }, [currentMerchantId]);
 
-  return <>{children}</>;
+  return (
+    <BrandProvider brand={brand}>
+      {children}
+    </BrandProvider>
+  );
 }
